@@ -1,0 +1,8 @@
+codeEnvironment=DEVELOP
+[plugins]
+dbWolf=dbWolf.ini
+cacheRedis=redis.ini
+[/plugins]
+[products]
+MVC=mvc.ini
+[/products]

@@ -1,0 +1,4 @@
+codeEnvironment=DEVELOP
+[plugins]
+dbWolf=dbWolf.ini
+[/plugins]

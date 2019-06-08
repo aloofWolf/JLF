@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jlf</groupId>
+		<artifactId>JLF</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>JLF_PLUGIN</artifactId>
+	<packaging>pom</packaging>
+
+	<dependencies>
+		<!--依赖JLF_CORE -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_CORE</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+	<modules>
+		<module>JLF_PLUGIN_AOP</module>
+		<module>JLF_PLUGIN_CACHE</module>
+		<module>JLF_PLUGIN_CHECK</module>
+		<module>JLF_PLUGIN_LOG</module>
+		<module>JLF_PLUGIN_DBPOOL</module>
+		<module>JLF_PLUGIN_SESSION</module>
+		<module>JLF_PLUGIN_THREADPOOL</module>
+		<module>JLF_PLUGIN_JSON</module>
+		<module>JLF_PLUGIN_MQ</module>
+		<module>JLF_PLUGIN_PUSH</module>
+	</modules>
+</project>

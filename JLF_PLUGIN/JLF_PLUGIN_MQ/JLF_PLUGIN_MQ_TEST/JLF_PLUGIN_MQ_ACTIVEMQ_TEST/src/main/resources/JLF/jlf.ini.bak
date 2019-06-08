@@ -1,0 +1,5 @@
+codeEnvironment=DEVELOP
+[plugins]
+dbWolf=dbWolf.ini
+cacheRedis=redis.ini
+[/plugins]

@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jlf</groupId>
+    <artifactId>JLF_PLUGIN_THREADPOOL_TEST</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>JLF_PLUGIN_THREADPOOL_WOLF_TEST</artifactId>
+  <dependencies>
+		<!--依赖JLF_PLUGIN_THREADPOOL_CLIENT -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_PLUGIN_THREADPOOL_CLIENT</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖JLF_PLUGIN_THREADPOOL_WOLF_SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_PLUGIN_THREADPOOL_WOLF_SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+	</dependencies>
+</project>

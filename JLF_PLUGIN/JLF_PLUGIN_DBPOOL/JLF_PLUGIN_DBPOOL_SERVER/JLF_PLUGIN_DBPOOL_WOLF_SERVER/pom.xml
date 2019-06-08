@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jlf</groupId>
+		<artifactId>JLF_PLUGIN_DBPOOL_SERVER</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>JLF_PLUGIN_DBPOOL_WOLF_SERVER</artifactId>
+	<dependencies>
+		<!--依赖c3p0插件 -->
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.5.2</version>
+		</dependency>
+		<!--依赖mysql -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.0.8</version>
+		</dependency>
+		<!--依赖JLF_PLUGIN_CHECK_CLIENT -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_PLUGIN_CHECK_CLIENT</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+</project>

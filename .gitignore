@@ -1,0 +1,16 @@
+.project
+.classpath
+.target
+.settings/*
+**/.settings/
+**/.classpath
+**/.project
+**/target/
+*.class
+**/*.swp
+*.iml
+.idea/
+**/*.iml
+**/*.log
+**/bin/
+pom.xml.versionsBackup

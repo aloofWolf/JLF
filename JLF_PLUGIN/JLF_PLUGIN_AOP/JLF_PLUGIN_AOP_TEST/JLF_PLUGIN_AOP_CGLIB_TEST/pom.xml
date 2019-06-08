@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jlf</groupId>
+		<artifactId>JLF_PLUGIN_AOP_TEST</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>JLF_PLUGIN_AOP_CGLIB_TEST</artifactId>
+
+	<dependencies>
+		<!--依赖JLF_PLUGIN_AOP_CLIENT -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_PLUGIN_AOP_CLIENT</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖JLF_PLUGIN_AOP_CGLIB_SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_PLUGIN_AOP_CGLIB_SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+	</dependencies>
+</project>
