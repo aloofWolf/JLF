@@ -1,5 +1,9 @@
 package org.jlf.product.quartz.web.api.metadata.request.executeJob;
 
+import java.util.Map;
+
+import org.jlf.common.enums.BooleanType;
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.soa.mvc.metadata.request.JLFMVCIdAndVersionRequest;
 
 /**
@@ -9,18 +13,47 @@ import org.jlf.soa.mvc.metadata.request.JLFMVCIdAndVersionRequest;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-public class QuartzJobUpdateReq extends QuartzJobSaveReq{
+public class QuartzJobUpdateReq extends JLFMVCIdAndVersionRequest {
 
-	private JLFMVCIdAndVersionRequest header; // header信息
+	@JLFCheckAnn(isNull = true, desc = "模板id")
+	private Long templateId;
+	@JLFCheckAnn(isNull = true, maxLength = 20, desc = "执行时间")
+	private String core;
+	@JLFCheckAnn(isNull = true, desc = "是否启用")
+	private BooleanType enabled;
+	@JLFCheckAnn(isNull = true, desc = "执行参数")
+	private Map<String, Object> params;
 
-	public JLFMVCIdAndVersionRequest getHeader() {
-		return header;
+	public Long getTemplateId() {
+		return templateId;
 	}
 
-	public void setHeader(JLFMVCIdAndVersionRequest header) {
-		this.header = header;
+	public void setTemplateId(Long templateId) {
+		this.templateId = templateId;
 	}
 
-	
+	public String getCore() {
+		return core;
+	}
+
+	public void setCore(String core) {
+		this.core = core;
+	}
+
+	public BooleanType getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(BooleanType enabled) {
+		this.enabled = enabled;
+	}
+
+	public Map<String, Object> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, Object> params) {
+		this.params = params;
+	}
 
 }

@@ -18,7 +18,7 @@ public class EnumCheck<E extends IEnum> extends ICheck<IEnum> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IEnum getValue(JLFJson json, Field field) throws Exception {
+	public IEnum getValue(JLFJson json, Field field) {
 		Integer valueInt = json.getInt(field.getName());
 		if (valueInt == null) {
 			return null;

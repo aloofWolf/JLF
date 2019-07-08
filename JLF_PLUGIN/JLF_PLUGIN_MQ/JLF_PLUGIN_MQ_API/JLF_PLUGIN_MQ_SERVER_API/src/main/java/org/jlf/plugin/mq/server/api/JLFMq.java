@@ -1,6 +1,6 @@
 package org.jlf.plugin.mq.server.api;
 
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 import org.jlf.plugin.mq.user.api.JLFCousumerQueueProcess;
 import org.jlf.plugin.mq.user.api.JLFCousumerTopicProcess;
 
@@ -11,7 +11,7 @@ import org.jlf.plugin.mq.user.api.JLFCousumerTopicProcess;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-public interface JLFMq extends JLFIPlugin{
+public interface JLFMq extends JLFPluginServerApi {
 
 	/**
 	 * 
@@ -35,9 +35,8 @@ public interface JLFMq extends JLFIPlugin{
 	 * @Description:获取队列模式的消费者接口
 	 * @param process
 	 * @return
-	 * @throws Exception 
 	 */
-	public JLFCousumerQueue getCousumerQueue(JLFCousumerQueueProcess process) throws Exception;
+	public JLFCousumerQueue getCousumerQueue(JLFCousumerQueueProcess process);
 
 	/**
 	 * 
@@ -46,6 +45,6 @@ public interface JLFMq extends JLFIPlugin{
 	 * @param process
 	 * @return
 	 */
-	public JLFCousumerTopic getCousumerTopic(JLFCousumerTopicProcess process) throws Exception;
+	public JLFCousumerTopic getCousumerTopic(JLFCousumerTopicProcess process);
 
 }

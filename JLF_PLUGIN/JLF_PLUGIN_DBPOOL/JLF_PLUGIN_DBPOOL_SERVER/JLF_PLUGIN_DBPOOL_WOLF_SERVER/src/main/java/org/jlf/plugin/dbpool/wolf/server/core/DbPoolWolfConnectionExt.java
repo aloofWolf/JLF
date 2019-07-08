@@ -1,4 +1,4 @@
-package org.jlf.plugin.dbpool.wolf.server.core;
+package org.jlf.plugin.dbPool.wolf.server.core;
 
 import java.sql.Connection;
 

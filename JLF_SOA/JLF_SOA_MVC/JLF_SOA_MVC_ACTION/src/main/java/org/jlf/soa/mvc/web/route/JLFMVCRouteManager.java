@@ -13,8 +13,10 @@ import org.jlf.common.util.IniUtil;
 import org.jlf.common.util.PackageUtil;
 import org.jlf.common.util.ReflectUtil;
 import org.jlf.common.util.SingletonUtil;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCRouteCls;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCRouteMethod;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCService;
 import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
-import org.jlf.soa.mvc.service.JLFMVCService;
 import org.jlf.soa.mvc.service.JLFMVCServiceStruc;
 
 /**
@@ -27,17 +29,18 @@ import org.jlf.soa.mvc.service.JLFMVCServiceStruc;
 public class JLFMVCRouteManager {
 
 	private static Map<String, JLFMVCRouteTarget> routes = new HashMap<String, JLFMVCRouteTarget>();// 全部路由
+	private static Map<String, JLFMVCRouteTarget> routesBak = null;// 全部路由bak
 
 	/**
 	 * 
 	 * @Title: initRoutes
 	 * @Description:根据配置文件初始化路由
 	 * @param config
-	 * @throws Exception
 	 */
-	public static void initRoutes(IniUtil ini) throws Exception {
+	public static void initRoutes(IniUtil ini) {
 		Properties packages = ini.getSection("routes");
 		if (packages != null) {
+			routesBak = new HashMap<String, JLFMVCRouteTarget>();
 			for (Enumeration<Object> keys = packages.keys(); keys.hasMoreElements();) {
 				String packageKey = (String) keys.nextElement();
 				String packageValue = packages.getProperty(packageKey);
@@ -46,6 +49,8 @@ public class JLFMVCRouteManager {
 		} else {
 			throw new JLFException("MVC未配置路由");
 		}
+		routes = routesBak;
+		routesBak = null;
 	}
 
 	/**
@@ -54,9 +59,8 @@ public class JLFMVCRouteManager {
 	 * @Description:解析配置文件中的单个包
 	 * @param packageKey
 	 * @param packageValue
-	 * @throws Exception
 	 */
-	private static void parsePackage(String packageKey, String packageValue) throws Exception {
+	private static void parsePackage(String packageKey, String packageValue) {
 		List<Class<?>> clss = PackageUtil.getPackageClss(packageValue);
 		for (Class<?> routeCls : clss) {
 			parseCls(packageKey, packageValue, routeCls);
@@ -70,23 +74,22 @@ public class JLFMVCRouteManager {
 	 * @param packageKey
 	 * @param packageValue
 	 * @param routeCls
-	 * @throws Exception
 	 */
-	private static void parseCls(String packageKey, String packageValue, Class<?> routeCls) throws Exception {
+	private static void parseCls(String packageKey, String packageValue, Class<?> routeCls) {
 
 		JLFMVCRouteCls routeClsAnn = (JLFMVCRouteCls) routeCls.getAnnotation(JLFMVCRouteCls.class);
 		Object webObj = null;
 		if (routeClsAnn == null) {
 			return;
-		}else if(routeClsAnn.type() == 1){ //接口或抽象路由,不做处理
-			return;
-		}else if(routeClsAnn.type() == 2){ // 接口或抽象路由的实现,获取当前对象,并获取父类
-			webObj = createWebObj(routeCls);
-			routeCls = routeCls.getInterfaces()[0];
-			routeClsAnn = (JLFMVCRouteCls) routeCls.getAnnotation(JLFMVCRouteCls.class);
-		}else{                             // 普通路由,获取当前对象
-			webObj = createWebObj(routeCls);
-		}
+		} /*
+			 * else if(routeClsAnn.type() == 1){ //接口或抽象路由,不做处理 return; }else
+			 * if(routeClsAnn.type() == 2){ // 接口或抽象路由的实现,获取当前对象,并获取父类 webObj =
+			 * createWebObj(routeCls); routeCls = routeCls.getInterfaces()[0];
+			 * routeClsAnn = (JLFMVCRouteCls)
+			 * routeCls.getAnnotation(JLFMVCRouteCls.class); }else{ //
+			 * 普通路由,获取当前对象 webObj = createWebObj(routeCls); }
+			 */
+		webObj = createWebObj(routeCls);
 		String webName = routeCls.getSimpleName();
 		if (routeClsAnn.name() != null && routeClsAnn.name().length() > 0) {
 			webName = routeClsAnn.name();
@@ -103,19 +106,23 @@ public class JLFMVCRouteManager {
 	 * @Description:创建路由对象
 	 * @param routeCls
 	 * @return
-	 * @throws Exception
 	 */
-	private static Object createWebObj(Class<?> routeCls) throws Exception {
+	private static Object createWebObj(Class<?> routeCls) {
 		Object webObj = SingletonUtil.getInstance(routeCls);
-		List<Field> fields = ReflectUtil.getAllFields(routeCls);
+		Class<?> webObjCls = webObj.getClass();
+		List<Field> fields = ReflectUtil.getAllFields(webObjCls);
 		for (Field field : fields) {
 			Class<?> fieldCls = field.getType();
-			if (JLFMVCService.class.isAssignableFrom(fieldCls)) {
-				@SuppressWarnings("unchecked")
-				JLFMVCService<?, ?> fieldValue = (JLFMVCService<?, ?>) JLFMVCServiceStruc
-						.getService((Class<? extends JLFMVCService<?, ?>>) fieldCls);
+			JLFMVCService serviceAnn = (JLFMVCService) fieldCls.getAnnotation(JLFMVCService.class);
+			if(serviceAnn != null){
+				Object fieldValue = JLFMVCServiceStruc.getService((Class<?>) fieldCls);
 				field.setAccessible(true);
-				field.set(webObj, fieldValue);
+				try {
+					field.set(webObj, fieldValue);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+					throw new JLFException(e);
+				}
 			}
 		}
 		return webObj;
@@ -131,17 +138,16 @@ public class JLFMVCRouteManager {
 	 * @param routeMethod
 	 * @param webName
 	 * @param webObj
-	 * @throws Exception
 	 */
 	private static void parseMethod(String packageKey, String packageValue, Class<?> routeCls, Method routeMethod,
-			String webName, Object webObj) throws Exception {
+			String webName, Object webObj) {
 		Class<?>[] paramterTypes = routeMethod.getParameterTypes();
 		if (paramterTypes.length != 1) {
 			return;
 		}
 
 		Class<?> paramType = paramterTypes[0];
-		if(!JLFMVCRequest.class.isAssignableFrom(paramType)){
+		if (!JLFMVCRequest.class.isAssignableFrom(paramType)) {
 			return;
 		}
 
@@ -154,7 +160,7 @@ public class JLFMVCRouteManager {
 				.toString();
 		JLFMVCRouteTarget target = new JLFMVCRouteTarget(packageValue, routeCls, webObj, routeMethod, paramterTypes[0],
 				routeMethodAnn);
-		routes.put(routeSource, target);
+		routesBak.put(routeSource, target);
 	}
 
 	/**
@@ -163,9 +169,8 @@ public class JLFMVCRouteManager {
 	 * @Description:根据routeKey找到对应JLFMVCRouteTarget
 	 * @param routeKey
 	 * @return
-	 * @throws Exception
 	 */
-	public static JLFMVCRouteTarget getTarget(String routeKey) throws Exception {
+	public static JLFMVCRouteTarget getTarget(String routeKey) {
 		return routes.get(routeKey);
 	}
 

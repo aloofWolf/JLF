@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jlf.common.exception.JLFException;
+
 /**
  * 
  * @ClassName: ReflectUtil
@@ -30,7 +32,7 @@ public class ReflectUtil {
 		}
 		return fields;
 	}
-	
+
 	/**
 	 * 
 	 * @Title: getAllFields
@@ -38,10 +40,10 @@ public class ReflectUtil {
 	 * @param cls
 	 * @return
 	 */
-	public static List<Field> getAllFields(Class<?> cls,Class<?> topCls) {
+	public static List<Field> getAllFields(Class<?> cls, Class<?> topCls) {
 		List<Field> fields = new ArrayList<Field>();
 		while (cls != null) {// 当父类为null的时候说明到达了最上层的父类(Object类).
-			if(cls.equals(topCls)){
+			if (cls.equals(topCls)) {
 				break;
 			}
 			fields.addAll(0, Arrays.asList(cls.getDeclaredFields()));
@@ -49,7 +51,7 @@ public class ReflectUtil {
 		}
 		return fields;
 	}
-	
+
 	/**
 	 * 
 	 * @Title: getAllMethods
@@ -65,7 +67,7 @@ public class ReflectUtil {
 		}
 		return methods;
 	}
-	
+
 	/**
 	 * 
 	 * @Title: getAllMethods
@@ -73,10 +75,10 @@ public class ReflectUtil {
 	 * @param cls
 	 * @return
 	 */
-	public static List<Method> getAllMethods(Class<?> cls,Class<?> topCls) {
+	public static List<Method> getAllMethods(Class<?> cls, Class<?> topCls) {
 		List<Method> methods = new ArrayList<Method>();
 		while (cls != null) {// 当父类为null的时候说明到达了最上层的父类(Object类).
-			if(cls.equals(topCls)){
+			if (cls.equals(topCls)) {
 				break;
 			}
 			methods.addAll(0, Arrays.asList(cls.getDeclaredMethods()));
@@ -93,12 +95,17 @@ public class ReflectUtil {
 	 * @param fieldName
 	 * @param fieldType
 	 * @return
-	 * @throws Exception
 	 */
-	public static Method createSetMothod(Class<?> cls, String fieldName, Class<?> fieldType) throws Exception {
+	public static Method createSetMothod(Class<?> cls, String fieldName, Class<?> fieldType) {
 		String methodStr = new StringBuffer("set").append(fieldName.substring(0, 1).toUpperCase())
 				.append(fieldName.substring(1)).toString();
-		Method method = cls.getMethod(methodStr, fieldType);
+		Method method;
+		try {
+			method = cls.getMethod(methodStr, fieldType);
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 		return method;
 	}
 
@@ -110,12 +117,17 @@ public class ReflectUtil {
 	 * @param fieldName
 	 * @param fieldType
 	 * @return
-	 * @throws Exception
 	 */
-	public static Method createGetMothod(Class<?> cls, String fieldName) throws Exception {
+	public static Method createGetMothod(Class<?> cls, String fieldName) {
 		String methodStr = new StringBuffer("get").append(fieldName.substring(0, 1).toUpperCase())
 				.append(fieldName.substring(1)).toString();
-		Method method = cls.getMethod(methodStr);
+		Method method;
+		try {
+			method = cls.getMethod(methodStr);
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 		return method;
 	}
 }

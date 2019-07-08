@@ -4,15 +4,20 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_SOA_MVC</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_SOA_MVC_ACTION</artifactId>
+
+	<properties>
+		<servlet.version>2.5</servlet.version>
+	</properties>
+
 	<dependencies>
 		<!--依赖servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<!--依赖JLF_SOA_MVC_SERVICE -->
@@ -28,4 +33,5 @@
 			<version>${parent.version}</version>
 		</dependency>
 	</dependencies>
+
 </project>

@@ -32,12 +32,12 @@ public class ActiveMqCore implements JLFMq {
 	}
 
 	@Override
-	public JLFCousumerQueue getCousumerQueue(JLFCousumerQueueProcess process) throws Exception {
+	public JLFCousumerQueue getCousumerQueue(JLFCousumerQueueProcess process) {
 		return new ConsumerQueue(process);
 	}
 
 	@Override
-	public JLFCousumerTopic getCousumerTopic(JLFCousumerTopicProcess process) throws Exception {
+	public JLFCousumerTopic getCousumerTopic(JLFCousumerTopicProcess process) {
 		return new ConsumerTopic(process);
 	}
 

@@ -46,10 +46,9 @@ public class IniUtilTest {
 	 * 
 	 * @Title: iniRead
 	 * @Description:。ini文件读取功能测试
-	 * @throws Exception
 	 */
 	@Test
-	public void iniRead() throws Exception {
+	public void iniRead() {
 		IniUtil ini = new IniUtil("I:/workspace/SKLF/cfm-main/cfm/src/main/resources/cfm_config.ini");
 		Properties pros = ini.getPros();
 		if (pros != null) {

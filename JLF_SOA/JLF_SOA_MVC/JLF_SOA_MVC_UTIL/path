@@ -1,0 +1,396 @@
+)
+  CREATE TABLE `QuartzExecuteLog` (
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8   COMMENT='定时任务执行日志表'   ;
+)
+  CREATE TABLE `QuartzJob` (
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8   COMMENT='定时任务表'   ;
+)
+  CREATE TABLE `QuartzTemplate` (
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+     )
+                 
+                
+                
+                 
+                
+                
+        `$!{field.fieldName}` `$!{field.dataType}`,
+        
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8   COMMENT='定时任务模板表'   ;

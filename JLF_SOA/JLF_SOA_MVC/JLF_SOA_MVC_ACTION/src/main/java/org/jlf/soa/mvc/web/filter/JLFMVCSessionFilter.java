@@ -2,7 +2,6 @@ package org.jlf.soa.mvc.web.filter;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -10,8 +9,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.LogUtil;
-import org.jlf.plugin.aop.client.JLFSessionClient;
+import org.jlf.plugin.session.client.JLFSessionClient;
 import org.jlf.plugin.session.user.api.JLFSessionBean;
 import org.jlf.soa.mvc.metadata.threadLocal.JLFMVCThreadLocal;
 
@@ -22,10 +22,10 @@ import org.jlf.soa.mvc.metadata.threadLocal.JLFMVCThreadLocal;
  * @author Lone Wolf
  * @date 2019年6月5日
  */
-public class JLFMVCSessionFilter implements Filter {
+public class JLFMVCSessionFilter extends JLFMVCFilter {
 
 	@Override
-	public void init(FilterConfig arg0) throws ServletException {
+	public void init(FilterConfig arg0) {
 
 	}
 
@@ -33,10 +33,8 @@ public class JLFMVCSessionFilter implements Filter {
 	 * @Title: paramsPackage
 	 * @Description:验证登陆是否超时
 	 * @param request
-	 * @throws IOException
-	 * @throws ServletException
 	 */
-	public void validateSession(ServletRequest request) throws IOException, ServletException {
+	public void validateSession(ServletRequest request) {
 		LogUtil.get().debug("JLFMVCSessionFilter过滤器开始执行.......");
 		JLFSessionBean sessionBean = null;
 		try {
@@ -44,7 +42,7 @@ public class JLFMVCSessionFilter implements Filter {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ServletException(e);
+			throw new JLFException(e);
 		}
 		JLFMVCThreadLocal.setDbName(sessionBean.getDbName());
 		LogUtil.get().debug("JLFMVCSessionFilter过滤器执行结束.......");
@@ -58,11 +56,5 @@ public class JLFMVCSessionFilter implements Filter {
 		response.setCharacterEncoding("UTF-8");
 		validateSession(request);
 		chain.doFilter(request, response);
-	}
-
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -14,22 +14,6 @@ import org.jlf.plugin.push.server.api.JLFPush;
 public class JLFPushClient implements JLFPluginClient<JLFPush> {
 
 	private static JLFPush api; // api实例
-	private JLFPluginServer<JLFPush> server; // 绑定服务端
-
-	/**
-	 * 
-	 * 创建一个新的实例 JLFPushClient.
-	 *
-	 * @param server
-	 * @throws Exception
-	 */
-	public <SERVER extends JLFPluginServer<JLFPush>> JLFPushClient(SERVER server) throws Exception {
-		if (api != null) {
-			throw new Exception("JLFPushClient不能重复初始化");
-		}
-		api = server.get();
-		this.server = server;
-	}
 
 	/**
 	 * 
@@ -41,10 +25,9 @@ public class JLFPushClient implements JLFPluginClient<JLFPush> {
 		return api;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JLFPluginServer<JLFPush> getServer() {
-		return server;
+	public <SERVER extends JLFPluginServer<JLFPush>> void bindServer(SERVER server) {
+		api = server.getServerApi();
 	}
 
 }

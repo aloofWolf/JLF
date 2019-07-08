@@ -16,10 +16,9 @@ public class ClassUtilTest {
 	 * 
 	 * @Title: clsIsCustom
 	 * @Description:判断class类是否是用户自定义类型
-	 * @throws Exception
 	 */
 	@Test
-	public <T> void clsIsCustom() throws Exception {
+	public <T> void clsIsCustom() {
 		System.out.println(ClassUtil.clsIsCustom(String.class));
 		System.out.println(ClassUtil.clsIsCustom(ChildC.class));
 	}

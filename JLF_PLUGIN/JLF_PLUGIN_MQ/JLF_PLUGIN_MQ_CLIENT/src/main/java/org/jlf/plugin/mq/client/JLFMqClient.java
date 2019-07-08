@@ -7,22 +7,6 @@ import org.jlf.plugin.mq.server.api.JLFMq;
 public class JLFMqClient implements JLFPluginClient<JLFMq> {
 
 	private static JLFMq api; // api实例
-	private JLFPluginServer<JLFMq> server; // 绑定服务端
-
-	/**
-	 * 
-	 * 创建一个新的实例 JLFAopClient.
-	 *
-	 * @param server
-	 * @throws Exception
-	 */
-	public <SERVER extends JLFPluginServer<JLFMq>> JLFMqClient(SERVER server) throws Exception {
-		if (api != null) {
-			throw new Exception("JLFMqClient不能重复初始化");
-		}
-		api = server.get();
-		this.server = server;
-	}
 
 	/**
 	 * 
@@ -34,11 +18,10 @@ public class JLFMqClient implements JLFPluginClient<JLFMq> {
 		return api;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JLFPluginServer<JLFMq> getServer() {
-		return server;
+	public <SERVER extends JLFPluginServer<JLFMq>> void bindServer(SERVER server) {
+		api = server.getServerApi();
+
 	}
 
 }
-

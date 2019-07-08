@@ -1,12 +1,14 @@
 package org.jlf.plugin.check.wolf.server.core;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.jlf.common.enums.api.IEnum;
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.ClassUtil;
 import org.jlf.common.util.GenericityUtil;
 import org.jlf.common.util.ReflectUtil;
@@ -27,13 +29,13 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class CheckWolf implements JLFCheck {
 
 	@Override
-	public <T> T check(String jsonStr, Class<T> cls) throws Exception {
+	public <T> T check(String jsonStr, Class<T> cls)  {
 		JLFJson json = JLFJsonClient.get().jsonStrToJson(jsonStr);
 		return check(json, cls);
 	}
 
 	@Override
-	public <T> T check(Map<String, Object> map, Class<T> cls) throws Exception {
+	public <T> T check(Map<String, Object> map, Class<T> cls)  {
 		JLFJson json = JLFJsonClient.get().mapToJson(map);
 		return check(json, cls);
 	}
@@ -45,10 +47,15 @@ public class CheckWolf implements JLFCheck {
 	 * @param json
 	 * @param cls
 	 * @return
-	 * @throws Exception
 	 */
-	public <T> T check(JLFJson json, Class<T> cls) throws Exception {
-		T t = cls.newInstance();
+	public <T> T check(JLFJson json, Class<T> cls)  {
+		T t;
+		try {
+			t = cls.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 		List<Field> fields = ReflectUtil.getAllFields(cls);
 		for (Field field : fields) {
 			JLFCheckAnn ann = field.getAnnotation(JLFCheckAnn.class);
@@ -73,9 +80,8 @@ public class CheckWolf implements JLFCheck {
 	 * @param checkBean
 	 * @param field
 	 * @return
-	 * @throws Exception
 	 */
-	private Object getValue(JLFJson json, CheckBean<?> checkBean, Field field) throws Exception {
+	private Object getValue(JLFJson json, CheckBean<?> checkBean, Field field)  {
 		return checkBean.getObj().getValue(json, field);
 	}
 
@@ -86,13 +92,15 @@ public class CheckWolf implements JLFCheck {
 	 * @param field
 	 * @param checkBean
 	 * @param value
-	 * @throws Exception
 	 */
-	private void checkValue(Field field, JLFCheckAnn ann, CheckBean<?> checkBean, Object value) throws Exception {
-		if (ann != null) {
-			List<Method> methods = checkBean.getMethods();
-			for (Method method : methods) {
+	private void checkValue(Field field, JLFCheckAnn ann, CheckBean<?> checkBean, Object value)  {
+		List<Method> methods = checkBean.getMethods();
+		for (Method method : methods) {
+			try {
 				method.invoke(checkBean.getObj(), ann, field, value);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
 			}
 		}
 	}
@@ -105,10 +113,9 @@ public class CheckWolf implements JLFCheck {
 	 * @param fieldCls
 	 * @param value
 	 * @return
-	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public Object recursive(Field field, Class<?> fieldCls, Object value) throws Exception {
+	public Object recursive(Field field, Class<?> fieldCls, Object value)  {
 		if (IEnum.class.isAssignableFrom(fieldCls)) {
 			return value;
 		}
@@ -133,10 +140,9 @@ public class CheckWolf implements JLFCheck {
 	 * @param fieldCls
 	 * @param values
 	 * @return
-	 * @throws Exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List<?> recursiveList(Class<?> listTCls, Class<?> fieldCls, List<JLFJson> values) throws Exception {
+	private List<?> recursiveList(Class<?> listTCls, Class<?> fieldCls, List<JLFJson> values)  {
 		List list;
 		try {
 			list = (List) fieldCls.newInstance();
@@ -160,11 +166,15 @@ public class CheckWolf implements JLFCheck {
 	 * @param field
 	 * @param fieldCls
 	 * @param value
-	 * @throws Exception
 	 */
-	private void setValue(Class<?> cls, Object obj, Field field, Class<?> fieldCls, Object value) throws Exception {
+	private void setValue(Class<?> cls, Object obj, Field field, Class<?> fieldCls, Object value)  {
 		Method setMethod = ReflectUtil.createSetMothod(cls, field.getName(), fieldCls);
-		setMethod.invoke(obj, value);
+		try {
+			setMethod.invoke(obj, value);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * 
  * @ClassName: QuartzExecuteLogResp
- * @Description:定时任务执行日志的列表详情响应参数
+ * @Description:定时任务执行日志的列表响应参数
  * @author Lone Wolf
  * @date 2019年5月31日
  */
@@ -21,19 +21,6 @@ public class QuartzExecuteLogResp {
 	private Date endTime; // 结束执行时间
 	private Integer executeResult; // 执行结果
 	private String failReason; // 失败原因
-
-	/*public QuartzExecuteLogResp(QuartzExecuteLog log) {
-		this.templateId = log.getTemplateId();
-		this.templateName = log.getTemplateName();
-		this.templateClsName = log.getTemplateClsName();
-		this.jobId = log.getJobId();
-		this.billId = log.getBillId();
-		this.params = log.getParams();
-		this.startTime = log.getStartTime();
-		this.endTime = log.getEndTime();
-		this.executeResult = log.getExecuteResult().getId();
-		this.failReason = log.getFailReason();
-	}*/
 
 	public Long getTemplateId() {
 		return templateId;

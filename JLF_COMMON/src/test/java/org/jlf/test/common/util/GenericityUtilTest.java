@@ -8,17 +8,28 @@ import java.util.Map;
 import org.jlf.common.util.GenericityUtil;
 import org.junit.Test;
 
+/**
+ * 
+ * @ClassName: GenericityUtilTest
+ * @Description:泛型工具类测试
+ * @author Lone Wolf
+ * @date 2019年7月4日
+ */
 public class GenericityUtilTest {
 
 	/**
 	 * 
 	 * @Title: getFieldGenerCls
 	 * @Description:获取成员变量字段中的泛型所属的class测试
-	 * @throws Exception
 	 */
 	@Test
-	public <T> void getFieldGenerCls() throws Exception {
-		Field field = ChildC.class.getDeclaredField("l");
+	public <T> void getFieldGenerCls() {
+		Field field = null;
+		try {
+			field = ChildC.class.getDeclaredField("l");
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+		}
 		System.out.println(GenericityUtil.getFieldGenerCls(field));
 		System.out.println(GenericityUtil.getFieldGenerCls(field, 2));
 	}

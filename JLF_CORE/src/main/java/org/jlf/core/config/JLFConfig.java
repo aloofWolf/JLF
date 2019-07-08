@@ -6,8 +6,8 @@ import org.jlf.common.util.PathUtil;
 
 /**
  * 
- * @ClassName: JAFConfig
- * @Description:JAL配置
+ * @ClassName: JLFConfig
+ * @Description:JLL配置
  * @author Lone Wolf
  * @date 2019年5月22日
  */
@@ -17,6 +17,7 @@ public class JLFConfig {
 	private static String configPath; // 配置文件路径
 	private static IniUtil JLFConfig; // 配置文件的ini
 	private static CodeEnvironment codeEnvironment; // 当前代码环境
+	private static String serverJarPath;
 
 	/**
 	 * 初始化读取并解析总配置文件
@@ -27,9 +28,13 @@ public class JLFConfig {
 			JLFConfig = new IniUtil(new StringBuffer(configPath).append(configFileName).toString());
 			String codeEnvironmentStr = JLFConfig.getValue("codeEnvironment");
 			if (codeEnvironmentStr == null || codeEnvironmentStr.length() == 0) {
-				throw new Exception();
+				throw new Exception("未配置当前代码环境codeEnvironment");
 			}
 			codeEnvironment = CodeEnvironment.valueOf(codeEnvironmentStr);
+			serverJarPath = JLFConfig.getValue("serverJarPath");
+			if (serverJarPath == null) {
+				throw new Exception("未配置服务端jar包路径serverJarPath");
+			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -73,9 +78,10 @@ public class JLFConfig {
 	 * @return
 	 */
 	public static String getPluginConfigName(String pluginName) {
-		return new StringBuffer(configPath).append(codeEnvironment).append("/").append("PLUGINS/").append(JLFConfig.getValue("plugins",pluginName)).toString();
+		return new StringBuffer(configPath).append(codeEnvironment).append("/").append("PLUGINS/")
+				.append(JLFConfig.getValue("pluginsConfig", pluginName)).toString();
 	}
-	
+
 	/**
 	 * 
 	 * @Title: getProductConfigName
@@ -84,9 +90,10 @@ public class JLFConfig {
 	 * @return
 	 */
 	public static String getProductConfigName(String productName) {
-		return new StringBuffer(configPath).append(codeEnvironment).append("/").append("PRODUCTS/").append(JLFConfig.getValue("products",productName)).toString();
+		return new StringBuffer(configPath).append(codeEnvironment).append("/").append("PRODUCTS/")
+				.append(JLFConfig.getValue("productsConfig", productName)).toString();
 	}
-	
+
 	/**
 	 * 
 	 * @Title: getSoaConfigName
@@ -95,7 +102,8 @@ public class JLFConfig {
 	 * @return
 	 */
 	public static String getSoaConfigName(String soaName) {
-		return new StringBuffer(configPath).append(codeEnvironment).append("/").append("SOAS/").append(JLFConfig.getValue("soas",soaName)).toString();
+		return new StringBuffer(configPath).append(codeEnvironment).append("/").append("SOAS/")
+				.append(JLFConfig.getValue("soasConfig", soaName)).toString();
 	}
 
 	/**
@@ -108,4 +116,13 @@ public class JLFConfig {
 		return codeEnvironment;
 	}
 
+	/**
+	 * 
+	 * @Title: getServerJarPath
+	 * @Description:获取服务端jar包的存放路径
+	 * @return
+	 */
+	public static String getServerJarPath() {
+		return serverJarPath;
+	}
 }

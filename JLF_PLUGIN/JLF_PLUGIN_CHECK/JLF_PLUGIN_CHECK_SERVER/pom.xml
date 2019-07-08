@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PLUGIN_CHECK</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PLUGIN_CHECK_SERVER</artifactId>
 	<packaging>pom</packaging>

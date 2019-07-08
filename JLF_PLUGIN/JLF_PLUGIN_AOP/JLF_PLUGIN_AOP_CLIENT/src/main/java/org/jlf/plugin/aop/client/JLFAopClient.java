@@ -14,22 +14,6 @@ import org.jlf.plugin.aop.server.api.JLFAop;
 public class JLFAopClient implements JLFPluginClient<JLFAop> {
 
 	private static JLFAop api; // api实例
-	private JLFPluginServer<JLFAop> server; // 绑定服务端
-
-	/**
-	 * 
-	 * 创建一个新的实例 JLFAopClient.
-	 *
-	 * @param server
-	 * @throws Exception
-	 */
-	public <SERVER extends JLFPluginServer<JLFAop>> JLFAopClient(SERVER server) throws Exception {
-		if (api != null) {
-			throw new Exception("JLFAopClient不能重复初始化");
-		}
-		api = server.get();
-		this.server = server;
-	}
 
 	/**
 	 * 
@@ -41,10 +25,9 @@ public class JLFAopClient implements JLFPluginClient<JLFAop> {
 		return api;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JLFPluginServer<JLFAop> getServer() {
-		return server;
+	public <SERVER extends JLFPluginServer<JLFAop>> void bindServer(SERVER server) {
+		api = server.getServerApi();
 	}
 
 }

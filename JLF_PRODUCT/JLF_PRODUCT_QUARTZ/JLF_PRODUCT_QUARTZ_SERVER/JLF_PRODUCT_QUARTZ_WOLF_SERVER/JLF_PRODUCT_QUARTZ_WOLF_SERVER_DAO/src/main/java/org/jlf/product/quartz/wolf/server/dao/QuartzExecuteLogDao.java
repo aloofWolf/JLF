@@ -24,9 +24,8 @@ public class QuartzExecuteLogDao extends JLFMVCDao<QuartzExecuteLog> {
 	 * @Description:查询执行日志分页信息
 	 * @param req
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFMVCPage<QuartzExecuteLog> getPage(QuartzExecuteLogPageReq req) throws Exception {
+	public JLFMVCPage<QuartzExecuteLog> getPage(QuartzExecuteLogPageReq req) {
 		JLFMVCSqlBean sqlBean = getSqlBean(req);
 		return this.getPage(sqlBean, req.getPages().getPageNum(), req.getPages().getPageSize());
 

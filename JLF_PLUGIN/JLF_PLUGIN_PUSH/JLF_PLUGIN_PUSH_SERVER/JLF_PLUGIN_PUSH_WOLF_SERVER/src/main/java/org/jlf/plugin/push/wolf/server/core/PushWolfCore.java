@@ -2,6 +2,7 @@ package org.jlf.plugin.push.wolf.server.core;
 
 import java.util.Map;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.check.client.JLFCheckClient;
 import org.jlf.plugin.push.server.api.JLFPush;
 import org.jlf.plugin.push.user.api.JLFSendTool;
@@ -15,14 +16,21 @@ import org.jlf.plugin.push.wolf.server.core.send.http.HttpSend;
 import org.jlf.plugin.push.wolf.server.core.send.socket.SocketSend;
 import org.jlf.plugin.push.wolf.server.manager.ChannelManager;
 
+/**
+ * 
+    * @ClassName: PushWolfCore
+    * @Description:PushWolfCore
+    * @author Lone Wolf
+    * @date 2019年7月5日
+ */
 public class PushWolfCore implements JLFPush{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends JLFPushRequest> JLFPushResponse send(String channelCode, String interCode, Map<String, Object> params) throws Exception {
+	public <T extends JLFPushRequest> JLFPushResponse send(String channelCode, String interCode, Map<String, Object> params)  {
 		JLFInter<T,?,?> inter = (JLFInter<T, ?, ?>) ChannelManager.getInter(channelCode, interCode);
 		if(inter == null){
-			throw new Exception("根据渠道编号:"+channelCode+"和接口编号:"+interCode+"未能匹配到接口");
+			throw new JLFException("根据渠道编号:"+channelCode+"和接口编号:"+interCode+"未能匹配到接口");
 		}
 		Class<T> reqCls = inter.getReqCls();
 		T req = JLFCheckClient.get().check(params, reqCls);

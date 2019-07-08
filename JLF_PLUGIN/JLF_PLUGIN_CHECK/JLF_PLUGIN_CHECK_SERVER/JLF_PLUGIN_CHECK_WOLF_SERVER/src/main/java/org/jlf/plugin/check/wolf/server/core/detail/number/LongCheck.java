@@ -15,7 +15,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class LongCheck extends NumberCheck<Long> {
 
 	@Override
-	public Long getValue(JLFJson json, Field field) throws Exception {
+	public Long getValue(JLFJson json, Field field) {
 		return json.getLong(field.getName());
 	}
 }

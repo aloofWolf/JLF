@@ -1,6 +1,5 @@
 package org.jlf.test.common.util;
 
-import java.text.ParseException;
 import java.util.Date;
 
 import org.jlf.common.util.DateUtil;
@@ -22,7 +21,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getDateString() {
-		System.out.println("1:  "+DateUtil.getDateString(new Date()));
+		System.out.println("1:  " + DateUtil.getDateString(new Date()));
 	}
 
 	/**
@@ -32,7 +31,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getDateNotTime() {
-		System.out.println("2:  "+DateUtil.getDateNotTime(new Date()));
+		System.out.println("2:  " + DateUtil.getDateNotTime(new Date()));
 	}
 
 	/**
@@ -42,7 +41,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getDateOnlyTime() {
-		System.out.println("3:  "+DateUtil.getDateOnlyTime(new Date()));
+		System.out.println("3:  " + DateUtil.getDateOnlyTime(new Date()));
 	}
 
 	/**
@@ -52,18 +51,17 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getDateStringFormat() {
-		System.out.println("4:  "+DateUtil.getDateString(new Date(), DateUtil.DEFAULT_DATETIMEPATTERN));
+		System.out.println("4:  " + DateUtil.getDateString(new Date(), DateUtil.DEFAULT_DATETIMEPATTERN));
 	}
 
 	/**
 	 * 
 	 * @Title: formatDate
 	 * @Description:测试根据日期字符串获取日期
-	 * @throws Exception
 	 */
 	@Test
-	public void formatDate() throws Exception {
-		System.out.println("5:  "+DateUtil.formatDate("2019-09-21"));
+	public void formatDate() {
+		System.out.println("5:  " + DateUtil.formatDate("2019-09-21"));
 
 	}
 
@@ -71,11 +69,10 @@ public class DateUtilTest {
 	 * 
 	 * @Title: formatDateFormat
 	 * @Description:测试根据日期字符串获取日期
-	 * @throws Exception
 	 */
 	@Test
-	public void formatDateFormat() throws Exception {
-		System.out.println("6:  "+DateUtil.formatDate("2019-09-21 10:21:32", DateUtil.DEFAULT_DATETIMEPATTERN));
+	public void formatDateFormat() {
+		System.out.println("6:  " + DateUtil.formatDate("2019-09-21 10:21:32", DateUtil.DEFAULT_DATETIMEPATTERN));
 
 	}
 
@@ -83,11 +80,15 @@ public class DateUtilTest {
 	 * 
 	 * @Title: compareDataString
 	 * @Description:测试日期字符串比较
-	 * @throws Exception
 	 */
 	@Test
-	public void compareDataString() throws Exception {
-		System.out.println("7:  "+DateUtil.compareDataString("2019-09-21", "2019-09-23"));
+	public void compareDataString() {
+		System.out.println("7:  " + DateUtil.compareDataString("2019-09-21", "2019-09-23"));
+	}
+
+	@Test
+	public void compareData() {
+		System.out.println("7.1:  " + DateUtil.compareData(new Date(), new Date()));
 	}
 
 	/**
@@ -97,7 +98,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSpecifiedDayBefore() {
-		System.out.println("8:  "+DateUtil.getSpecifiedDayBefore("2019-09-21"));
+		System.out.println("8:  " + DateUtil.getSpecifiedDayBefore("2019-09-21"));
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSpecifiedDayBeforeFormat() {
-		System.out.println("9:  "+DateUtil.getSpecifiedDayBefore("2019-09-21", 11, DateUtil.DEFAULT_DATEPATTERN));
+		System.out.println("9:  " + DateUtil.getSpecifiedDayBefore("2019-09-21", 11, DateUtil.DEFAULT_DATEPATTERN));
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSpecifiedDayBeforeDate() {
-		System.out.println("10:  "+DateUtil.getSpecifiedDayBeforeDate("2019-09-21"));
+		System.out.println("10:  " + DateUtil.getSpecifiedDayBeforeDate("2019-09-21"));
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayBefore() {
-		System.out.println("11:  "+DateUtil.getSomeDayBefore(new Date(), 11));
+		System.out.println("11:  " + DateUtil.getSomeDayBefore(new Date(), 11));
 	}
 
 	/**
@@ -137,7 +138,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayBefore_beginDate() {
-		System.out.println("12:  "+DateUtil.getSomeDayBefore_beginDate(new Date(), 11));
+		System.out.println("12:  " + DateUtil.getSomeDayBefore_beginDate(new Date(), 11));
 	}
 
 	/**
@@ -147,7 +148,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayBefore_endDate() {
-		System.out.println("13:  "+DateUtil.getSomeDayBefore_endDate(new Date(), 11));
+		System.out.println("13:  " + DateUtil.getSomeDayBefore_endDate(new Date(), 11));
 	}
 
 	/**
@@ -157,7 +158,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSpecifiedDayAfter() {
-		System.out.println("14:  "+DateUtil.getSpecifiedDayAfter("2019-08-22"));
+		System.out.println("14:  " + DateUtil.getSpecifiedDayAfter("2019-08-22"));
 	}
 
 	/**
@@ -167,7 +168,8 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSpecifiedDayAfterFormat() {
-		System.out.println("15:  "+DateUtil.getSpecifiedDayAfter("2019-08-22 11:23:11", 11, DateUtil.DEFAULT_DATETIMEPATTERN));
+		System.out.println(
+				"15:  " + DateUtil.getSpecifiedDayAfter("2019-08-22 11:23:11", 11, DateUtil.DEFAULT_DATETIMEPATTERN));
 	}
 
 	/**
@@ -177,7 +179,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSpecifiedDayAfterDate() {
-		System.out.println("16:  "+DateUtil.getSpecifiedDayAfterDate("2019-08-22"));
+		System.out.println("16:  " + DateUtil.getSpecifiedDayAfterDate("2019-08-22"));
 	}
 
 	/**
@@ -187,7 +189,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayAfter() {
-		System.out.println("17:  "+DateUtil.getSomeDayAfter(new Date(), 3));
+		System.out.println("17:  " + DateUtil.getSomeDayAfter(new Date(), 3));
 	}
 
 	/**
@@ -197,7 +199,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayAfter_beginDate() {
-		System.out.println("18:  "+DateUtil.getSomeDayAfter_beginDate(new Date(), 3));
+		System.out.println("18:  " + DateUtil.getSomeDayAfter_beginDate(new Date(), 3));
 	}
 
 	/**
@@ -207,7 +209,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayAfter_endDate() {
-		System.out.println("19:  "+DateUtil.getSomeDayAfter_endDate(new Date(), 3));
+		System.out.println("19:  " + DateUtil.getSomeDayAfter_endDate(new Date(), 3));
 	}
 
 	/**
@@ -217,7 +219,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void isSameDate() {
-		System.out.println("20:  "+DateUtil.isSameDate("2019-05-24", new Date()));
+		System.out.println("20:  " + DateUtil.isSameDate("2019-05-24", new Date()));
 
 	}
 
@@ -225,22 +227,20 @@ public class DateUtilTest {
 	 * 
 	 * @Title: daysBetween
 	 * @Description:测试计算两个日期相隔天数
-	 * @throws ParseException
 	 */
 	@Test
-	public void daysBetween() throws Exception {
-		System.out.println("21:  "+DateUtil.daysBetween(new Date(), new Date()));
+	public void daysBetween() {
+		System.out.println("21:  " + DateUtil.daysBetween(new Date(), new Date()));
 	}
 
 	/**
 	 * 
 	 * @Title: daysBetweenStr
 	 * @Description:测试计算两个日期字符串相隔天数
-	 * @throws ParseException
 	 */
 	@Test
-	public void daysBetweenStr() throws Exception {
-		System.out.println("22:  "+DateUtil.daysBetween("2019-08-23", "2019-07-24"));
+	public void daysBetweenStr() {
+		System.out.println("22:  " + DateUtil.daysBetween("2019-08-23", "2019-07-24"));
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSameWeekFirstDay() {
-		System.out.println("23:  "+DateUtil.getSameWeekFirstDay(new Date()));
+		System.out.println("23:  " + DateUtil.getSameWeekFirstDay(new Date()));
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSameWeekFirstDay_chinese() {
-		System.out.println("24:  "+DateUtil.getSameWeekFirstDay_chinese(new Date()));
+		System.out.println("24:  " + DateUtil.getSameWeekFirstDay_chinese(new Date()));
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getAssignedBeforeWeekFirstDay() {
-		System.out.println("25:  "+DateUtil.getAssignedBeforeWeekFirstDay(new Date(), 3));
+		System.out.println("25:  " + DateUtil.getAssignedBeforeWeekFirstDay(new Date(), 3));
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getAssignedBeforeWeekFirstDay_chinese() {
-		System.out.println("26:  "+DateUtil.getAssignedBeforeWeekFirstDay_chinese(new Date(), 3));
+		System.out.println("26:  " + DateUtil.getAssignedBeforeWeekFirstDay_chinese(new Date(), 3));
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSameWeekLastDay() {
-		System.out.println("27:  "+DateUtil.getSameWeekLastDay(new Date()));
+		System.out.println("27:  " + DateUtil.getSameWeekLastDay(new Date()));
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSameWeekLastDay_chinese() {
-		System.out.println("28:  "+DateUtil.getSameWeekLastDay_chinese(new Date()));
+		System.out.println("28:  " + DateUtil.getSameWeekLastDay_chinese(new Date()));
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getAssignedBeforeWeekLastDay() {
-		System.out.println("29:  "+DateUtil.getAssignedBeforeWeekLastDay(new Date(), 3));
+		System.out.println("29:  " + DateUtil.getAssignedBeforeWeekLastDay(new Date(), 3));
 	}
 
 	/**
@@ -321,7 +321,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getAssignedBeforeWeekLastDay_chinese() {
-		System.out.println("30:  "+DateUtil.getAssignedBeforeWeekLastDay_chinese(new Date(), 3));
+		System.out.println("30:  " + DateUtil.getAssignedBeforeWeekLastDay_chinese(new Date(), 3));
 	}
 
 	/**
@@ -331,7 +331,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSameMonthFirstDay() {
-		System.out.println("31:  "+DateUtil.getSameMonthFirstDay(new Date()));
+		System.out.println("31:  " + DateUtil.getSameMonthFirstDay(new Date()));
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSameMonthLastDay() {
-		System.out.println("32:  "+DateUtil.getSameMonthLastDay(new Date()));
+		System.out.println("32:  " + DateUtil.getSameMonthLastDay(new Date()));
 	}
 
 	/**
@@ -351,7 +351,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getAssignedBeforeMonthFirstDay() {
-		System.out.println("33:  "+DateUtil.getAssignedBeforeMonthFirstDay(new Date(), 3));
+		System.out.println("33:  " + DateUtil.getAssignedBeforeMonthFirstDay(new Date(), 3));
 	}
 
 	/**
@@ -361,7 +361,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getAssignedBeforeMonthLaseDay() {
-		System.out.println("34:  "+DateUtil.getAssignedBeforeMonthLaseDay(new Date(), 3));
+		System.out.println("34:  " + DateUtil.getAssignedBeforeMonthLaseDay(new Date(), 3));
 	}
 
 }

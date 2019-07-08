@@ -26,7 +26,7 @@ public class GenericityUtil {
 	/**
 	 * 
 	 * @Title: getFieldGenerCls
-	 * @Description:获取成员变量字段中的第一个泛型所属的class
+	 * @Description:获取成员变量字段中的index位置的泛型所属的class
 	 * @param field
 	 * @param index
 	 * @return

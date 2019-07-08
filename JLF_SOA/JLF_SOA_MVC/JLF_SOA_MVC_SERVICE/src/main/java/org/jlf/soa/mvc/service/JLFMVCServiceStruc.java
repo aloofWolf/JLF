@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.ReflectUtil;
 import org.jlf.plugin.aop.client.JLFAopClient;
+import org.jlf.soa.mvc.dao.JLFMVCDao;
+import org.jlf.soa.mvc.dao.JLFMVCDaoStruc;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCService;
 
 /**
  * 
@@ -27,22 +31,20 @@ public class JLFMVCServiceStruc {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <SERVICE extends JLFMVCService<?, ?>> SERVICE getService(Class<SERVICE> serviceCls) {
-		try{
+	public static <SERVICE> SERVICE getService(Class<SERVICE> serviceCls) {
+		try {
 			SERVICE service = (SERVICE) servicesMap.get(serviceCls);
 			if (service == null) {
 				service = JLFAopClient.get().getProxy(serviceCls, new JLFMVCServiceAopDo());
-				service.init();
 				servicesMap.put(serviceCls, service);
 				inject(service);
 			}
 			return service;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new JLFException(e);
 		}
-		return null;
-		
-		
+
 	}
 
 	/**
@@ -53,16 +55,20 @@ public class JLFMVCServiceStruc {
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "unchecked" })
-	private static <SERVICE extends JLFMVCService<?, ?>> void inject(SERVICE service) throws Exception {
+	private static <SERVICE> void inject(SERVICE service) throws Exception {
 		Class<? extends Object> cls = service.getClass();
 		List<Field> fields = ReflectUtil.getAllFields(cls);
 		for (Field field : fields) {
 			Class<?> fieldCls = field.getType();
-			if (JLFMVCService.class.isAssignableFrom(fieldCls)) {
-				JLFMVCService<?, ?> fieldValue = (JLFMVCService<?, ?>) JLFMVCServiceStruc
-						.getService((Class<SERVICE>) fieldCls);
+			JLFMVCService serviceAnn = (JLFMVCService) fieldCls.getAnnotation(JLFMVCService.class);
+			if (serviceAnn != null) {
+				SERVICE fieldServiceValue = getService((Class<SERVICE>) fieldCls);
 				field.setAccessible(true);
-				field.set(service, fieldValue);
+				field.set(service, fieldServiceValue);
+			}else if(JLFMVCDao.class.isAssignableFrom(fieldCls)){
+				JLFMVCDao<?> fieldDaoValue = JLFMVCDaoStruc.getDao((Class<? extends JLFMVCDao<?>>) fieldCls);
+				field.setAccessible(true);
+				field.set(service, fieldDaoValue);
 			}
 		}
 

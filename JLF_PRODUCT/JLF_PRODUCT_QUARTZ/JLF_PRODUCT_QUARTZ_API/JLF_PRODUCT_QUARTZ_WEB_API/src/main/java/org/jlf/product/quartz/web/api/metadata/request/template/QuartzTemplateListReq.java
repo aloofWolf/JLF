@@ -1,6 +1,7 @@
 package org.jlf.product.quartz.web.api.metadata.request.template;
 
 import org.jlf.common.enums.BooleanType;
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
 
 /**
@@ -10,10 +11,12 @@ import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
  * @author Lone Wolf
  * @date 2019年6月1日
  */
-public class QuartzTemplateListReq extends JLFMVCRequest{
+public class QuartzTemplateListReq extends JLFMVCRequest {
 
-	private String templateName; // 模板名称
-	private BooleanType enabled; // 是否启用
+	@JLFCheckAnn(isNull = true, desc = "模板名称")
+	private String templateName;
+	@JLFCheckAnn(isNull = true, desc = "是否启用")
+	private BooleanType enabled;
 
 	public String getTemplateName() {
 		return templateName;

@@ -21,7 +21,7 @@ import org.jlf.plugin.push.wolf.server.manager.ChannelManager;
 public class PushWolfServer extends JLFPluginServer<JLFPush> {
 
 	@Override
-	public JLFPush get() {
+	public JLFPush getServerApi() {
 		return new PushWolfCore();
 	}
 
@@ -34,22 +34,10 @@ public class PushWolfServer extends JLFPluginServer<JLFPush> {
 	}
 
 	@Override
-	public void jStart() throws Exception {
+	public void initConfig() {
 		String configFileName = JLFConfig.getPluginConfigName("pushWolf");
 		IniUtil ini = new IniUtil(configFileName);
 		ChannelManager.init(ini);
-	}
-
-	@Override
-	public void jStop() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void jreStart() throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 /**
  * 
- * @ClassName: JAFAopDo
+ * @ClassName: JLFAopDo
  * @Description:Aop处理模式api,不需要具体服务实现,需具体调用者实现
  * @author Lone Wolf
  * @date 2019年5月22日
@@ -19,9 +19,8 @@ public interface JLFAopDo<T> {
 	 * @param obj
 	 * @param method
 	 * @param args
-	 * @throws Exception
 	 */
-	public T doBefore(Object obj, Method method, Object[] args) throws Exception;
+	public T doBefore(Object obj, Method method, Object[] args);
 
 	/**
 	 * 
@@ -30,9 +29,8 @@ public interface JLFAopDo<T> {
 	 * @param obj
 	 * @param method
 	 * @param args
-	 * @throws Exception
 	 */
-	public T doAfter(Object obj, Method method, Object[] args, T t) throws Exception;
+	public T doAfter(Object obj, Method method, Object[] args, T t);
 
 	/**
 	 * 
@@ -41,8 +39,7 @@ public interface JLFAopDo<T> {
 	 * @param obj
 	 * @param method
 	 * @param args
-	 * @throws Exception
 	 */
-	public T doException(Object obj, Method method, Object[] args, T t) throws Exception;
+	public T doException(Object obj, Method method, Object[] args, T t);
 
 }

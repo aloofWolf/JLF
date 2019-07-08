@@ -4,18 +4,11 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PLUGIN</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PLUGIN_AOP</artifactId>
 	<packaging>pom</packaging>
-	<dependencies>
-		<!--依赖JLF核心模块 -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF_CORE</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
-	</dependencies>
+
 	<modules>
 		<module>JLF_PLUGIN_AOP_CLIENT</module>
 		<module>JLF_PLUGIN_AOP_API</module>

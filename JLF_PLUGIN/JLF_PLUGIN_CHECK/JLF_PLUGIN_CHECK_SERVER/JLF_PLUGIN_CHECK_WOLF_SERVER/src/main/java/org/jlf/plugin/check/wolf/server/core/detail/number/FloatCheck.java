@@ -15,7 +15,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class FloatCheck extends NumberCheck<Float> {
 
 	@Override
-	public Float getValue(JLFJson json, Field field) throws Exception {
+	public Float getValue(JLFJson json, Field field) {
 		return json.getFloat(field.getName());
 	}
 }

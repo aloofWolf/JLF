@@ -15,7 +15,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class ShortCheck extends NumberCheck<Short> {
 
 	@Override
-	public Short getValue(JLFJson json, Field field) throws Exception {
+	public Short getValue(JLFJson json, Field field) {
 		return json.getShort(field.getName());
 	}
 }

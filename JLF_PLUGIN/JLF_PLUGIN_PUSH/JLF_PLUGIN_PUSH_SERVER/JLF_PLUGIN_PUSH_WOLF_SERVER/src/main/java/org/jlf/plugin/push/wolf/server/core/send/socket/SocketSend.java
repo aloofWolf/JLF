@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.LogUtil;
 import org.jlf.plugin.push.user.api.config.JLFSocketConfig;
 
@@ -26,9 +27,8 @@ public class SocketSend {
 	 * @param config
 	 * @param datagram
 	 * @return
-	 * @throws Exception
 	 */
-	public static String send(JLFSocketConfig config, String datagram) throws Exception {
+	public static String send(JLFSocketConfig config, String datagram) {
 
 		SocketExt socket = SocketPools.getSocket(config);
 
@@ -45,10 +45,10 @@ public class SocketSend {
 			is = socket.getInputStream();
 
 			br = new BufferedReader(new InputStreamReader(is, config.getCharset()));
-			LogUtil.get().debug("send data is:" + datagram+"\\n");
-			pw.write(datagram+"\n");
+			LogUtil.get().debug("send data is:" + datagram + "\\n");
+			pw.write(datagram + "\n");
 			pw.flush();
-			//socket.shutdownOutput();
+			// socket.shutdownOutput();
 			String reply = null;
 			respXml = "";
 			while (!((reply = br.readLine()) == null)) {
@@ -57,7 +57,7 @@ public class SocketSend {
 			socket.shutdownInput();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception(e);
+			throw new JLFException(e);
 		} finally {
 			try {
 				SocketPools.close(config, socket, br, is, pw, os);

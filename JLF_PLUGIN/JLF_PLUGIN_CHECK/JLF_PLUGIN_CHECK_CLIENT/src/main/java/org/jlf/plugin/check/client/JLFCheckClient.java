@@ -14,22 +14,6 @@ import org.jlf.plugin.check.server.api.JLFCheck;
 public class JLFCheckClient implements JLFPluginClient<JLFCheck> {
 
 	private static JLFCheck api; // api实例
-	private JLFPluginServer<JLFCheck> server; // 绑定服务端
-
-	/**
-	 * 
-	 * 创建一个新的实例 JLFAopClient.
-	 *
-	 * @param server
-	 * @throws Exception
-	 */
-	public <SERVER extends JLFPluginServer<JLFCheck>> JLFCheckClient(SERVER server) throws Exception {
-		if (api != null) {
-			throw new Exception("JLFAopClient不能重复初始化");
-		}
-		api = server.get();
-		this.server = server;
-	}
 
 	/**
 	 * 
@@ -41,10 +25,10 @@ public class JLFCheckClient implements JLFPluginClient<JLFCheck> {
 		return api;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JLFPluginServer<JLFCheck> getServer() {
-		return server;
+	public <SERVER extends JLFPluginServer<JLFCheck>> void bindServer(SERVER server) {
+		api = server.getServerApi();
+
 	}
 
 }

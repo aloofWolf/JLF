@@ -15,14 +15,6 @@ public class QuartzTemplateResp {
 	private String clsName; // 模板类名
 	private Integer enabled; // 是否启用
 
-	/*public QuartzTemplateResp(QuartzTemplate template) {
-		this.id = template.getId();
-		this.version = template.getVersion();
-		this.templateName = template.getTemplateName();
-		this.clsName = template.getClsName();
-		this.enabled = template.getEnabled().getId();
-	}*/
-
 	public Long getId() {
 		return id;
 	}

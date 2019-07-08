@@ -1,0 +1,11 @@
+codeEnvironment=DEVELOP
+serverJarPath=J:/serverJar
+[plugins]
+json=fast
+aop=cglib
+check=wolf
+cache=redis
+[/plugins]
+[pluginsConfig]
+cacheRedis=redis.ini
+[/pluginsConfig]

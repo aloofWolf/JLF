@@ -14,9 +14,8 @@ import org.jlf.plugin.aop.user.api.JLFAopDo;
 @SuppressWarnings("rawtypes")
 public class CacheRedisAopDo implements JLFAopDo {
 
-
 	@Override
-	public Object doBefore(Object obj, Method method, Object[] args) throws Exception {
+	public Object doBefore(Object obj, Method method, Object[] args) {
 		CacheRedisCore core = (CacheRedisCore) obj;
 		core.jedis = CacheRedisPool.getJedis();
 		return core;
@@ -24,7 +23,7 @@ public class CacheRedisAopDo implements JLFAopDo {
 	}
 
 	@Override
-	public Object doAfter(Object obj, Method method, Object[] args, Object bean) throws Exception {
+	public Object doAfter(Object obj, Method method, Object[] args, Object bean) {
 		CacheRedisCore core = (CacheRedisCore) obj;
 		core.jedis.close();
 		core.jedis = null;
@@ -33,7 +32,7 @@ public class CacheRedisAopDo implements JLFAopDo {
 	}
 
 	@Override
-	public Object doException(Object obj, Method method, Object[] args, Object bean) throws Exception {
+	public Object doException(Object obj, Method method, Object[] args, Object bean) {
 		CacheRedisCore core = (CacheRedisCore) obj;
 		core.jedis.close();
 		core.jedis = null;

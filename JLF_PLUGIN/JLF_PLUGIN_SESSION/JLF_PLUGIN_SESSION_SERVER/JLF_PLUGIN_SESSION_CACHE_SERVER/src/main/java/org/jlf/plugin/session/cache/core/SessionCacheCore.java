@@ -19,7 +19,7 @@ public class SessionCacheCore implements JLFSession {
 
 	@Override
 	public void createToken(String dbName, Long userId, JLFSessionBean sessionBean, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response) {
 		String TokenKey = String.format("%s_%s", dbName, userId);
 		String lastToken = JLFCacheClient.get().getString(TokenKey);
 		if (lastToken != null) {
@@ -35,10 +35,9 @@ public class SessionCacheCore implements JLFSession {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends JLFSessionBean> T validateToken(HttpServletRequest request) throws Exception {
+	public <T extends JLFSessionBean> T validateToken(HttpServletRequest request) {
 		String token = request.getHeader(JLFSession.TOKEN_CONSTANT);
-		T sessionBean = JLFCacheClient.get().getObj(token,
-				(Class<T>) SessionCacheBean.getConfig().getSessionBeanCls());
+		T sessionBean = JLFCacheClient.get().getObj(token, (Class<T>) SessionCacheBean.getConfig().getSessionBeanCls());
 		if (sessionBean == null) {
 			throw new JLFException("µÇÂ¼³¬Ê±,ÇëÖØÐÂµÇÂ¼");
 		}
@@ -48,7 +47,7 @@ public class SessionCacheCore implements JLFSession {
 	}
 
 	@Override
-	public void deleteToken(HttpServletRequest request) throws Exception {
+	public void deleteToken(HttpServletRequest request) {
 		String token = request.getHeader(JLFSession.TOKEN_CONSTANT);
 		JLFCacheClient.get().delete(token);
 		SessionCacheBean.setSessionBean(null);
@@ -57,7 +56,7 @@ public class SessionCacheCore implements JLFSession {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends JLFSessionBean> T getSessionBean() throws Exception {
+	public <T extends JLFSessionBean> T getSessionBean() {
 		return (T) SessionCacheBean.getSessionBean();
 	}
 

@@ -28,7 +28,7 @@ public class ReflectUtilTest {
 			System.out.println(field.getName());
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @Title: getAllMethodsTest
@@ -41,21 +41,15 @@ public class ReflectUtilTest {
 			System.out.println(method.getName());
 		}
 	}
-	
-	
 
 	/**
 	 * 
 	 * @Title: createSetMothod
 	 * @Description:创建字段的set方法测试
-	 * @param cls
-	 * @param fieldName
-	 * @param fieldType
 	 * @return
-	 * @throws Exception
 	 */
 	@Test
-	public void createSetMothod() throws Exception {
+	public void createSetMothod() {
 		Method m = ReflectUtil.createSetMothod(Parent.class, "str", String.class);
 		System.out.println(m.getName());
 	}
@@ -64,10 +58,9 @@ public class ReflectUtilTest {
 	 * 
 	 * @Title: createGetMothod
 	 * @Description:创建字段的get方法
-	 * @throws Exception
 	 */
 	@Test
-	public void createGetMothod() throws Exception {
+	public void createGetMothod() {
 		Method m = ReflectUtil.createGetMothod(Parent.class, "str");
 		System.out.println(m.getName());
 	}

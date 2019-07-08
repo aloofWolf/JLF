@@ -15,7 +15,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class DoubleCheck extends NumberCheck<Double> {
 
 	@Override
-	public Double getValue(JLFJson json, Field field) throws Exception {
+	public Double getValue(JLFJson json, Field field) {
 		return json.getDouble(field.getName());
 	}
 }

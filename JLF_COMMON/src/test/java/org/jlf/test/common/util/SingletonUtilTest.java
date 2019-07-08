@@ -35,7 +35,7 @@ public class SingletonUtilTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void single() throws Exception {
+	public void single() {
 		long before = System.currentTimeMillis();
 		for (int i = 0; i < 10000000; i++) {
 			SingletonUtilTest t = SingletonUtil.getInstance(SingletonUtilTest.class);

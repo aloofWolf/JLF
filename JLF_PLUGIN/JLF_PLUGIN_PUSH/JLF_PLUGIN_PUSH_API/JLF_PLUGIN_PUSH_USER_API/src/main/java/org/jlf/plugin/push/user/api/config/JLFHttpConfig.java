@@ -1,5 +1,7 @@
 package org.jlf.plugin.push.user.api.config;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import javax.net.ssl.TrustManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
+import org.jlf.common.exception.JLFException;
 
 /**
  * 
@@ -71,12 +74,18 @@ public abstract class JLFHttpConfig extends JLFTransferConfig {
 	 * @Title: getSSLContext
 	 * @Description:获取SSLContext,默认采用绕过验证的SSLContext,可被子类覆盖
 	 * @return
-	 * @throws Exception
 	 */
-	public SSLContext getSSLContext() throws Exception {
-		SSLContext sslcontext = SSLContext.getInstance("TLSv1");
-		TrustManager[] trustManagersWithoutVerify = new TrustManager[] { new JLFX509TrustManagerWithoutVerify() };
-		sslcontext.init((javax.net.ssl.KeyManager[]) null, trustManagersWithoutVerify, (SecureRandom) null);
+	public SSLContext getSSLContext() {
+		SSLContext sslcontext;
+		try {
+			sslcontext = SSLContext.getInstance("TLSv1");
+			TrustManager[] trustManagersWithoutVerify = new TrustManager[] { new JLFX509TrustManagerWithoutVerify() };
+			sslcontext.init((javax.net.ssl.KeyManager[]) null, trustManagersWithoutVerify, (SecureRandom) null);
+		} catch (NoSuchAlgorithmException | KeyManagementException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+
 		return sslcontext;
 	}
 

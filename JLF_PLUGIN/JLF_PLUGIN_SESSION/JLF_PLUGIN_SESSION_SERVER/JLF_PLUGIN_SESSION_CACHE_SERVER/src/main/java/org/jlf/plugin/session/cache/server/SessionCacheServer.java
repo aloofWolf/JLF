@@ -8,9 +8,11 @@ import java.util.Set;
 
 import org.jlf.common.util.IniUtil;
 import org.jlf.core.config.JLFConfig;
+import org.jlf.core.exception.JLFClientNoInitExecption;
 import org.jlf.core.server.JLFPluginServer;
 import org.jlf.plugin.cache.client.JLFCacheClient;
 import org.jlf.plugin.check.client.JLFCheckClient;
+import org.jlf.plugin.check.server.api.JLFCheck;
 import org.jlf.plugin.session.cache.config.SessionCacheConfig;
 import org.jlf.plugin.session.cache.core.SessionCacheBean;
 import org.jlf.plugin.session.cache.core.SessionCacheCore;
@@ -26,7 +28,7 @@ import org.jlf.plugin.session.server.api.JLFSession;
 public class SessionCacheServer extends JLFPluginServer<JLFSession> {
 
 	@Override
-	public JLFSession get() {
+	public JLFSession getServerApi() {
 		return new SessionCacheCore();
 	}
 
@@ -41,25 +43,17 @@ public class SessionCacheServer extends JLFPluginServer<JLFSession> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void jStart() throws Exception {
+	public void initConfig() {
+		JLFCheck ckeck = JLFCheckClient.get();
+		if (ckeck == null) {
+			throw new JLFClientNoInitExecption(JLFCheckClient.class);
+		}
 		String configFileName = JLFConfig.getPluginConfigName("sessionCache");
 		IniUtil ini = new IniUtil(configFileName);
 		Properties prop = ini.getPros();
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		SessionCacheConfig config = JLFCheckClient.get().check(map, SessionCacheConfig.class);
+		SessionCacheConfig config = ckeck.check(map, SessionCacheConfig.class);
 		SessionCacheBean.setConfig(config);
-
-	}
-
-	@Override
-	public void jStop() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void jreStart() throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 

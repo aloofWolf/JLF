@@ -15,7 +15,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class ByteCheck extends NumberCheck<Byte> {
 
 	@Override
-	public Byte getValue(JLFJson json, Field field) throws Exception {
+	public Byte getValue(JLFJson json, Field field) {
 		return json.getByte(field.getName());
 	}
 }

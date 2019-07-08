@@ -14,7 +14,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class CustomerCheck extends ICheck<JLFJson> {
 
 	@Override
-	public JLFJson getValue(JLFJson json, Field field) throws Exception {
+	public JLFJson getValue(JLFJson json, Field field){
 		return json.getJson(field.getName());
 	}
 

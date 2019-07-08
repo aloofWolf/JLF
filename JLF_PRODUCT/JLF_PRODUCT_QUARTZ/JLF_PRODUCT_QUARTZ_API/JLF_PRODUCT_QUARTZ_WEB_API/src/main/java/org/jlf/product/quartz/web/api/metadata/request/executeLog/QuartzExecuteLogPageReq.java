@@ -2,6 +2,7 @@ package org.jlf.product.quartz.web.api.metadata.request.executeLog;
 
 import java.util.Date;
 
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.product.quartz.web.api.metadata.enums.QuartzExecuteResult;
 import org.jlf.soa.mvc.metadata.request.JLFMVCPagingRequest;
 import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
@@ -13,17 +14,26 @@ import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-public class QuartzExecuteLogPageReq extends JLFMVCRequest{
+public class QuartzExecuteLogPageReq extends JLFMVCRequest {
 
+	@JLFCheckAnn(desc = "分页信息")
 	private JLFMVCPagingRequest pages;
-	private Long templateId; // 模板id
-	private String templateName; // 模板名称
-	private Long jobId; // 任务id
-	private Long billId; // 单据id
-	private Date startTime; // 执行开始时间
-	private Date endTime; // 执行结束时间
-	private QuartzExecuteResult executeResult; // 执行结果
-	private String failReason; // 失败原因
+	@JLFCheckAnn(isNull = true, desc = "模板id")
+	private Long templateId;
+	@JLFCheckAnn(isNull = true, desc = "模板名称")
+	private String templateName;
+	@JLFCheckAnn(isNull = true, desc = "任务id")
+	private Long jobId;
+	@JLFCheckAnn(isNull = true, desc = "单据id")
+	private Long billId;
+	@JLFCheckAnn(isNull = true, desc = "执行开始时间")
+	private Date startTime;
+	@JLFCheckAnn(isNull = true, desc = "执行结束时间")
+	private Date endTime;
+	@JLFCheckAnn(isNull = true, desc = "执行结果")
+	private QuartzExecuteResult executeResult;
+	@JLFCheckAnn(isNull = true, desc = "失败原因")
+	private String failReason;
 
 	public JLFMVCPagingRequest getPages() {
 		return pages;

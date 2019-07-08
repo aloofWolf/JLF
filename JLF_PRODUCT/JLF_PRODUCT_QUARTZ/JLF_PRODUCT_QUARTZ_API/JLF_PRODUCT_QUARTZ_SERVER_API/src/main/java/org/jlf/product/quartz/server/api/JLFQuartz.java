@@ -1,7 +1,7 @@
 package org.jlf.product.quartz.server.api;
 
 import org.jlf.common.enums.BooleanType;
-import org.jlf.core.api.JLFIProduct;
+import org.jlf.core.api.JLFProductServerApi;
 import org.jlf.plugin.json.server.api.JLFJson;
 
 /**
@@ -11,7 +11,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
  * @author Lone Wolf
  * @date 2019年6月3日
  */
-public interface JLFQuartz extends JLFIProduct {
+public interface JLFQuartz extends JLFProductServerApi {
 
 	/**
 	 * 
@@ -23,8 +23,7 @@ public interface JLFQuartz extends JLFIProduct {
 	 * @param enabled
 	 * @param params
 	 */
-	public void saveJob(Long templateId, Long billId, String core, BooleanType enabled, JLFJson params)
-			throws Exception;
+	public void saveJob(Long templateId, Long billId, String core, BooleanType enabled, JLFJson params);
 
 	/**
 	 * 
@@ -39,7 +38,7 @@ public interface JLFQuartz extends JLFIProduct {
 	 * @param params
 	 */
 	public void updateJob(Long id, Long version, Long templateId, Long billId, String core, BooleanType enabled,
-			JLFJson params) throws Exception;
+			JLFJson params);
 
 	/**
 	 * 
@@ -48,24 +47,24 @@ public interface JLFQuartz extends JLFIProduct {
 	 * @param id
 	 * @param version
 	 */
-	public void deleteJob(Long id, Long version) throws Exception;
+	public void deleteJob(Long id, Long version);
 
 	/**
 	 * 
-	 * @Title: enableJob
+	 * @Title: enabledJob
 	 * @Description:启用job
 	 * @param id
 	 * @param version
 	 */
-	public void enableJob(Long id, Long version) throws Exception;
+	public void enabledJob(Long id, Long version);
 
 	/**
 	 * 
-	 * @Title: disableJob
+	 * @Title: disabledJob
 	 * @Description:禁用job
 	 * @param id
 	 * @param version
 	 */
-	public void disableJob(Long id, Long version) throws Exception;
+	public void disabledJob(Long id, Long version);
 
 }

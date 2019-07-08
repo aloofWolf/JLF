@@ -18,10 +18,9 @@ public class PackageUtilTest {
 	 * 
 	 * @Title: getClss
 	 * @Description:获取包下所有类测试
-	 * @throws Exception
 	 */
 	@Test
-	public void getClss() throws Exception {
+	public void getClss() {
 		List<Class<?>> clsNames = PackageUtil.getPackageClss("org.jlf.test.common.util");
 		for (Class<?> cls : clsNames) {
 			System.out.println(cls.getName());

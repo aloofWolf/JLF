@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Session;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.SerializeUtil;
 import org.jlf.plugin.mq.activeMq.server.core.ActiveMqPool;
 import org.jlf.plugin.mq.server.api.JLFCousumerTopic;
@@ -28,16 +30,21 @@ public class ConsumerTopic extends Consumer implements JLFCousumerTopic {
 	 * 创建一个新的实例 ConsumerQueue.
 	 *
 	 * @param process
-	 * @throws Exception
+	 * @
 	 */
-	public ConsumerTopic(JLFCousumerTopicProcess process) throws Exception {
+	public ConsumerTopic(JLFCousumerTopicProcess process) {
 		this.process = process;
 		this.messageCls = process.getMessageCls();
 	}
 
 	@Override
-	public Destination getDestination(Session session) throws Exception {
-		return session.createTopic(getName());
+	public Destination getDestination(Session session) {
+		try {
+			return session.createTopic(getName());
+		} catch (JMSException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	@Override
@@ -46,14 +53,19 @@ public class ConsumerTopic extends Consumer implements JLFCousumerTopic {
 	}
 
 	@Override
-	public void process(String result) throws Exception {
+	public void process(String result) {
 		Serializable message = SerializeUtil.serializeToObject(result, this.messageCls);
-		this.process.process(message);
+		try {
+			this.process.process(message);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 
 	}
 
 	@Override
-	public Connection getConn() throws Exception {
+	public Connection getConn() {
 		return ActiveMqPool.getTopicConnection();
 	}
 

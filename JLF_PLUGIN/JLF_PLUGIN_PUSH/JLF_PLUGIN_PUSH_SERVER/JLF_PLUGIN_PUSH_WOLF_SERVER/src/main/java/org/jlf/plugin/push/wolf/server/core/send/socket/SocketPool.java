@@ -1,11 +1,13 @@
 package org.jlf.plugin.push.wolf.server.core.send.socket;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Vector;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.push.user.api.config.JLFSocketConfig;
 
 /**
@@ -30,10 +32,9 @@ public class SocketPool {
 	 * 
 	 * @Title: getConn
 	 * @Description:从连接池内获取一个socket连接
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public synchronized SocketExt getSocket() throws Exception {
+	public synchronized SocketExt getSocket() {
 		int size = sockets.size();
 		SocketExt conn = null;
 		if (size > 0) {
@@ -59,25 +60,43 @@ public class SocketPool {
 	 * @param pw
 	 * @param os
 	 * @param socket
-	 * @throws Exception
 	 */
-	public void close(BufferedReader br, InputStream is, PrintWriter pw, OutputStream os, SocketExt socket)
-			throws Exception {
+	public void close(BufferedReader br, InputStream is, PrintWriter pw, OutputStream os, SocketExt socket) {
 		if (socket.isPreSocket()) {
 			sockets.add(socket);
 		} else {
-			socket.close();
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
 			if (br != null) {
-				br.close();
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					throw new JLFException(e);
+				}
 			}
 			if (is != null) {
-				is.close();
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					throw new JLFException(e);
+				}
 			}
 			if (pw != null) {
 				pw.close();
 			}
 			if (os != null) {
-				os.close();
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					throw new JLFException(e);
+				}
 			}
 		}
 	}

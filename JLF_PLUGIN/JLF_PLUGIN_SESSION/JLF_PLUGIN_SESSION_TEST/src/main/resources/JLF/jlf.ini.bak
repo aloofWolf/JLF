@@ -1,0 +1,16 @@
+codeEnvironment=DEVELOP
+serverJarPath=J:
+[plugins]
+aop=cglib
+json=fast
+cache=redis
+check=wolf
+session=cache
+[/plugins]
+[soas]
+mvc
+[/soas]
+[pluginsConfig]
+cacheRedis=redis.ini
+sessionCache=sessionCache.ini
+[/pluginsConfig]

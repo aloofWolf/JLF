@@ -1,5 +1,6 @@
 package org.jlf.plugin.aop.cglib.server.core;
 
+import org.jlf.common.util.ClassLoaderUtil;
 import org.jlf.plugin.aop.server.api.JLFAop;
 import org.jlf.plugin.aop.user.api.JLFAopDo;
 
@@ -14,14 +15,14 @@ import net.sf.cglib.proxy.Enhancer;
  */
 public class AopCglib implements JLFAop {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public <T> T getProxy(Class<T> tCls, JLFAopDo<?> aopDo) {
 		Enhancer enhancer = new Enhancer();
-		@SuppressWarnings("rawtypes")
 		AInterceptor<?> interceptor = new AInterceptor(aopDo);
 		enhancer.setSuperclass(tCls);
-		enhancer.setCallback(interceptor);	
+		enhancer.setCallback(interceptor);
+		enhancer.setClassLoader(ClassLoaderUtil.getLoader());
 		return (T) enhancer.create();
 	}
 

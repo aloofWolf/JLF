@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,17 +16,20 @@ import java.util.Map;
 
 import org.jlf.common.enums.BooleanType;
 import org.jlf.common.enums.api.IEnum;
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.EnumUtil;
 import org.jlf.common.util.GenericityUtil;
 import org.jlf.common.util.LogUtil;
 import org.jlf.common.util.ReflectUtil;
-import org.jlf.plugin.aop.client.JLFSessionClient;
 import org.jlf.plugin.cache.client.JLFCacheClient;
-import org.jlf.plugin.dbpool.client.JLFDbPoolClient;
+import org.jlf.plugin.dbPool.client.JLFDbPoolClient;
+import org.jlf.plugin.dbPool.server.api.JLFDbPool;
+import org.jlf.plugin.session.client.JLFSessionClient;
 import org.jlf.plugin.session.user.api.JLFSessionBean;
 import org.jlf.soa.mvc.dao.sqlBean.JLFMVCSqlBean;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanFieldMapped;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanTableMapped;
 import org.jlf.soa.mvc.metadata.bean.JLFMVCBean;
-import org.jlf.soa.mvc.metadata.bean.JLFMVCBeanMapped;
 import org.jlf.soa.mvc.metadata.page.JLFMVCPage;
 import org.jlf.soa.mvc.metadata.threadLocal.JLFMVCThreadLocal;
 
@@ -54,9 +58,8 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * 
 	 * @Title: init
 	 * @Description:初始化dao相关变量
-	 * @throws Exception
 	 */
-	public void init() throws Exception {
+	public void init() {
 		initBeanCls();
 		initFields();
 		initTableName();
@@ -68,9 +71,8 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Title: getConn
 	 * @Description:获取当前线程连接
 	 * @return
-	 * @throws Exception
 	 */
-	public Connection getConn() throws Exception {
+	public Connection getConn() {
 		String dbName = getDbName();
 		return JLFDbPoolClient.get().getConn(dbName);
 
@@ -81,13 +83,16 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Title: getDbName
 	 * @Description:获取当前的dbName
 	 * @return
-	 * @throws Exception
 	 */
-	public String getDbName() throws Exception {
-		JLFMVCBeanMapped mapped = this.beanCls.getAnnotation(JLFMVCBeanMapped.class);
-		String dbName = mapped.dbName();
-		if ("?".equals(dbName)) {
+	public String getDbName() {
+		String dbName = null;
+		JLFMVCBeanTableMapped mapped = this.beanCls.getAnnotation(JLFMVCBeanTableMapped.class);
+		if (mapped == null) {
+			dbName = JLFDbPool.mainDbName;
+		} else if ("?".equals(dbName)) {
 			dbName = JLFMVCThreadLocal.getDbName();
+		} else {
+			dbName = mapped.dbName();
 		}
 		return dbName;
 	}
@@ -98,7 +103,7 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description:获取当前bean的class类型
 	 * @return
 	 */
-	private void initBeanCls() throws Exception {
+	private void initBeanCls() {
 		this.beanCls = GenericityUtil.getObjGenerCls(this.getClass());
 	}
 
@@ -108,20 +113,21 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description: 获取bean字段的字符串集合
 	 * @return
 	 */
-	private void initFields() throws Exception {
+	private void initFields() {
 		this.fieldList = new ArrayList<Field>();
 		List<Field> allFields = ReflectUtil.getAllFields(this.beanCls);
 		StringBuffer fieldsSb = new StringBuffer();
 		for (Field field : allFields) {
 			String fieldName = field.getName();
-			if(fieldName.equals("serialVersionUID")){
+			if (fieldName.equals("serialVersionUID") || fieldName.equals("data")) {
 				continue;
 			}
-			JLFMVCBeanMapped mapped = field.getAnnotation(JLFMVCBeanMapped.class);
-			if (mapped == null || !mapped.skipMapped()) {
-				this.fieldList.add(field);
-				fieldsSb.append(fieldName).append(",");
+			JLFMVCBeanFieldMapped mapped = field.getAnnotation(JLFMVCBeanFieldMapped.class);
+			if (mapped != null && mapped.isSkipMapped()) {
+				continue;
 			}
+			this.fieldList.add(field);
+			fieldsSb.append(fieldName).append(",");
 		}
 		this.fieldStr = fieldsSb.substring(0, fieldsSb.length() - 1);
 	}
@@ -132,14 +138,18 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description:获取当前bean对应的数据库表名,缓存信息
 	 * @return
 	 */
-	private void initTableName() throws Exception {
-		JLFMVCBeanMapped mapped = this.beanCls.getAnnotation(JLFMVCBeanMapped.class);
-		if (mapped != null && mapped.tableName() != null && mapped.tableName().length() > 0) {
+	private void initTableName() {
+		JLFMVCBeanTableMapped mapped = this.beanCls.getAnnotation(JLFMVCBeanTableMapped.class);
+		if (mapped == null) {
+			this.tableName = this.beanCls.getSimpleName();
+			return;
+		}
+		if (mapped.tableName() != null && mapped.tableName().length() > 0) {
 			this.tableName = mapped.tableName();
 		} else {
 			this.tableName = this.beanCls.getSimpleName();
 		}
-		//this.cacheKey = new StringBuffer(getDbName()).append("_").append(tableName).append("%s").toString();
+		this.cacheKey = new StringBuffer("%s").append("_").append(tableName).append("%s").toString();
 		this.isCache = mapped.cache();
 		this.seconds = mapped.seconds();
 	}
@@ -148,9 +158,8 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * 
 	 * @Title: initFieldMapping
 	 * @Description:初始化bean字段与get、set方法的映射、字段与class的映射关系
-	 * @throws Exception
 	 */
-	private void initFieldMapping() throws Exception {
+	private void initFieldMapping() {
 		if (this.fieldGetMapping == null || this.fieldSetMapping == null) {
 			Map<String, Method> fieldSetMappingTemp = new HashMap<String, Method>();
 			Map<String, Method> fieldGetMappingTemp = new HashMap<String, Method>();
@@ -158,13 +167,6 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 			Class<BEAN> cls = this.beanCls;
 			for (Field field : fieldList) {
 				String fieldName = field.getName();
-				if(fieldName.equals("serialVersionUID")){
-					continue;
-				}
-				JLFMVCBeanMapped mapped = field.getAnnotation(JLFMVCBeanMapped.class);
-				if (mapped != null && mapped.skipMapped()) {
-					continue;
-				}
 				Class<?> fieldCls = field.getType();
 				Method getMethod = ReflectUtil.createGetMothod(cls, fieldName);
 				Method setMethod = ReflectUtil.createSetMothod(cls, fieldName, fieldCls);
@@ -187,9 +189,8 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description:根据id获取实体
 	 * @param id
 	 * @return
-	 * @throws Exception
 	 */
-	public BEAN getById(Long id) throws Exception {
+	public BEAN getById(Long id) {
 		BEAN bean = null;
 		String key = null;
 		if (isCache) {
@@ -203,14 +204,37 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 		sql.append("select ").append(this.fieldStr);
 		sql.append(" from ").append(this.tableName).append(" where id = ? and isDelete = ?");
 		ResultSet rs = getRs(sql.toString(), id, BooleanType.FALSE.getId());
-		if (rs.next()) {
-			bean = ResultSetToBean(rs);
-			if (isCache) {
-				JLFCacheClient.get().save(key, bean);
+		try {
+			if (rs.next()) {
+				bean = ResultSetToBean(rs);
+				if (isCache) {
+					JLFCacheClient.get().save(key, bean);
+				}
+				return ResultSetToBean(rs);
 			}
-			return ResultSetToBean(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
 		return null;
+	}
+
+	/**
+	 * 
+	 * @Title: getById
+	 * @Description:根据id和版本号获取实体
+	 * @param id
+	 * @return
+	 */
+	public BEAN getByIdAndVersion(Long id, Long version) {
+		BEAN bean = getById(id);
+		if (bean == null) {
+			return null;
+		}
+		if (bean.getVersion() != version) {
+			throw new JLFException("版本号已过期");
+		}
+		return bean;
 	}
 
 	/**
@@ -218,63 +242,66 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description:保存实体
 	 * @param bean
 	 * @return
-	 * @throws Exception
 	 */
-	public BEAN save(BEAN bean) throws Exception {
-		JLFSessionBean sessionBean = JLFSessionClient.get().getSessionBean();
-		Long sessionUserId = -1l;
-		if(sessionBean != null){
-			sessionUserId = sessionBean.getUserId();
-		}
-		Date now = new Date();
-		bean.setCreateUserId(sessionUserId);
-		bean.setUpdateUserId(sessionUserId);
-		bean.setCreateTime(now);
-		bean.setUpdateTime(now);
-		StringBuffer sql = new StringBuffer("insert into ");
-		sql.append(this.tableName);
-		StringBuffer fields = new StringBuffer(" ( ");
-		StringBuffer placeholder = new StringBuffer(" ( ");
-		List<Object> values = new ArrayList<Object>();
-		for (Field field : this.fieldList) {
-			String fieldName = field.getName();
-			Method getMethod = ReflectUtil.createGetMothod(this.beanCls, fieldName);
-			Object value = getMethod.invoke(bean);
-			if (value != null && !value.equals("")) {
-				Class<?> fieldCls = fieldNameEnumClsMapping.get(fieldName);
-				if (fieldCls != null) {
-					IEnum enums = (IEnum) value;
-					Integer enumId = enums.getId();
-					value = enumId;
-				}
-				values.add(value);
-				fields.append(fieldName).append(",");
-				placeholder.append("?,");
+	public BEAN save(BEAN bean) {
+		try {
+			JLFSessionBean sessionBean = JLFSessionClient.get().getSessionBean();
+			Long sessionUserId = -1l;
+			if (sessionBean != null) {
+				sessionUserId = sessionBean.getUserId();
 			}
-		}
-		fields = fields.replace(fields.length() - 1, fields.length(), ")");
-		placeholder = placeholder.replace(placeholder.length() - 1, placeholder.length(), ")");
-		sql.append(fields).append(" values ").append(placeholder);
-		PreparedStatement ps = getConn().prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+			Date now = new Date();
+			if (bean.getCreateUserId() == null) {
+				bean.setCreateUserId(sessionUserId);
+				bean.setUpdateUserId(sessionUserId);
+			}
+			bean.setCreateTime(now);
+			bean.setUpdateTime(now);
+			StringBuffer sql = new StringBuffer("insert into ");
+			sql.append(this.tableName);
+			StringBuffer fields = new StringBuffer(" ( ");
+			StringBuffer placeholder = new StringBuffer(" ( ");
+			List<Object> values = new ArrayList<Object>();
+			for (Field field : this.fieldList) {
+				String fieldName = field.getName();
+				Method getMethod = ReflectUtil.createGetMothod(this.beanCls, fieldName);
+				Object value = getMethod.invoke(bean);
+				if (value != null && !value.equals("")) {
+					Class<?> fieldCls = fieldNameEnumClsMapping.get(fieldName);
+					if (fieldCls != null) {
+						IEnum enums = (IEnum) value;
+						Integer enumId = enums.getId();
+						value = enumId;
+					}
+					values.add(value);
+					fields.append(fieldName).append(",");
+					placeholder.append("?,");
+				}
+			}
+			fields = fields.replace(fields.length() - 1, fields.length(), ")");
+			placeholder = placeholder.replace(placeholder.length() - 1, placeholder.length(), ")");
+			sql.append(fields).append(" values ").append(placeholder);
+			PreparedStatement ps = getConn().prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 
-		LogUtil.get().debug("sql= {}", sql);
-		for (int i = 1; i <= values.size(); i++) {
-			Object value = values.get(i-1);
-			ps.setObject(i, value);
-			LogUtil.get().info("params{}= {},", i, value);
+			LogUtil.get().debug("sql= {}", sql);
+			for (int i = 1; i <= values.size(); i++) {
+				Object value = values.get(i - 1);
+				ps.setObject(i, value);
+				LogUtil.get().info("params{}= {},", i, value);
+			}
+
+			if (ps.executeUpdate() != 1) {
+				throw new JLFException("保存失败");
+			}
+			ResultSet rs = ps.getGeneratedKeys();
+			rs.next();
+			Long id = rs.getLong(1);
+			bean.setId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
 
-		if (ps.executeUpdate() != 1) {
-			throw new Exception("保存失败");
-		}
-		ResultSet rs = ps.getGeneratedKeys();
-		rs.next();
-		Long id = rs.getLong(1);
-		bean.setId(id);
-		if (isCache) {
-			String key = String.format(cacheKey, id);
-			JLFCacheClient.get().save(key, bean);
-		}
 		return bean;
 
 	}
@@ -283,57 +310,62 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Title: update
 	 * @Description:修改实体
 	 * @param bean
-	 * @throws Exception
 	 */
-	public void update(BEAN bean) throws Exception {
-		JLFSessionBean sessionBean = JLFSessionClient.get().getSessionBean();
-		Long sessionUserId = -1l;
-		if(sessionBean != null){
-			sessionUserId = sessionBean.getUserId();
-		}
-		Date now = new Date();
-		bean.setUpdateUserId(sessionUserId);
-		bean.setUpdateTime(now);
-		StringBuffer sql = new StringBuffer("update ");
-		sql.append(this.tableName).append(" set ");
-
-		List<Object> values = new ArrayList<Object>();
-		for (Field field : this.fieldList) {
-			String fieldName = field.getName();
-			Method getMethod = ReflectUtil.createGetMothod(this.beanCls, fieldName);
-			Object value = getMethod.invoke(bean);
-			if (value != null && !value.equals("")) {
-				Class<?> fieldCls = fieldNameEnumClsMapping.get(fieldName);
-				if (fieldCls != null) {
-					IEnum enums = (IEnum) value;
-					Integer enumId = enums.getId();
-					value = enumId;
-				}
-				values.add(value);
-				sql.append(fieldName).append("=").append("?,");
+	public void update(BEAN bean) {
+		try {
+			JLFSessionBean sessionBean = JLFSessionClient.get().getSessionBean();
+			Long sessionUserId = -1l;
+			if (sessionBean != null) {
+				sessionUserId = sessionBean.getUserId();
 			}
+			Date now = new Date();
+			bean.setUpdateUserId(sessionUserId);
+			bean.setUpdateTime(now);
+			StringBuffer sql = new StringBuffer("update ");
+			sql.append(this.tableName).append(" set ");
+
+			List<Object> values = new ArrayList<Object>();
+			for (Field field : this.fieldList) {
+				String fieldName = field.getName();
+				Method getMethod = ReflectUtil.createGetMothod(this.beanCls, fieldName);
+				Object value = getMethod.invoke(bean);
+				if (value != null && !value.equals("")) {
+					Class<?> fieldCls = fieldNameEnumClsMapping.get(fieldName);
+					if (fieldCls != null) {
+						IEnum enums = (IEnum) value;
+						Integer enumId = enums.getId();
+						value = enumId;
+					}
+					values.add(value);
+					sql.append(fieldName).append("=").append("?,");
+				}
+			}
+
+			sql.append("version = version + 1 where id = ? and version = ?");
+			PreparedStatement ps = getConn().prepareStatement(sql.toString());
+			LogUtil.get().info("sql= {}", sql);
+			int valuesSize = values.size();
+			for (int i = 1; i <= valuesSize; i++) {
+				Object value = values.get(i - 1);
+				ps.setObject(i, value);
+				LogUtil.get().info("params{}= {},", i, value);
+			}
+			ps.setLong(valuesSize + 1, bean.getId());
+			ps.setLong(valuesSize + 2, bean.getVersion());
+			LogUtil.get().info("params{}= {},", valuesSize + 1, bean.getId());
+			LogUtil.get().info("params{}= {},", valuesSize + 2, bean.getVersion());
+			if (ps.executeUpdate() != 1) {
+				throw new JLFException("数据过期");
+			}
+			if (isCache) {
+				String key = String.format(cacheKey, bean.getId());
+				JLFCacheClient.get().delete(key);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
 
-		sql.append("version = version + 1 where id = ? and version = ?");
-		PreparedStatement ps = getConn().prepareStatement(sql.toString());
-		LogUtil.get().info("sql= {}", sql);
-		int valuesSize = values.size();
-		for (int i = 1; i <= valuesSize; i++) {
-			Object value = values.get(i-1);
-			ps.setObject(i, value);
-			LogUtil.get().info("params{}= {},", i, value);
-		}
-		ps.setLong(valuesSize + 1, bean.getId());
-		ps.setLong(valuesSize + 2, bean.getVersion());
-		LogUtil.get().info("params{}= {},", valuesSize + 1, bean.getId());
-		LogUtil.get().info("params{}= {},", valuesSize + 2, bean.getVersion());
-		if (ps.executeUpdate() != 1) {
-			throw new Exception("数据过期");
-		}
-		if (isCache) {
-			String key = String.format(cacheKey, bean.getId());
-			JLFCacheClient.get().delete(key);
-		}
 	}
 
 	/**
@@ -342,14 +374,13 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description:删除实体
 	 * @param id
 	 * @param version
-	 * @throws Exception
 	 */
-	public void delete(Long id, Long version) throws Exception {
+	public void delete(Long id, Long version) {
 		StringBuffer sql = new StringBuffer("update ");
 		sql.append(this.tableName);
 		sql.append(" set isDelete = ?,deletedNum = ?,version = version + 1 where id = ? and version = ?");
 		if (executePs(sql.toString(), BooleanType.TRUE.getId(), id, id, version) != 1) {
-			throw new Exception("数据过期");
+			throw new JLFException("数据过期");
 		}
 		if (isCache) {
 			String key = String.format(cacheKey, id);
@@ -363,11 +394,15 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param sql
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public int execute(String sql, Object... params) throws Exception {
+	public int execute(String sql, Object... params) {
 		PreparedStatement ps = getPs(sql, params);
-		return ps.executeUpdate();
+		try {
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	/**
@@ -377,12 +412,16 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param sql
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public BEAN getUnique(String sql, Object... params) throws Exception {
+	public BEAN getUnique(String sql, Object... params) {
 		ResultSet rs = getRs(sql, params);
-		if (rs.next()) {
-			return ResultSetToBean(rs);
+		try {
+			if (rs.next()) {
+				return ResultSetToBean(rs);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
 		return null;
 
@@ -395,14 +434,18 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param sql
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public List<BEAN> getList(String sql, Object... params) throws Exception {
+	public List<BEAN> getList(String sql, Object... params) {
 		ResultSet rs = getRs(sql, params);
 		List<BEAN> list = new ArrayList<BEAN>();
-		while (rs.next()) {
-			BEAN bean = ResultSetToBean(rs);
-			list.add(bean);
+		try {
+			while (rs.next()) {
+				BEAN bean = ResultSetToBean(rs);
+				list.add(bean);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
 		return list;
 	}
@@ -418,28 +461,34 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param pageSize
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFMVCPage<BEAN> getPage(JLFMVCSqlBean sqlBean, Integer pageNum, Integer pageSize) throws Exception {
-		Integer startNum = (pageNum - 1) * pageSize;
-		String totFieldSql = sqlBean.getTotFieldSql();
-		ResultSet totRs = getRs(totFieldSql, sqlBean.getParams());
-		totRs.next();
-		Map<String, Object> totField = ResultSetToMap(totRs);
-		Long totalNum = totRs.getLong("cnt");
-		int totalPage = (int) (totalNum / pageSize);
-		int remainder = (int) (totalNum % pageSize);
-		if (remainder > 0) {
-			totalPage = totalPage + 1;
+	public JLFMVCPage<BEAN> getPage(JLFMVCSqlBean sqlBean, Integer pageNum, Integer pageSize) {
+		JLFMVCPage<BEAN> page;
+		try {
+			Integer startNum = (pageNum - 1) * pageSize;
+			String totFieldSql = sqlBean.getTotFieldSql();
+			ResultSet totRs = getRs(totFieldSql, sqlBean.getParams());
+			totRs.next();
+			Map<String, Object> totField = ResultSetToMap(totRs);
+			Long totalNum = totRs.getLong("cnt");
+			int totalPage = (int) (totalNum / pageSize);
+			int remainder = (int) (totalNum % pageSize);
+			if (remainder > 0) {
+				totalPage = totalPage + 1;
+			}
+			String pageSql = sqlBean.getPageSql();
+			ResultSet listRs = getRs(pageSql, startNum, pageSize, sqlBean.getParams());
+			List<BEAN> beanList = new ArrayList<BEAN>();
+			while (listRs.next()) {
+				BEAN bean = ResultSetToBean(listRs);
+				beanList.add(bean);
+			}
+			page = new JLFMVCPage<BEAN>(totalNum, totalPage, totField, beanList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
-		String pageSql = sqlBean.getPageSql();
-		ResultSet listRs = getRs(pageSql, startNum, pageSize, sqlBean.getParams());
-		List<BEAN> beanList = new ArrayList<BEAN>();
-		while (listRs.next()) {
-			BEAN bean = ResultSetToBean(listRs);
-			beanList.add(bean);
-		}
-		JLFMVCPage<BEAN> page = new JLFMVCPage<BEAN>(totalNum, totalPage, totField, beanList);
+
 		return page;
 	}
 
@@ -449,18 +498,23 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param sql
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public PreparedStatement getPs(String sql, Object... params) throws Exception {
-		LogUtil.get().debug("sql= {}", sql);
-		PreparedStatement ps = getConn().prepareStatement(sql.toString());
-		int paramsLength = params.length;
-		if (params != null) {
-			for (int i = 1; i <= paramsLength; i++) {
-				Object param = params[i - 1];
-				ps.setObject(i, param);
-				LogUtil.get().info("params{}= {},", i, param);
+	public PreparedStatement getPs(String sql, Object... params) {
+		PreparedStatement ps;
+		try {
+			LogUtil.get().debug("sql= {}", sql);
+			ps = getConn().prepareStatement(sql.toString());
+			int paramsLength = params.length;
+			if (params != null) {
+				for (int i = 1; i <= paramsLength; i++) {
+					Object param = params[i - 1];
+					ps.setObject(i, param);
+					LogUtil.get().info("params{}= {},", i, param);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
 		return ps;
 	}
@@ -471,24 +525,30 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param sql
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public PreparedStatement getPagePs(String sql, int startNum, int pageSize, Object... params) throws Exception {
-		LogUtil.get().debug("sql= {}", sql);
-		PreparedStatement ps = getConn().prepareStatement(sql.toString());
-		int paramsLength = 0;
-		if (params != null) {
-			paramsLength = params.length;
-			for (int i = 1; i <= paramsLength; i++) {
-				Object param = params[i - 1];
-				ps.setObject(i, param);
-				LogUtil.get().info("params{}= {},", i, param);
+	public PreparedStatement getPagePs(String sql, int startNum, int pageSize, Object... params) {
+		PreparedStatement ps;
+		try {
+			LogUtil.get().debug("sql= {}", sql);
+			ps = getConn().prepareStatement(sql.toString());
+			int paramsLength = 0;
+			if (params != null) {
+				paramsLength = params.length;
+				for (int i = 1; i <= paramsLength; i++) {
+					Object param = params[i - 1];
+					ps.setObject(i, param);
+					LogUtil.get().info("params{}= {},", i, param);
+				}
 			}
+			ps.setObject(paramsLength + 1, startNum);
+			LogUtil.get().info("params{}= {},", paramsLength + 1, startNum);
+			ps.setObject(paramsLength + 2, pageSize);
+			LogUtil.get().info("params{}= {},", paramsLength + 2, pageSize);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
-		ps.setObject(paramsLength + 1, startNum);
-		LogUtil.get().info("params{}= {},", paramsLength + 1, startNum);
-		ps.setObject(paramsLength + 2, pageSize);
-		LogUtil.get().info("params{}= {},", paramsLength + 2, pageSize);
+
 		return ps;
 	}
 
@@ -498,11 +558,15 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param sql
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public ResultSet getRs(String sql, Object... params) throws Exception {
+	public ResultSet getRs(String sql, Object... params) {
 		PreparedStatement ps = getPs(sql, params);
-		return ps.executeQuery();
+		try {
+			return ps.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	/**
@@ -512,10 +576,14 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @param sql
 	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	public int executePs(String sql, Object... params) throws Exception {
-		return getPs(sql, params).executeUpdate();
+	public int executePs(String sql, Object... params) {
+		try {
+			return getPs(sql, params).executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	/**
@@ -523,40 +591,45 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description:将ResultSet结果集转成Bean
 	 * @param rs
 	 * @return
-	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public BEAN ResultSetToBean(ResultSet rs) throws Exception {
+	public BEAN ResultSetToBean(ResultSet rs) {
+		BEAN bean;
+		try {
+			ResultSetMetaData meta = rs.getMetaData();
+			int columnCount = meta.getColumnCount();
+			bean = this.beanCls.newInstance();
 
-		ResultSetMetaData meta = rs.getMetaData();
-		int columnCount = meta.getColumnCount();
-		BEAN bean = this.beanCls.newInstance();
-
-		for (int i = 1; i <= columnCount; i++) {
-			String fieldName = meta.getColumnName(i);
-			Object value = rs.getObject(fieldName);
-			if (value == null) {
-				continue;
-			}
-			Class<?> fieldCls = fieldNameEnumClsMapping.get(fieldName);
-			if (fieldCls != null) {
-				Integer id = (Integer) value;
-				Class<? extends IEnum> enumCls = (Class<? extends IEnum>) fieldCls;
-				IEnum enums = EnumUtil.getByID(enumCls, id);
-				value = enums;
-			}
-			Method setMethod = this.fieldSetMapping.get(fieldName);
-			bean.set(fieldName, value);
-			if (setMethod != null) {
-				try {
-					setMethod.invoke(bean, value);
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.out.println(setMethod.getName());
+			for (int i = 1; i <= columnCount; i++) {
+				String fieldName = meta.getColumnName(i);
+				Object value = rs.getObject(fieldName);
+				if (value == null) {
+					continue;
 				}
+				Class<?> fieldCls = fieldNameEnumClsMapping.get(fieldName);
+				if (fieldCls != null) {
+					Integer id = (Integer) value;
+					Class<? extends IEnum> enumCls = (Class<? extends IEnum>) fieldCls;
+					IEnum enums = EnumUtil.getByID(enumCls, id);
+					value = enums;
+				}
+				Method setMethod = this.fieldSetMapping.get(fieldName);
+				bean.set(fieldName, value);
+				if (setMethod != null) {
+					try {
+						setMethod.invoke(bean, value);
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(setMethod.getName());
+					}
 
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
+
 		return bean;
 	}
 
@@ -566,19 +639,23 @@ public class JLFMVCDao<BEAN extends JLFMVCBean> {
 	 * @Description:将ResultSet结果集转成map
 	 * @param rs
 	 * @return
-	 * @throws Exception
 	 */
-	public Map<String, Object> ResultSetToMap(ResultSet rs) throws Exception {
+	public Map<String, Object> ResultSetToMap(ResultSet rs) {
 
-		ResultSetMetaData meta = rs.getMetaData();
-		int columnCount = meta.getColumnCount();
 		Map<String, Object> map = new HashMap<String, Object>();
-
-		for (int i = 1; i <= columnCount; i++) {
-			String key = meta.getColumnName(i);
-			Object value = rs.getObject(key);
-			map.put(key, value);
+		try {
+			ResultSetMetaData meta = rs.getMetaData();
+			int columnCount = meta.getColumnCount();
+			for (int i = 1; i <= columnCount; i++) {
+				String key = meta.getColumnName(i);
+				Object value = rs.getObject(key);
+				map.put(key, value);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
+
 		return map;
 	}
 }

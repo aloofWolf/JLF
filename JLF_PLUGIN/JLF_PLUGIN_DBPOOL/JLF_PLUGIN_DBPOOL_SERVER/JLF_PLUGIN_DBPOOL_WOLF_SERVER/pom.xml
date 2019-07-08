@@ -4,21 +4,27 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PLUGIN_DBPOOL_SERVER</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PLUGIN_DBPOOL_WOLF_SERVER</artifactId>
+
+	<properties>
+		<c3p0.version>0.9.5.2</c3p0.version>
+		<mysql.version>5.0.8</mysql.version>
+	</properties>
+
 	<dependencies>
 		<!--依赖c3p0插件 -->
 		<dependency>
 			<groupId>com.mchange</groupId>
 			<artifactId>c3p0</artifactId>
-			<version>0.9.5.2</version>
+			<version>${c3p0.version}</version>
 		</dependency>
 		<!--依赖mysql -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.0.8</version>
+			<version>${mysql.version}</version>
 		</dependency>
 		<!--依赖JLF_PLUGIN_CHECK_CLIENT -->
 		<dependency>
@@ -27,4 +33,27 @@
 			<version>${parent.version}</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assembly</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

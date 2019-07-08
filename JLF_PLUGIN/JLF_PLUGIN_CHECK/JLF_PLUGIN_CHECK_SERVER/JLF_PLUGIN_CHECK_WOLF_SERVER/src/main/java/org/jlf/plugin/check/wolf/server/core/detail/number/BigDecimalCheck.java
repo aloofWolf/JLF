@@ -16,7 +16,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class BigDecimalCheck extends NumberCheck<BigDecimal> {
 
 	@Override
-	public BigDecimal getValue(JLFJson json, Field field) throws Exception {
+	public BigDecimal getValue(JLFJson json, Field field) {
 		return json.getBigDecimal(field.getName());
 	}
 

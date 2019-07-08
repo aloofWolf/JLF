@@ -4,22 +4,15 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PRODUCT</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PRODUCT_QUARTZ</artifactId>
 	<packaging>pom</packaging>
-	<dependencies>
-		<!--依赖fastjson -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.7</version>
-		</dependency>
-	</dependencies>
 	<modules>
 		<module>JLF_PRODUCT_QUARTZ_API</module>
 		<module>JLF_PRODUCT_QUARTZ_SERVER</module>
 		<module>JLF_PRODUCT_QUARTZ_CLIENT</module>
 		<module>JLF_PRODUCT_QUARTZ_TEST</module>
 	</modules>
+
 </project>

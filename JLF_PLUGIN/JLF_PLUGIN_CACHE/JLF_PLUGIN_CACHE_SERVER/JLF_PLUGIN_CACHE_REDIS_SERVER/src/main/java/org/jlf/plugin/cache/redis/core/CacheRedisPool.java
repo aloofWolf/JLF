@@ -1,5 +1,6 @@
 package org.jlf.plugin.cache.redis.core;
 
+import org.jlf.common.util.ClassLoaderUtil;
 import org.jlf.plugin.cache.redis.config.CacheRedisConfig;
 
 import redis.clients.jedis.Jedis;
@@ -23,6 +24,7 @@ public class CacheRedisPool {
 		poolConfig.setMaxIdle(32); // 最大空闲连接数
 		poolConfig.setMaxWaitMillis(100 * 1000); // 最大等待时间
 		poolConfig.setTestOnBorrow(true); // 检查连接可用性, 确保获取的redis实例可用
+		Thread.currentThread().setContextClassLoader(ClassLoaderUtil.getLoader());
 		jedisPool = new JedisPool(poolConfig, config.getIp(), config.getPort());
 	}
 

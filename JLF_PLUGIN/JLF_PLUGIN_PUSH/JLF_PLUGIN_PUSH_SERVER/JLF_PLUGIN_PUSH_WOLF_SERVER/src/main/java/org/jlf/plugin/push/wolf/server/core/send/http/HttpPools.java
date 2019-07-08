@@ -25,9 +25,8 @@ public class HttpPools {
 	 * @Description:获取client对象
 	 * @param config
 	 * @return
-	 * @throws Exception
 	 */
-	public static CloseableHttpClient getClient(JLFHttpConfig config) throws Exception {
+	public static CloseableHttpClient getClient(JLFHttpConfig config) {
 		HttpPool pool = pools.get(config.getHostName());
 		if (pool == null) {
 			pool = new HttpPool(config);

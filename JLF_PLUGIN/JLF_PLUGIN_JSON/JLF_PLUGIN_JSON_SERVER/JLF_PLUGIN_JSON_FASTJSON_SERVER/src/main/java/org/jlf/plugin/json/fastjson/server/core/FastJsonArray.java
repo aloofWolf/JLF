@@ -1,4 +1,4 @@
-package org.jlf.plugin.json.fastjson.server.core;
+package org.jlf.plugin.json.fastJson.server.core;
 
 import org.jlf.plugin.json.server.api.JLFJson;
 import org.jlf.plugin.json.server.api.JLFJsonArray;
@@ -26,7 +26,7 @@ public class FastJsonArray implements JLFJsonArray {
 	}
 
 	@Override
-	public void add(JLFJson json) throws Exception {
+	public void add(JLFJson json) {
 		this.array.add(((FastJson) json).get());
 
 	}
@@ -46,17 +46,15 @@ public class FastJsonArray implements JLFJsonArray {
 	public JLFJsonArray getJsonArray(int index) {
 		return new FastJsonArray(this.array.getJSONArray(index));
 	}
-	
+
 	/**
 	 * 
 	 * @Title: get
 	 * @Description:获取当前jsonArray对象
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	protected JSONArray get() throws Exception {
+	protected JSONArray get() {
 		return this.array;
 	}
-
 
 }

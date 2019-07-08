@@ -1,7 +1,7 @@
 package org.jlf.common.enums.api;
 
-public interface IEnum{
-	
+public interface IEnum {
+
 	/**
 	 * 枚举操作的异常信息
 	 */
@@ -14,5 +14,12 @@ public interface IEnum{
 	 */
 	public Integer getId();
 
+	/**
+	 * 
+	 * @Title: getDesc
+	 * @Description:获取枚举描述信息
+	 * @return
+	 */
+	public String getDesc();
 
 }

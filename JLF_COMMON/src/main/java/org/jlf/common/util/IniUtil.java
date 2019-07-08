@@ -2,12 +2,15 @@ package org.jlf.common.util;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.jlf.common.exception.JLFException;
 
 /**
  * 
@@ -28,9 +31,8 @@ public class IniUtil {
 	 * 创建一个新的实例 IniUtil,默认使用GBK编码.
 	 * 
 	 * @param filename
-	 * @throws Exception
 	 */
-	public IniUtil(String fileName) throws Exception {
+	public IniUtil(String fileName) {
 		this(fileName, "GBK");
 	}
 
@@ -39,13 +41,19 @@ public class IniUtil {
 	 * 创建一个新的实例 IniUtil,调用者指定编码.
 	 * 
 	 * @param filename
-	 * @throws Exception
 	 */
-	public IniUtil(String fileName, String character) throws Exception {
-		InputStreamReader isr = new InputStreamReader(new FileInputStream(fileName), character);
-		BufferedReader reader = new BufferedReader(isr);
-		read(reader);
-		reader.close();
+	public IniUtil(String fileName, String character) {
+		InputStreamReader isr;
+		try {
+			isr = new InputStreamReader(new FileInputStream(fileName), character);
+			BufferedReader reader = new BufferedReader(isr);
+			read(reader);
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+
 	}
 
 	/**
@@ -53,12 +61,17 @@ public class IniUtil {
 	 * @Title: read
 	 * @Description:遍历每一行数据
 	 * @param reader
-	 * @throws Exception
 	 */
-	private void read(BufferedReader reader) throws Exception {
+	private void read(BufferedReader reader) {
 		String line;
-		while ((line = reader.readLine()) != null) {
-			parseLine(line);
+		try {
+			while ((line = reader.readLine()) != null) {
+				parseLine(line);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new JLFException(e);
 		}
 	}
 
@@ -67,9 +80,8 @@ public class IniUtil {
 	 * @Title: parseLine
 	 * @Description:解析每一行数据
 	 * @param line
-	 * @throws Exception
 	 */
-	private void parseLine(String line) throws Exception {
+	private void parseLine(String line) {
 		line = line.trim();
 		if (line.matches("\\[/.*\\]")) {
 
@@ -77,11 +89,11 @@ public class IniUtil {
 				secionName = null;
 				secionProps = null;
 			} else {
-				throw new Exception("");
+				throw new JLFException(".ini文件格式有误");
 			}
 		} else if (line.matches("\\[.*\\]")) {
 			if (secionName != null) {
-				throw new Exception("");
+				throw new JLFException(".ini文件格式有误");
 			}
 			secionName = line.replaceFirst("\\[(.*)\\]", "$1");
 			secionProps = new Properties();

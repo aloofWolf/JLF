@@ -1,16 +1,16 @@
 package org.jlf.plugin.aop.server.api;
 
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 import org.jlf.plugin.aop.user.api.JLFAopDo;
 
 /**
  * 
- * @ClassName: JAFAop
+ * @ClassName: JLFAop
  * @Description:AopApi
  * @author Lone Wolf
  * @date 2019Äê5ÔÂ22ÈÕ
  */
-public interface JLFAop extends JLFIPlugin {
+public interface JLFAop extends JLFPluginServerApi {
 
 	/**
 	 * 

@@ -2,7 +2,7 @@ package org.jlf.plugin.threadPool.api;
 
 import java.util.List;
 
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 import org.jlf.plugin.threadPool.user.api.JLFThreadPoolExecute;
 
 /**
@@ -12,7 +12,7 @@ import org.jlf.plugin.threadPool.user.api.JLFThreadPoolExecute;
  * @author Lone Wolf
  * @date 2019Äê5ÔÂ28ÈÕ
  */
-public interface JLFThreadPool extends JLFIPlugin {
+public interface JLFThreadPool extends JLFPluginServerApi {
 
 	/**
 	 * 

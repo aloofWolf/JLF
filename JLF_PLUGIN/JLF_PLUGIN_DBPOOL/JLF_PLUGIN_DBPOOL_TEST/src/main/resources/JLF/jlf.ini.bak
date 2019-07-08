@@ -1,0 +1,10 @@
+codeEnvironment=DEVELOP
+serverJarPath=J:/serverJar
+[plugins]
+json=fastJson
+check=wolf
+dbPool=wolf
+[/plugins]
+[pluginsConfig]
+dbPoolWolf=dbWolf.ini
+[/pluginsConfig]

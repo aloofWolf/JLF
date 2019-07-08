@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PLUGIN</artifactId>
 	<packaging>pom</packaging>
@@ -15,18 +15,20 @@
 			<groupId>${groupId}</groupId>
 			<artifactId>JLF_CORE</artifactId>
 			<version>${parent.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<modules>
 		<module>JLF_PLUGIN_AOP</module>
 		<module>JLF_PLUGIN_CACHE</module>
 		<module>JLF_PLUGIN_CHECK</module>
-		<module>JLF_PLUGIN_LOG</module>
 		<module>JLF_PLUGIN_DBPOOL</module>
 		<module>JLF_PLUGIN_SESSION</module>
 		<module>JLF_PLUGIN_THREADPOOL</module>
 		<module>JLF_PLUGIN_JSON</module>
 		<module>JLF_PLUGIN_MQ</module>
 		<module>JLF_PLUGIN_PUSH</module>
+		<module>JLF_PLUGIN_EXCEL</module>
+		<module>JLF_PLUGIN_TEMPLATE</module>
 	</modules>
 </project>

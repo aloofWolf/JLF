@@ -23,9 +23,8 @@ public interface JLFJsonArray {
 	 * @Title: add
 	 * @Description:
 	 * @param json
-	 * @throws Exception 
 	 */
-	public void add(JLFJson json) throws Exception;
+	public void add(JLFJson json);
 
 	/**
 	 * 
@@ -33,7 +32,7 @@ public interface JLFJsonArray {
 	 * @Description:从数组中移除值
 	 * @param json
 	 */
-	public void remove(JLFJson json) throws Exception;
+	public void remove(JLFJson json);
 
 	/**
 	 * 
@@ -42,7 +41,7 @@ public interface JLFJsonArray {
 	 * @param index
 	 * @return
 	 */
-	public JLFJson get(int index) throws Exception;
+	public JLFJson get(int index);
 
 	/**
 	 * 
@@ -51,7 +50,6 @@ public interface JLFJsonArray {
 	 * @param index
 	 * @return
 	 */
-	public JLFJsonArray getJsonArray(int index) throws Exception;
-	
+	public JLFJsonArray getJsonArray(int index);
 
 }

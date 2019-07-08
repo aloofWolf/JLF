@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.LogUtil;
 import org.jlf.plugin.push.user.api.config.JLFHttpConfig;
 
@@ -24,14 +25,13 @@ public class HttpSend {
 
 	/**
 	 * 
-	    * @Title: send
-	    * @Description:发送数据
-	    * @param config
-	    * @param datagram
-	    * @return
-	    * @throws Exception
+	 * @Title: send
+	 * @Description:发送数据
+	 * @param config
+	 * @param datagram
+	 * @return
 	 */
-	public static String send(JLFHttpConfig config, String datagram) throws Exception {
+	public static String send(JLFHttpConfig config, String datagram) {
 		CloseableHttpClient client = HttpPools.getClient(config);
 		HttpEntity entity = config.getHttpEntity(datagram);
 		HttpPost httpPost = new HttpPost(config.getUrl());
@@ -65,7 +65,7 @@ public class HttpSend {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception(e);
+			throw new JLFException(e);
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 		}

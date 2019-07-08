@@ -19,7 +19,7 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public N getValue(JLFJson json, Field field) throws Exception {
+	public N getValue(JLFJson json, Field field) {
 		return (N) json.get(field.getName());
 	}
 
@@ -52,14 +52,13 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMaxValue(JLFCheckAnn ann, Field field, N value) throws Exception {
+	public void checkMaxValue(JLFCheckAnn ann, Field field, N value) {
 		if (value != null) {
-			double maxValue = ann.maxValue();
+			double maxValue = (ann == null?JLFCheckAnn.maxValue:ann.maxValue());
 			if (numberToBigdecimal(value).compareTo(doubleBigdecimal(maxValue)) == 1) {
-				throw new Exception(getExceptionDesc(ann, field, MAX_VALUE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, field, MAX_VALUE_EXCEPTION_DESC));
 			}
 		}
 
@@ -72,14 +71,13 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMinValue(JLFCheckAnn ann, Field field, N value) throws Exception {
+	public void checkMinValue(JLFCheckAnn ann, Field field, N value) {
 		if (value != null) {
-			double minValue = ann.minValue();
+			double minValue = (ann == null?JLFCheckAnn.minValue:ann.minValue());
 			if (numberToBigdecimal(value).compareTo(doubleBigdecimal(minValue)) == -1) {
-				throw new Exception(getExceptionDesc(ann, field, MIN_VALUE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, field, MIN_VALUE_EXCEPTION_DESC));
 			}
 		}
 
@@ -92,12 +90,11 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void check(JLFCheckAnn ann, Field field, N value) throws Exception {
+	public void check(JLFCheckAnn ann, Field field, N value) {
 		if (value != null) {
-			String[] checks = ann.checked();
+			String[] checks = (ann == null?JLFCheckAnn.checked:ann.checked());
 			if (checks != null && checks.length > 0) {
 				String strValue = value.toString();
 				for (String check : checks) {

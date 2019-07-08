@@ -2,8 +2,10 @@ package org.jlf.plugin.mq.activeMq.server.core.producer;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Session;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.mq.activeMq.server.core.ActiveMqPool;
 import org.jlf.plugin.mq.server.api.JLFProducerTopic;
 
@@ -23,12 +25,17 @@ public class ProducerTopic extends Producer implements JLFProducerTopic {
 	}
 
 	@Override
-	public Destination getDestination(Session session, String topicName) throws Exception {
-		return session.createTopic(topicName);
+	public Destination getDestination(Session session, String topicName)  {
+		try {
+			return session.createTopic(topicName);
+		} catch (JMSException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	@Override
-	public Connection getConn() throws Exception {
+	public Connection getConn()  {
 		return ActiveMqPool.getTopicConnection();
 	}
 

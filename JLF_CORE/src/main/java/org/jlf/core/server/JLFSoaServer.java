@@ -2,7 +2,6 @@ package org.jlf.core.server;
 
 import java.util.Set;
 
-import org.jlf.common.exception.JLFException;
 import org.jlf.core.client.JLFPluginClient;
 
 /**
@@ -24,51 +23,36 @@ public abstract class JLFSoaServer {
 
 	/**
 	 * 
-	 * @Title: stop
-	 * @Description:停止插件服务
+	 * @Title: initConfig
+	 * @Description:初始化配置
 	 */
-	public abstract void jStart() throws Exception;
-
-	/**
-	 * 
-	 * @Title: reSatrt
-	 * @Description:重启插件服务
-	 */
-	public abstract void jreStart() throws Exception;
-
-	/**
-	 * 
-	 * @Title: start
-	 * @Description:启动插件服务
-	 */
-	public void start() throws Exception {
-		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s启动开始。。。", serverName));
-		try {
-			jStart();
-		} catch (Exception e) {
-			System.out.println(String.format("%s启动失败。。。", serverName));
-			throw new JLFException(e);
-		}
-
-		System.out.println(String.format("%s启动成功。。。", serverName));
+	public void initConfig() {
 	}
 
 	/**
 	 * 
-	 * @Title: reSatrt
-	 * @Description:重启插件服务
+	 * @Title: doOther
+	 * @Description:启动插件时,除初始化配置以外的其它处理
 	 */
-	public void reSatrt() throws Exception {
-		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s重启开始。。。", serverName));
-		try {
-			jreStart();
-		} catch (Exception e) {
-			System.out.println(String.format("%s重启失败。。。", serverName));
-			throw new JLFException(e);
-		}
+	public void doOther() {
+	}
 
-		System.out.println(String.format("%s重启成功。。。", serverName));
+	/**
+	 * 
+	 * @Title: start
+	 * @Description:启动架构服务
+	 */
+	public void start() {
+		String serverName = this.getClass().getName();
+		System.out.println(String.format("%s启动开始。。。", serverName));
+		try {
+			initConfig();
+			doOther();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(String.format("%s启动失败。。。", serverName));
+			throw e;
+		}
+		System.out.println(String.format("%s启动成功。。。", serverName));
 	}
 }

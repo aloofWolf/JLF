@@ -6,7 +6,7 @@ import org.jlf.plugin.json.server.api.JLFJsonFactory;
 
 /**
  * 
- * @ClassName: JLFCheckClient
+ * @ClassName: JLFJsonClient
  * @Description:JSON客户端
  * @author Lone Wolf
  * @date 2019年6月3日
@@ -14,22 +14,6 @@ import org.jlf.plugin.json.server.api.JLFJsonFactory;
 public class JLFJsonClient implements JLFPluginClient<JLFJsonFactory> {
 
 	private static JLFJsonFactory api; // api实例
-	private JLFPluginServer<JLFJsonFactory> server; // 绑定服务端
-
-	/**
-	 * 
-	 * 创建一个新的实例 JLFJsonClient
-	 *
-	 * @param server
-	 * @throws Exception
-	 */
-	public <SERVER extends JLFPluginServer<JLFJsonFactory>> JLFJsonClient(SERVER server) throws Exception {
-		if (api != null) {
-			throw new Exception("JLFAopClient不能重复初始化");
-		}
-		api = server.get();
-		this.server = server;
-	}
 
 	/**
 	 * 
@@ -41,10 +25,10 @@ public class JLFJsonClient implements JLFPluginClient<JLFJsonFactory> {
 		return api;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JLFPluginServer<JLFJsonFactory> getServer() {
-		return server;
+	public <SERVER extends JLFPluginServer<JLFJsonFactory>> void bindServer(SERVER server) {
+		api = server.getServerApi();
+
 	}
 
 }

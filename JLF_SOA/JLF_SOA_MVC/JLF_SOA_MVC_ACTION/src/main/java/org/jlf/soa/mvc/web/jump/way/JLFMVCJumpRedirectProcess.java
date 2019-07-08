@@ -1,8 +1,11 @@
 package org.jlf.soa.mvc.web.jump.way;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.soa.mvc.metadata.response.JLFMVCResponse;
 
 /**
@@ -15,9 +18,14 @@ import org.jlf.soa.mvc.metadata.response.JLFMVCResponse;
 public class JLFMVCJumpRedirectProcess implements JLFMVCIJumpProcess {
 
 	@Override
-	public void process(HttpServletRequest request, HttpServletResponse response, JLFMVCResponse<?> respBean, String url)
-			throws Exception {
-		response.sendRedirect(url);
+	public void process(HttpServletRequest request, HttpServletResponse response, JLFMVCResponse<?> respBean,
+			String url) {
+		try {
+			response.sendRedirect(url);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 }

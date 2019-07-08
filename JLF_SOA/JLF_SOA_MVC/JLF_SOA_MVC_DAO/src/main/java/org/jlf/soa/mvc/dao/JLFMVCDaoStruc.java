@@ -3,6 +3,8 @@ package org.jlf.soa.mvc.dao;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jlf.common.exception.JLFException;
+
 /**
  * 
  * @ClassName: JLFMVCServiceSign
@@ -20,13 +22,17 @@ public class JLFMVCDaoStruc {
 	 * @Description:»ñÈ¡daoÊµÀý
 	 * @param daoCls
 	 * @return
-	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static <DAO extends JLFMVCDao<?>> DAO getDao(Class<DAO> daoCls) throws Exception {
+	public static <DAO extends JLFMVCDao<?>> DAO getDao(Class<DAO> daoCls) {
 		DAO dao = (DAO) daosMap.get(daoCls);
 		if (dao == null) {
-			dao = daoCls.newInstance();
+			try {
+				dao = daoCls.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
 			dao.init();
 			daosMap.put(daoCls, dao);
 		}

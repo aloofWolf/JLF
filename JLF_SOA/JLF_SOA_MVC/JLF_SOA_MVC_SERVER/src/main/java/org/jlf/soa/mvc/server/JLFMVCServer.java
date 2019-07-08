@@ -7,11 +7,12 @@ import org.jlf.common.util.IniUtil;
 import org.jlf.core.config.JLFConfig;
 import org.jlf.core.server.JLFSoaServer;
 import org.jlf.plugin.aop.client.JLFAopClient;
-import org.jlf.plugin.aop.client.JLFSessionClient;
 import org.jlf.plugin.cache.client.JLFCacheClient;
 import org.jlf.plugin.check.client.JLFCheckClient;
-import org.jlf.plugin.dbpool.client.JLFDbPoolClient;
+import org.jlf.plugin.dbPool.client.JLFDbPoolClient;
+import org.jlf.plugin.excel.client.JLFExcelClient;
 import org.jlf.plugin.json.client.JLFJsonClient;
+import org.jlf.plugin.session.client.JLFSessionClient;
 import org.jlf.soa.mvc.web.route.JLFMVCRouteManager;
 
 /**
@@ -21,7 +22,7 @@ import org.jlf.soa.mvc.web.route.JLFMVCRouteManager;
  * @author Lone Wolf
  * @date 2019Äê5ÔÂ27ÈÕ
  */
-public class JLFMVCServer extends JLFSoaServer {
+public class JLFMvcServer extends JLFSoaServer {
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -33,21 +34,16 @@ public class JLFMVCServer extends JLFSoaServer {
 		set.add(JLFDbPoolClient.class);
 		set.add(JLFSessionClient.class);
 		set.add(JLFJsonClient.class);
+		set.add(JLFExcelClient.class);
 		return set;
 	}
 
 	@Override
-	public void jStart() throws Exception {
+	public void initConfig() {
 		String configFileName = JLFConfig.getSoaConfigName("mvc");
 		IniUtil ini = new IniUtil(configFileName);
 		JLFMVCRouteManager.initRoutes(ini);
-
 	}
-
-	@Override
-	public void jreStart() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }

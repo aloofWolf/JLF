@@ -1,5 +1,7 @@
 package org.jlf.product.quartz.wolf.server.config;
 
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
+
 /**
  * 
  * @ClassName: QuartzConfig
@@ -9,9 +11,12 @@ package org.jlf.product.quartz.wolf.server.config;
  */
 public class QuartzConfig {
 
-	private Integer maxThreads; // 最大线程数
-	private Integer seconds; // 主任务扫描间隔时间
-	private String dbNames; // 加载的数据库集合，以逗号分隔
+	@JLFCheckAnn(isNull = true, desc = "最大线程数")
+	private Integer maxThreads;
+	@JLFCheckAnn(isNull = true, desc = "主任务扫描间隔时间")
+	private Integer seconds;
+	@JLFCheckAnn(desc = "加载的数据库集合，以逗号分隔")
+	private String dbNames;
 
 	public Integer getMaxThreads() {
 		return maxThreads;

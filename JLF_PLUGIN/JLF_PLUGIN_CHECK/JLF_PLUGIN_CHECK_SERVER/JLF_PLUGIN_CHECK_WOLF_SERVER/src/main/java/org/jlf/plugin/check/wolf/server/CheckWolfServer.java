@@ -18,7 +18,7 @@ import org.jlf.plugin.json.client.JLFJsonClient;
 public class CheckWolfServer extends JLFPluginServer<JLFCheck> {
 
 	@Override
-	public JLFCheck get() {
+	public JLFCheck getServerApi() {
 		return new CheckWolf();
 	}
 
@@ -28,24 +28,6 @@ public class CheckWolfServer extends JLFPluginServer<JLFCheck> {
 		Set<Class<?>> set = new HashSet<Class<?>>();
 		set.add(JLFJsonClient.class);
 		return set;
-	}
-
-	@Override
-	public void jStart() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void jStop() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void jreStart() throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -9,17 +9,24 @@ import org.jlf.common.enums.api.IEnum;
  * @author Lone Wolf
  * @date 2019年5月22日
  */
-public enum BooleanType implements IEnum{
+public enum BooleanType implements IEnum {
 
-	TRUE(0), FALSE(1);
+	TRUE(0, "是"), FALSE(1, "否");
 	private Integer id;
+	private String desc;
 
-	BooleanType(Integer id) {
+	BooleanType(Integer id, String desc) {
 		this.id = id;
+		this.desc = desc;
 	}
 
 	public Integer getId() {
 		return this.id;
+	}
+
+	@Override
+	public String getDesc() {
+		return desc;
 	}
 
 }

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PLUGIN_CACHE</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PLUGIN_CACHE_SERVER</artifactId>
 	<packaging>pom</packaging>
@@ -18,5 +18,6 @@
 	</dependencies>
 	<modules>
 		<module>JLF_PLUGIN_CACHE_REDIS_SERVER</module>
+		<module>JLF_PLUGIN_CACHE_REDISCLUSTER_SERVER</module>
 	</modules>
 </project>

@@ -2,7 +2,7 @@ package org.jlf.plugin.push.server.api;
 
 import java.util.Map;
 
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 import org.jlf.plugin.push.user.api.metadata.JLFPushRequest;
 import org.jlf.plugin.push.user.api.metadata.JLFPushResponse;
 
@@ -13,7 +13,7 @@ import org.jlf.plugin.push.user.api.metadata.JLFPushResponse;
  * @author Lone Wolf
  * @date 2019年6月7日
  */
-public interface JLFPush extends JLFIPlugin {
+public interface JLFPush extends JLFPluginServerApi {
 
 	/**
 	 * 
@@ -26,9 +26,8 @@ public interface JLFPush extends JLFIPlugin {
 	 * @param params
 	 *            发送参数
 	 * @return
-	 * @throws Exception
 	 */
 	public <T extends JLFPushRequest> JLFPushResponse send(String channelCode, String interCode,
-			Map<String, Object> params) throws Exception;
+			Map<String, Object> params);
 
 }

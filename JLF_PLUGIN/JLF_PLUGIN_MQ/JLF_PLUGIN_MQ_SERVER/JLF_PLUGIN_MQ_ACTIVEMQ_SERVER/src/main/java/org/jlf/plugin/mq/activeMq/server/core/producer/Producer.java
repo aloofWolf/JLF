@@ -4,10 +4,12 @@ import java.io.Serializable;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.SerializeUtil;
 
 /**
@@ -26,9 +28,8 @@ public abstract class Producer {
 	 * @param session
 	 * @param name
 	 * @return
-	 * @throws Exception
 	 */
-	public abstract Destination getDestination(Session session, String name) throws Exception;
+	public abstract Destination getDestination(Session session, String name);
 
 	/**
 	 * 
@@ -36,7 +37,7 @@ public abstract class Producer {
 	 * @Description:获取连接
 	 * @return
 	 */
-	public abstract Connection getConn() throws Exception;
+	public abstract Connection getConn();
 
 	/**
 	 * 
@@ -44,9 +45,9 @@ public abstract class Producer {
 	 * @Description:发送消息
 	 * @param name
 	 * @param obj
-	 * @throws Exception
+	 * @
 	 */
-	public void send(String name, Serializable obj) throws Exception {
+	public void send(String name, Serializable obj) {
 		Connection conn = null;
 		Session session = null;
 		try {
@@ -61,10 +62,20 @@ public abstract class Producer {
 			e.printStackTrace();
 		} finally {
 			if (session != null) {
-				session.close();
+				try {
+					session.close();
+				} catch (JMSException e) {
+					e.printStackTrace();
+					throw new JLFException(e);
+				}
 			}
 			if (conn != null) {
-				conn.close();
+				try {
+					conn.close();
+				} catch (JMSException e) {
+					e.printStackTrace();
+					throw new JLFException(e);
+				}
 			}
 
 		}

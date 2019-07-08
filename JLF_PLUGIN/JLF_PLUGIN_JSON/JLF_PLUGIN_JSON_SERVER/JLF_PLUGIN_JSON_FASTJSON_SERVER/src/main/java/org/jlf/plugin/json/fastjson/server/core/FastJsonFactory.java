@@ -1,4 +1,4 @@
-package org.jlf.plugin.json.fastjson.server.core;
+package org.jlf.plugin.json.fastJson.server.core;
 
 import java.util.Map;
 
@@ -25,24 +25,24 @@ public class FastJsonFactory implements JLFJsonFactory {
 	}
 
 	@Override
-	public JLFJson beanToJson(Object bean) throws Exception {
+	public JLFJson beanToJson(Object bean) {
 		return new FastJson((JSONObject) JSONObject.toJSON(bean));
 	}
 
 	@Override
-	public String beanToJsonStr(Object bean) throws Exception {
+	public String beanToJsonStr(Object bean) {
 		JLFJson json = beanToJson(bean);
 		return json.toStr();
 	}
 
 	@Override
-	public JLFJson mapToJson(Map<String, Object> map) throws Exception {
+	public JLFJson mapToJson(Map<String, Object> map) {
 		JSONObject json = new JSONObject(map);
 		return new FastJson(json);
 	}
 
 	@Override
-	public String mapToJsonStr(Map<String, Object> map) throws Exception {
+	public String mapToJsonStr(Map<String, Object> map) {
 		JLFJson json = mapToJson(map);
 		return json.toStr();
 	}
@@ -54,13 +54,13 @@ public class FastJsonFactory implements JLFJsonFactory {
 	}
 
 	@Override
-	public <T> T jsonStrToBean(String jsonStr, Class<T> beanCls) throws Exception {
+	public <T> T jsonStrToBean(String jsonStr, Class<T> beanCls) {
 		JLFJson json = jsonStrToJson(jsonStr);
 		return json.toBean(beanCls);
 	}
 
 	@Override
-	public Map<String, Object> jsonStrToMap(String jsonStr) throws Exception {
+	public Map<String, Object> jsonStrToMap(String jsonStr) {
 		JLFJson json = jsonStrToJson(jsonStr);
 		return json.toMap();
 	}

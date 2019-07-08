@@ -3,6 +3,7 @@ package org.jlf.plugin.check.wolf.server.core.detail;
 import java.lang.reflect.Field;
 import java.util.Date;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.common.util.DateUtil;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.plugin.json.server.api.JLFJson;
@@ -17,26 +18,25 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class DateCheck extends ICheck<Date> {
 
 	@Override
-	public Date getValue(JLFJson json, Field field) throws Exception {
+	public Date getValue(JLFJson json, Field field) {
 		return json.getDate(field.getName());
 	}
 
 	/**
 	 * 
-	 * @Title: checkMaxValue
+	 * @Title: checkMaxDate
 	 * @Description:日期最大值校验
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMaxValue(JLFCheckAnn ann, Field field, Date value) throws Exception {
+	public void checkMaxDate(JLFCheckAnn ann, Field field, Date value) {
 		if (value != null) {
-			String maxDateStr = ann.maxDate();
+			String maxDateStr = (ann == null?JLFCheckAnn.maxDate:ann.maxDate());
 			Date date = DateUtil.formatDate(maxDateStr, DateUtil.DEFAULT_DATETIMEPATTERN);
 			if (value.after(date)) {
-				throw new Exception(getExceptionDesc(ann, field, MAX_DATE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, field, MAX_DATE_EXCEPTION_DESC));
 			}
 		}
 
@@ -44,20 +44,19 @@ public class DateCheck extends ICheck<Date> {
 
 	/**
 	 * 
-	 * @Title: checkMinValue
+	 * @Title: checkMaxDate
 	 * @Description:日期最小值校验
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMinValue(JLFCheckAnn ann, Field field, Date value) throws Exception {
+	public void checkMinDate(JLFCheckAnn ann, Field field, Date value) {
 		if (value != null) {
-			String minDateStr = ann.minDate();
+			String minDateStr = (ann == null?JLFCheckAnn.minDate:ann.minDate());
 			Date date = DateUtil.formatDate(minDateStr, DateUtil.DEFAULT_DATETIMEPATTERN);
 			if (value.before(date)) {
-				throw new Exception(getExceptionDesc(ann, field, MAX_DATE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, field, MAX_DATE_EXCEPTION_DESC));
 			}
 		}
 

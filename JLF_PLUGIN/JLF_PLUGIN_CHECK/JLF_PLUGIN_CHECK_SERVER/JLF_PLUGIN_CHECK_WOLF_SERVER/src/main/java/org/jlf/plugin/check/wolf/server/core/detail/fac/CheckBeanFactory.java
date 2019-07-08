@@ -51,7 +51,7 @@ public class CheckBeanFactory {
 	 * @return
 	 * @throws Exception
 	 */
-	public static CheckBean<?> getCheckBean(Class<?> fieldCls) throws Exception {
+	public static CheckBean<?> getCheckBean(Class<?> fieldCls) {
 
 		if (fieldCls.equals(Byte.class)) {
 			return createCheckBean(ByteCheck.class);
@@ -94,10 +94,16 @@ public class CheckBeanFactory {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	private static <C extends ICheck<?>> CheckBean<?> createCheckBean(Class<?> cls) throws Exception {
+	private static <C extends ICheck<?>> CheckBean<?> createCheckBean(Class<?> cls) {
 		CheckBean<?> bean = checks.get(cls);
 		if (bean == null) {
-			C c = (C) cls.newInstance();
+			C c;
+			try {
+				c = (C) cls.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
 			List<Method> allMethods = ReflectUtil.getAllMethods(cls);
 			List<Method> checkMethods = new ArrayList<Method>();
 			for (Method method : allMethods) {

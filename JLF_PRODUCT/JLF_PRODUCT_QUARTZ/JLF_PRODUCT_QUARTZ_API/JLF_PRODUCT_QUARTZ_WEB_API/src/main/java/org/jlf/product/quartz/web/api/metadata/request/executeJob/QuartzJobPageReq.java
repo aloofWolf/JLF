@@ -1,5 +1,6 @@
 package org.jlf.product.quartz.web.api.metadata.request.executeJob;
 
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.soa.mvc.metadata.request.JLFMVCPagingRequest;
 
 /**
@@ -9,11 +10,11 @@ import org.jlf.soa.mvc.metadata.request.JLFMVCPagingRequest;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-public class QuartzJobPageReq extends QuartzJobListReq{
+public class QuartzJobPageReq extends QuartzJobListReq {
 
-	private JLFMVCPagingRequest pages; // 分页信息
+	@JLFCheckAnn(desc = "分页信息")
+	private JLFMVCPagingRequest pages;
 
-	
 	public JLFMVCPagingRequest getPages() {
 		return pages;
 	}

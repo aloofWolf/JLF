@@ -16,7 +16,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class MapCheck extends CollectionCheck<Map<String, Object>> {
 
 	@Override
-	public Map<String, Object> getValue(JLFJson json, Field field) throws Exception {
+	public Map<String, Object> getValue(JLFJson json, Field field) {
 		JLFJson jsonValue = json.getJson(field.getName());
 		Map<String, Object> map = jsonValue.toMap();
 		return map;

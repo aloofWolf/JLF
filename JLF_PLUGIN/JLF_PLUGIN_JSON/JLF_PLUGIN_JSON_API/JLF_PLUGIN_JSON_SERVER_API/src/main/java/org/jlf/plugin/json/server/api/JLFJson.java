@@ -18,7 +18,6 @@ public interface JLFJson {
 	 * @Title: toStr
 	 * @Description:json转字符串
 	 * @return
-	 * @throws Exception
 	 */
 	public String toStr();
 
@@ -27,9 +26,8 @@ public interface JLFJson {
 	 * @Title: toMap
 	 * @Description:json转map
 	 * @return
-	 * @throws Exception
 	 */
-	public Map<String, Object> toMap() throws Exception;
+	public Map<String, Object> toMap();
 
 	/**
 	 * 
@@ -37,9 +35,8 @@ public interface JLFJson {
 	 * @Description:json转bean
 	 * @param beanCls
 	 * @return
-	 * @throws Exception
 	 */
-	public <T> T toBean(Class<T> beanCls) throws Exception;
+	public <T> T toBean(Class<T> beanCls);
 
 	/**
 	 * 
@@ -47,38 +44,34 @@ public interface JLFJson {
 	 * @Description:向json中赋值
 	 * @param key
 	 * @param value
-	 * @throws Exception
 	 */
-	public void put(String key, Object value) throws Exception;
-	
+	public void put(String key, Object value);
+
 	/**
 	 * 
 	 * @Title: put
 	 * @Description:向json中添加json
 	 * @param key
 	 * @param value
-	 * @throws Exception
 	 */
-	public void put(String key, JLFJson value) throws Exception;
-	
+	public void put(String key, JLFJson value);
+
 	/**
 	 * 
 	 * @Title: put
 	 * @Description:向json中添加value
 	 * @param key
 	 * @param value
-	 * @throws Exception
 	 */
-	public void put(String key, JLFJsonArray value) throws Exception;
+	public void put(String key, JLFJsonArray value);
 
 	/**
 	 * 
 	 * @Title: remove
 	 * @Description:从json中移除指定key
 	 * @param key
-	 * @throws Exception
 	 */
-	public void remove(String key) throws Exception;
+	public void remove(String key);
 
 	/**
 	 * 
@@ -86,9 +79,8 @@ public interface JLFJson {
 	 * @Description:根据key取对象
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public <T> T get(String key) throws Exception;
+	public <T> T get(String key);
 
 	/**
 	 * 
@@ -96,9 +88,8 @@ public interface JLFJson {
 	 * @Description:根据key取字符串value
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public String getStr(String key) throws Exception;
+	public String getStr(String key);
 
 	/**
 	 * 
@@ -106,9 +97,8 @@ public interface JLFJson {
 	 * @Description:取byye值
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Byte getByte(String key) throws Exception;
+	public Byte getByte(String key);
 
 	/**
 	 * 
@@ -116,9 +106,8 @@ public interface JLFJson {
 	 * @Description:取short值
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Short getShort(String key) throws Exception;
+	public Short getShort(String key);
 
 	/**
 	 * 
@@ -126,9 +115,8 @@ public interface JLFJson {
 	 * @Description:取int值
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Integer getInt(String key) throws Exception;
+	public Integer getInt(String key);
 
 	/**
 	 * 
@@ -136,9 +124,8 @@ public interface JLFJson {
 	 * @Description:取long值
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Long getLong(String key) throws Exception;
+	public Long getLong(String key);
 
 	/**
 	 * 
@@ -146,9 +133,8 @@ public interface JLFJson {
 	 * @Description:取double值
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Double getDouble(String key) throws Exception;
+	public Double getDouble(String key);
 
 	/**
 	 * 
@@ -156,9 +142,8 @@ public interface JLFJson {
 	 * @Description:取float值
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Float getFloat(String key) throws Exception;
+	public Float getFloat(String key);
 
 	/**
 	 * 
@@ -167,9 +152,8 @@ public interface JLFJson {
 	 * 
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public BigDecimal getBigDecimal(String key) throws Exception;
+	public BigDecimal getBigDecimal(String key);
 
 	/**
 	 * 
@@ -177,9 +161,8 @@ public interface JLFJson {
 	 * @Description:取Boolean值
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Boolean getBoolean(String key) throws Exception;
+	public Boolean getBoolean(String key);
 
 	/**
 	 * 
@@ -187,9 +170,8 @@ public interface JLFJson {
 	 * @Description:取日期
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public Date getDate(String key) throws Exception;
+	public Date getDate(String key);
 
 	/**
 	 * 
@@ -197,9 +179,8 @@ public interface JLFJson {
 	 * @Description:取json数组
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFJsonArray getJsonArray(String key) throws Exception;
+	public JLFJsonArray getJsonArray(String key);
 
 	/**
 	 * 
@@ -207,17 +188,15 @@ public interface JLFJson {
 	 * @Description:取json对象
 	 * @param key
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFJson getJson(String key) throws Exception;
+	public JLFJson getJson(String key);
 
 	/**
 	 * 
 	 * @Title: size
 	 * @Description:获取json的大小
 	 * @return
-	 * @throws Exception
 	 */
-	public int size() throws Exception;
+	public int size();
 
 }

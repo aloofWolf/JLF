@@ -18,10 +18,9 @@ public class SerializeUtilTest {
 	 * 
 	 * @Title: serialize
 	 * @Description:序列化与反序列化测试
-	 * @throws Exception
 	 */
 	@Test
-	public void serialize() throws Exception {
+	public void serialize() {
 		Ser ser = new Ser();
 		ser.setStr("qqq");
 		ser.setL(90l);

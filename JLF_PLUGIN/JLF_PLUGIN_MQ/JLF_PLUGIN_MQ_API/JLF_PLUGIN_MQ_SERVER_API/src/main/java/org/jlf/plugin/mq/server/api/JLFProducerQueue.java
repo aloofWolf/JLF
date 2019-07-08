@@ -17,8 +17,7 @@ public interface JLFProducerQueue {
 	 * @Description:·¢ËÍÏûÏ¢
 	 * @param name
 	 * @param obj
-	 * @throws Exception
 	 */
-	public void send(String name, Serializable obj) throws Exception;
+	public void send(String name, Serializable obj);
 
 }

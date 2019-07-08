@@ -3,6 +3,8 @@ package org.jlf.common.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jlf.common.exception.JLFException;
+
 /**
  * 
  * @ClassName: SingletonUtil
@@ -20,9 +22,8 @@ public class SingletonUtil {
 	 * @Description:根据默认的singleObjMap获取单例对象
 	 * @param cls
 	 * @return
-	 * @throws Exception
 	 */
-	public static <T> T getInstance(Class<T> cls) throws Exception {
+	public static <T> T getInstance(Class<T> cls) {
 		return getInstance(cls, defaultSingleObjMap);
 	}
 
@@ -33,13 +34,17 @@ public class SingletonUtil {
 	 * @param cls
 	 * @param singleObjMap
 	 * @return
-	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getInstance(Class<T> cls, final Map<Class<?>, ?> singleObjMap) throws Exception {
+	public static <T> T getInstance(Class<T> cls, final Map<Class<?>, ?> singleObjMap) {
 		Object obj = defaultSingleObjMap.get(cls);
 		if (obj == null) {
-			obj = cls.newInstance();
+			try {
+				obj = cls.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
 			defaultSingleObjMap.put(cls, obj);
 		}
 		return (T) obj;

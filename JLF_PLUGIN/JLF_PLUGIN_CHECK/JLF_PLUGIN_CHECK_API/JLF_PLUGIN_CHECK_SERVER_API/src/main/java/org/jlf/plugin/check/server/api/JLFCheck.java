@@ -2,16 +2,16 @@ package org.jlf.plugin.check.server.api;
 
 import java.util.Map;
 
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 
 /**
  * 
-    * @ClassName: JLFCheck
-    * @Description:checkApi
-    * @author Lone Wolf
-    * @date 2019年5月22日
+ * @ClassName: JLFCheck
+ * @Description:checkApi
+ * @author Lone Wolf
+ * @date 2019年5月22日
  */
-public interface JLFCheck extends JLFIPlugin {
+public interface JLFCheck extends JLFPluginServerApi {
 
 	/**
 	 * 
@@ -20,9 +20,8 @@ public interface JLFCheck extends JLFIPlugin {
 	 * @param jsonStr
 	 * @param cls
 	 * @return
-	 * @throws Exception 
 	 */
-	public <T> T check(String jsonStr, Class<T> cls) throws Exception;
+	public <T> T check(String jsonStr, Class<T> cls);
 
 	/**
 	 * 
@@ -31,7 +30,6 @@ public interface JLFCheck extends JLFIPlugin {
 	 * @param map
 	 * @param cls
 	 * @return
-	 * @throws Exception 
 	 */
-	public <T> T check(Map<String, Object> map, Class<T> cls) throws Exception;
+	public <T> T check(Map<String, Object> map, Class<T> cls);
 }

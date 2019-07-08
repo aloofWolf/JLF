@@ -3,26 +3,18 @@ package org.jlf.product.quartz.client;
 import org.jlf.core.client.JLFProductClient;
 import org.jlf.core.server.JLFProductServer;
 import org.jlf.product.quartz.server.api.JLFQuartz;
+import org.jlf.product.quartz.web.api.JLFQuartzAcion;
 
-public class JLFQuartzClient implements JLFProductClient<JLFQuartz> {
+/**
+ * 
+    * @ClassName: JLFQuartzClient
+    * @Description:JLFQuartzClient
+    * @author Lone Wolf
+    * @date 2019年7月6日
+ */
+public class JLFQuartzClient implements JLFProductClient<JLFQuartz, JLFQuartzAcion> {
 
 	private static JLFQuartz api; // api实例
-	private JLFProductServer<JLFQuartz> server; // 绑定服务端
-
-	/**
-	 * 
-	 * 创建一个新的实例 JLFAopClient.
-	 *
-	 * @param server
-	 * @throws Exception
-	 */
-	public <SERVER extends JLFProductServer<JLFQuartz>> JLFQuartzClient(SERVER server) throws Exception {
-		if (api != null) {
-			throw new Exception("JLFSessionClient不能重复初始化");
-		}
-		api = server.get();
-		this.server = server;
-	}
 
 	/**
 	 * 
@@ -34,10 +26,10 @@ public class JLFQuartzClient implements JLFProductClient<JLFQuartz> {
 		return api;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JLFProductServer<JLFQuartz> getServer() {
-		return server;
+	public <SERVER extends JLFProductServer<JLFQuartz, JLFQuartzAcion>> void bindServer(SERVER server) {
+		api = server.getServerApi();
+
 	}
 
 }

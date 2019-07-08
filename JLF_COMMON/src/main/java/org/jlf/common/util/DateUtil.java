@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.jlf.common.exception.JLFException;
+
 /**
  * 
  * @ClassName: DateUtil
@@ -88,16 +90,16 @@ public class DateUtil {
 	 * @Description:根据日期字符串获取日期
 	 * @param str_date
 	 * @return
-	 * @throws Exception
 	 */
-	public static Date formatDate(String str_date) throws Exception {
+	public static Date formatDate(String str_date) {
+		Date result = null;
 		try {
-			Date result = new SimpleDateFormat(DEFAULT_DATEPATTERN).parse(str_date);
-			return result;
+			result = new SimpleDateFormat(DEFAULT_DATEPATTERN).parse(str_date);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			throw new Exception(str_date + "can't parse ");
+			throw new JLFException(e);
 		}
+		return result;
 
 	}
 
@@ -108,16 +110,16 @@ public class DateUtil {
 	 * @param str_date
 	 * @param format
 	 * @return
-	 * @throws Exception
 	 */
-	public static Date formatDate(String str_date, String format) throws Exception {
+	public static Date formatDate(String str_date, String format) {
+		Date result = null;
 		try {
-			Date result = new SimpleDateFormat(format).parse(str_date);
-			return result;
+			result = new SimpleDateFormat(format).parse(str_date);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			throw new Exception(str_date + "can't parse ");
+			throw new JLFException(e);
 		}
+		return result;
 
 	}
 
@@ -129,15 +131,35 @@ public class DateUtil {
 	 *            开始日期
 	 * @param end
 	 *            结束日期
-	 * @return 结束日期在开始日期之后，返回 1 ，两日期为同一天，返回 0 ；结束日期在开始日期之前，返回 -1
-	 * @throws Exception
+	 * @return 结束日期大于开始日期之后，返回 1 ，等于，返回 0 ；小于，返回 -1
 	 */
-	public static int compareDataString(String begin, String end) throws Exception {
+	public static int compareDataString(String begin, String end) {
 		Date beingD = formatDate(begin);
 		Date endD = formatDate(end);
 		if (endD.getTime() == beingD.getTime()) {
 			return 0;
 		} else if (endD.getTime() > beingD.getTime()) {
+			return 1;
+		} else {
+			return -1;
+		}
+
+	}
+
+	/**
+	 * 
+	 * @Title: compareData
+	 * @Description:日期比较
+	 * @param begin
+	 *            开始日期
+	 * @param end
+	 *            结束日期
+	 * @return 结束日期大于开始日期之后，返回 1 ，等于，返回 0 ；小于，返回 -1
+	 */
+	public static int compareData(Date begin, Date end) {
+		if (end.getTime() == begin.getTime()) {
+			return 0;
+		} else if (end.getTime() > begin.getTime()) {
 			return 1;
 		} else {
 			return -1;
@@ -437,12 +459,17 @@ public class DateUtil {
 	 * @param beginDate
 	 * @param endDate
 	 * @return
-	 * @throws ParseException
 	 */
-	public static int daysBetween(Date beginDate, Date endDate) throws Exception {
+	public static int daysBetween(Date beginDate, Date endDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATEPATTERN);
-		beginDate = sdf.parse(sdf.format(beginDate));
-		endDate = sdf.parse(sdf.format(endDate));
+		try {
+			beginDate = sdf.parse(sdf.format(beginDate));
+			endDate = sdf.parse(sdf.format(endDate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(beginDate);
 		long time1 = cal.getTimeInMillis();
@@ -460,14 +487,18 @@ public class DateUtil {
 	 * @param beginDate
 	 * @param endDate
 	 * @return
-	 * @throws ParseException
 	 */
-	public static int daysBetween(String beginDate, String endDate) throws Exception {
+	public static int daysBetween(String beginDate, String endDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATEPATTERN);
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(sdf.parse(beginDate));
+		try {
+			cal.setTime(sdf.parse(beginDate));
+			cal.setTime(sdf.parse(endDate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 		long time1 = cal.getTimeInMillis();
-		cal.setTime(sdf.parse(endDate));
 		long time2 = cal.getTimeInMillis();
 		long between_days = (time2 - time1) / (1000 * 3600 * 24);
 

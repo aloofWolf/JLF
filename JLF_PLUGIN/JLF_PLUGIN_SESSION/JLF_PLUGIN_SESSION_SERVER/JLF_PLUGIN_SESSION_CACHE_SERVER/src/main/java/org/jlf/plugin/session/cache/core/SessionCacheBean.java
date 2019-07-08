@@ -21,7 +21,6 @@ public class SessionCacheBean {
 
 	public static void setSessionBean(JLFSessionBean value) {
 		sessionBean.set(value);
-		;
 	}
 
 	public static SessionCacheConfig getConfig() {

@@ -1,6 +1,7 @@
 package org.jlf.plugin.push.wolf.server.manager;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -37,9 +38,9 @@ public class ChannelManager {
 	 * @Title: init
 	 * @Description:初始化inters
 	 * @param ini
-	 * @throws Exception
+	 * @
 	 */
-	public static void init(IniUtil ini) throws Exception {
+	public static void init(IniUtil ini) {
 		Properties props = ini.getSection("channls");
 		if (props != null) {
 			for (Enumeration<Object> keys = props.keys(); keys.hasMoreElements();) {
@@ -56,8 +57,8 @@ public class ChannelManager {
 		} else {
 			throw new JLFException("PUSH插件未配置扫描包");
 		}
-		
-		//遍历输出扫描的结果
+
+		// 遍历输出扫描的结果
 		Iterator<Map.Entry<String, JLFInter<?, ?, ?>>> it = inters.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, JLFInter<?, ?, ?>> entry = it.next();
@@ -73,11 +74,9 @@ public class ChannelManager {
 	 * @param channelCode
 	 * @param clss
 	 * @param config
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	private static JLFChannel<?> pasreChannel(String channelCode, List<Class<?>> clss, Properties config)
-			throws Exception {
+	private static JLFChannel<?> pasreChannel(String channelCode, List<Class<?>> clss, Properties config) {
 		List<Class<?>> channels = new ArrayList<Class<?>>();
 		for (Class<?> channelCls : clss) {
 			JLFChannelAnn channelAnn = (JLFChannelAnn) channelCls.getAnnotation(JLFChannelAnn.class);
@@ -95,7 +94,13 @@ public class ChannelManager {
 			throw new JLFException("渠道编号" + channelCode + "未匹配到实现类类");
 		}
 		Class<?> channelCls = channels.get(0);
-		JLFChannel<?> channel = (JLFChannel<?>) channelCls.newInstance();
+		JLFChannel<?> channel;
+		try {
+			channel = (JLFChannel<?>) channelCls.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 		channel.initConfig(config);
 		return channel;
 	}
@@ -107,9 +112,9 @@ public class ChannelManager {
 	 * @param channelCode
 	 * @param clss
 	 * @param channel
-	 * @throws Exception
+	 * @
 	 */
-	private static void pasreInter(String channelCode, List<Class<?>> clss, JLFChannel<?> channel) throws Exception {
+	private static void pasreInter(String channelCode, List<Class<?>> clss, JLFChannel<?> channel) {
 		for (Class<?> interCls : clss) {
 			JLFInterAnn channelAnn = (JLFInterAnn) interCls.getAnnotation(JLFInterAnn.class);
 			if (channelAnn != null && channelAnn.channelCode().equals(channelCode)) {
@@ -120,8 +125,17 @@ public class ChannelManager {
 						throw new JLFException("有重复的渠道编号:" + channelCode + "和接口编号:" + interCode);
 					}
 
-					Constructor<?> interConstuc = interCls.getConstructor(channel.getClass());
-					JLFInter<?, ?, ?> inter = (JLFInter<?, ?, ?>) interConstuc.newInstance(channel);
+					Constructor<?> interConstuc;
+					JLFInter<?, ?, ?> inter;
+					try {
+						interConstuc = interCls.getConstructor(channel.getClass());
+						inter = (JLFInter<?, ?, ?>) interConstuc.newInstance(channel);
+					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+						throw new JLFException(e);
+					}
+
 					inters.put(intersMapKey, inter);
 				}
 

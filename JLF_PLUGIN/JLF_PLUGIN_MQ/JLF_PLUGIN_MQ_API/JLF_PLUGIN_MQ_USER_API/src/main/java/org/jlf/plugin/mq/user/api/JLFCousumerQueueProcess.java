@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Lone Wolf
  * @date 2019年6月6日
  */
-public interface JLFCousumerQueueProcess{
+public interface JLFCousumerQueueProcess {
 
 	/**
 	 * 
@@ -32,8 +32,7 @@ public interface JLFCousumerQueueProcess{
 	 * @Title: process
 	 * @Description:消费者接收消息后的处理
 	 * @param obj
-	 * @throws Exception
 	 */
-	public void process(Serializable obj) throws Exception;
+	public void process(Serializable obj);
 
 }

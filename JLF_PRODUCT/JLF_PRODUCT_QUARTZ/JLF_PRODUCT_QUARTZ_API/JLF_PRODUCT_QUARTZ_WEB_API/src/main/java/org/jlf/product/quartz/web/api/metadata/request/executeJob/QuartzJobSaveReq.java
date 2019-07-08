@@ -1,9 +1,10 @@
 package org.jlf.product.quartz.web.api.metadata.request.executeJob;
 
-import org.jlf.common.enums.BooleanType;
-import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
+import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
+import org.jlf.common.enums.BooleanType;
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
+import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
 
 /**
  * 
@@ -12,13 +13,18 @@ import com.alibaba.fastjson.JSONObject;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-public class QuartzJobSaveReq extends JLFMVCRequest{
+public class QuartzJobSaveReq extends JLFMVCRequest {
 
-	private Long templateId; // 模板id
-	private Long billId; // 单据id
-	private String core; // 执行时间
-	private BooleanType enabled; // 是否启用
-	private JSONObject params; // 执行参数
+	@JLFCheckAnn(desc = "模板id")
+	private Long templateId;
+	@JLFCheckAnn(isNull = true, desc = "单据id")
+	private Long billId;
+	@JLFCheckAnn(maxLength = 20, desc = "执行时间")
+	private String core;
+	@JLFCheckAnn(desc = "是否启用")
+	private BooleanType enabled;
+	@JLFCheckAnn(isNull = true, desc = "执行参数")
+	private Map<String, Object> params;
 
 	public Long getTemplateId() {
 		return templateId;
@@ -52,29 +58,12 @@ public class QuartzJobSaveReq extends JLFMVCRequest{
 		this.enabled = enabled;
 	}
 
-	public JSONObject getParams() {
+	public Map<String, Object> getParams() {
 		return params;
 	}
 
-	public void setParams(JSONObject params) {
+	public void setParams(Map<String, Object> params) {
 		this.params = params;
 	}
 
 }
-
-/**
- * 
- * @Title: getBeanList
- * @Description:获取QuartzExecute的list
- * @return
- *//*
-	 * public List<QuartzJob> getBeanList() { List<QuartzJob> list = new
-	 * ArrayList<QuartzJob>(); for (QuartzJobSaveDetailReq detail : details) {
-	 * QuartzJob job = new QuartzJob(); job.setTemplateId(this.templateId);
-	 * job.setBillId(this.billId); job.setCron(detail.getCore());
-	 * job.setEnabled(detail.getEnabled()); if
-	 * (detail.getEnabled().equals(BooleanType.TRUE)) {
-	 * job.setReady(BooleanType.TRUE); } if (detail.getParams() != null) {
-	 * job.setParams(detail.getParams().toJSONString()); } list.add(job); }
-	 * return list; }
-	 */

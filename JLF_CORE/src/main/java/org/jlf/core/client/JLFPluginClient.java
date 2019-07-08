@@ -1,6 +1,6 @@
 package org.jlf.core.client;
 
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 import org.jlf.core.server.JLFPluginServer;
 
 /**
@@ -9,16 +9,16 @@ import org.jlf.core.server.JLFPluginServer;
  * @Description:JLF插件客户端
  * @author Lone Wolf
  * @date 2019年6月3日
- * @param <API>
+ * @param <SERVER_API>
  */
-public interface JLFPluginClient<API extends JLFIPlugin> {
+public interface JLFPluginClient<SERVER_API extends JLFPluginServerApi> {
 
 	/**
 	 * 
-	 * @Title: getServer
-	 * @Description:获取插件的绑定的server端
-	 * @return
+	 * @Title: bindServer
+	 * @Description:绑定当前客户端的服务端
+	 * @param server
 	 */
-	public <SERVER extends JLFPluginServer<API>> SERVER getServer();
+	public <SERVER extends JLFPluginServer<SERVER_API>> void bindServer(SERVER server);
 
 }

@@ -20,52 +20,52 @@ public class CacheRedisCore implements JLFCache {
 	protected Jedis jedis;
 
 	@Override
-	public void save(String key, String value) throws Exception {
+	public void save(String key, String value) {
 		jedis.set(key, value);
 	}
 
 	@Override
-	public void save(String key, Serializable bean) throws Exception {
+	public void save(String key, Serializable bean) {
 		String ser = SerializeUtil.serialize(bean);
 		jedis.set(key, ser);
 
 	}
 
 	@Override
-	public void save(String key, String value, int seconds) throws Exception {
+	public void save(String key, String value, int seconds) {
 		jedis.set(key, value);
 		jedis.expire(key, seconds);
 
 	}
 
 	@Override
-	public void save(String key, Serializable bean, int seconds) throws Exception {
+	public void save(String key, Serializable bean, int seconds) {
 		String ser = SerializeUtil.serialize(bean);
 		jedis.set(key, ser);
 		jedis.expire(key, seconds);
 	}
 
 	@Override
-	public void update(String key, String value) throws Exception {
+	public void update(String key, String value) {
 		jedis.set(key, value);
 	}
 
 	@Override
-	public void update(String key, Serializable bean) throws Exception {
+	public void update(String key, Serializable bean) {
 		String ser = SerializeUtil.serialize(bean);
 		jedis.set(key, ser);
 
 	}
 
 	@Override
-	public void update(String key, String value, int seconds) throws Exception {
+	public void update(String key, String value, int seconds) {
 		jedis.set(key, value);
 		jedis.expire(key, seconds);
 
 	}
 
 	@Override
-	public void update(String key, Serializable bean, int seconds) throws Exception {
+	public void update(String key, Serializable bean, int seconds) {
 		String ser = SerializeUtil.serialize(bean);
 		jedis.set(key, ser);
 		jedis.expire(key, seconds);
@@ -73,12 +73,12 @@ public class CacheRedisCore implements JLFCache {
 	}
 
 	@Override
-	public String getString(String key) throws Exception {
+	public String getString(String key) {
 		return jedis.get(key);
 	}
 
 	@Override
-	public <T extends Serializable> T getObj(String key, Class<T> cls) throws Exception {
+	public <T extends Serializable> T getObj(String key, Class<T> cls) {
 		String ser = jedis.get(key);
 		if (ser == null) {
 			return null;
@@ -88,31 +88,31 @@ public class CacheRedisCore implements JLFCache {
 	}
 
 	@Override
-	public void save(String key, String... values) throws Exception {
+	public void save(String key, String... values) {
 		jedis.sadd(key, values);
 
 	}
 
 	@Override
-	public void add(String key, String... values) throws Exception {
+	public void add(String key, String... values) {
 		jedis.sadd(key, values);
 
 	}
 
 	@Override
-	public void save(String key, int seconds, String... values) throws Exception {
-		jedis.sadd(key, values);
-		jedis.expire(key, seconds);
-	}
-
-	@Override
-	public void add(String key, int seconds, String... values) throws Exception {
+	public void save(String key, int seconds, String... values) {
 		jedis.sadd(key, values);
 		jedis.expire(key, seconds);
 	}
 
 	@Override
-	public int getArrSize(String key) throws Exception {
+	public void add(String key, int seconds, String... values) {
+		jedis.sadd(key, values);
+		jedis.expire(key, seconds);
+	}
+
+	@Override
+	public int getArrSize(String key) {
 		Set<String> set = jedis.smembers(key);
 		if (set == null) {
 			return 0;
@@ -121,13 +121,13 @@ public class CacheRedisCore implements JLFCache {
 	}
 
 	@Override
-	public void delete(String key) throws Exception {
+	public void delete(String key) {
 		jedis.del(key);
 
 	}
 
 	@Override
-	public void setKeyPeriod(String key, int seconds) throws Exception {
+	public void setKeyPeriod(String key, int seconds) {
 		jedis.expire(key, seconds);
 	}
 

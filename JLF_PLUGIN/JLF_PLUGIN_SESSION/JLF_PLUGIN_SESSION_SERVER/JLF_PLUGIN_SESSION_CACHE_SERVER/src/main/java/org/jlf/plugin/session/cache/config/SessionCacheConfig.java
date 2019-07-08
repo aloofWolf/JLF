@@ -1,5 +1,6 @@
 package org.jlf.plugin.session.cache.config;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.plugin.session.user.api.JLFSessionBean;
 
@@ -31,15 +32,15 @@ public class SessionCacheConfig {
 		return sessionBeanClsName;
 	}
 
-	public void setSessionBeanClsName(String sessionBeanClsName) throws Exception {
+	public void setSessionBeanClsName(String sessionBeanClsName) {
 		try {
 			this.sessionBeanCls = Class.forName(sessionBeanClsName);
 			if (!JLFSessionBean.class.isAssignableFrom(this.sessionBeanCls)) {
-				throw new Exception("");
+				throw new JLFException("sessionBeanClsName不正确");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("sessionBeanClsName不正确");
+			throw new JLFException("sessionBeanClsName不正确");
 		}
 		this.sessionBeanClsName = sessionBeanClsName;
 	}

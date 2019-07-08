@@ -2,6 +2,7 @@ package org.jlf.common.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -21,16 +22,26 @@ public class SerializeUtil {
 	 * @Description:将对象序列化为字符串
 	 * @param t
 	 * @return
-	 * @throws Exception
 	 */
-	public static <T extends Serializable> String serialize(T t) throws Exception {
+	public static <T extends Serializable> String serialize(T t) {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		ObjectOutputStream objectOutputStream;
-		objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-		objectOutputStream.writeObject(t);
-		String string = byteArrayOutputStream.toString("ISO-8859-1");
-		objectOutputStream.close();
-		byteArrayOutputStream.close();
+		ObjectOutputStream objectOutputStream = null;
+		String string = null;
+		try {
+			objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+			objectOutputStream.writeObject(t);
+			string = byteArrayOutputStream.toString("ISO-8859-1");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				byteArrayOutputStream.close();
+				objectOutputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return string;
 	}
 
@@ -41,15 +52,30 @@ public class SerializeUtil {
 	 * @param ser
 	 * @param cls
 	 * @return
-	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T serializeToObject(String ser, Class<T> cls) throws Exception {
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(ser.getBytes("ISO-8859-1"));
-		ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-		T t = (T) objectInputStream.readObject();
-		objectInputStream.close();
-		byteArrayInputStream.close();
+	public static <T extends Serializable> T serializeToObject(String ser, Class<T> cls) {
+		ByteArrayInputStream byteArrayInputStream = null;
+		ObjectInputStream objectInputStream = null;
+		T t = null;
+		try {
+			byteArrayInputStream = new ByteArrayInputStream(ser.getBytes("ISO-8859-1"));
+			objectInputStream = new ObjectInputStream(byteArrayInputStream);
+			t = (T) objectInputStream.readObject();
+
+		} catch (IOException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				objectInputStream.close();
+				byteArrayInputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 		return t;
 	}
 

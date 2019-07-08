@@ -1,7 +1,7 @@
 package org.jlf.common.util;
 
-import org.jlf.common.enums.BooleanType;
 import org.jlf.common.enums.api.IEnum;
+import org.jlf.common.exception.JLFException;
 
 /**
  * 
@@ -19,16 +19,15 @@ public class EnumUtil {
 	 * @param cls
 	 * @param id
 	 * @return
-	 * @throws Exception
 	 */
-	public static <E extends IEnum> E getByID(Class<E> cls, Integer id) throws Exception {
+	public static <E extends IEnum> E getByID(Class<E> cls, Integer id) {
 		E[] arr = cls.getEnumConstants();
 		for (E e : arr) {
 			if (e.getId().equals(id)) {
 				return e;
 			}
 		}
-		throw new Exception(String.format(E.idNoExistExceptionMessage, "ExpressOperatorType", id));
+		throw new JLFException(String.format(E.idNoExistExceptionMessage, "ExpressOperatorType", id));
 	}
 
 	/**
@@ -39,9 +38,8 @@ public class EnumUtil {
 	 * @param id
 	 * @param defaultValue
 	 * @return
-	 * @throws Exception
 	 */
-	public static <E extends IEnum> E getByID(Class<E> cls, Integer id, E defaultValue) throws Exception {
+	public static <E extends IEnum> E getByID(Class<E> cls, Integer id, E defaultValue) {
 		E[] arr = cls.getEnumConstants();
 		for (E e : arr) {
 			if (e.getId().equals(id)) {
@@ -51,10 +49,31 @@ public class EnumUtil {
 		return defaultValue;
 	}
 
-	public static void main(String[] args) throws Exception {
-		System.out.println(getByID(BooleanType.class, 0));
-		System.out.println(getByID(BooleanType.class, 1));
-		System.out.println(getByID(BooleanType.class, 2));
+	/**
+	 * 
+	 * @Title: getAllIds
+	 * @Description:获取枚举的所有id数组
+	 * @param cls
+	 * @return
+	 */
+	public static <E extends IEnum> Integer[] getAllIds(Class<E> cls) {
+		E[] values = cls.getEnumConstants();
+		Integer[] arr = new Integer[values.length];
+		for (int i = 0; i < values.length; i++) {
+			arr[i] = values[i].getId();
+		}
+		return arr;
+
 	}
 
+	/**
+	 * 
+	 * @Title: getAllValues
+	 * @Description:获取枚举值数组
+	 * @param cls
+	 * @return
+	 */
+	public static <E extends IEnum> E[] getAllValues(Class<E> cls) {
+		return cls.getEnumConstants();
+	}
 }

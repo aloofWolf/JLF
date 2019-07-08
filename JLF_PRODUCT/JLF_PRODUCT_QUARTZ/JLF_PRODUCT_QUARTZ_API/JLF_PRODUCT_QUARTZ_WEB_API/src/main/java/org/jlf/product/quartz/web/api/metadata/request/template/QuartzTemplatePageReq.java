@@ -1,5 +1,6 @@
 package org.jlf.product.quartz.web.api.metadata.request.template;
 
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.soa.mvc.metadata.request.JLFMVCPagingRequest;
 
 /**
@@ -11,6 +12,7 @@ import org.jlf.soa.mvc.metadata.request.JLFMVCPagingRequest;
  */
 public class QuartzTemplatePageReq extends QuartzTemplateListReq {
 
+	@JLFCheckAnn(desc = "∑÷“≥–≈œ¢")
 	private JLFMVCPagingRequest pages;
 
 	public JLFMVCPagingRequest getPages() {

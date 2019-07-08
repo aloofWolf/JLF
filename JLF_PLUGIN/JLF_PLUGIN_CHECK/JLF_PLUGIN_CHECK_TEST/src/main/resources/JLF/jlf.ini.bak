@@ -1,0 +1,6 @@
+codeEnvironment=DEVELOP
+serverJarPath=J:/serverJar
+[plugins]
+json=fast
+check=wolf
+[/plugins]

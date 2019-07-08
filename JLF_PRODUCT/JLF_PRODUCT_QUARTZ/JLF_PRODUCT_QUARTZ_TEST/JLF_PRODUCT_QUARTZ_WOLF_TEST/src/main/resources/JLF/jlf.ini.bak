@@ -1,9 +1,0 @@
-codeEnvironment=DEVELOP
-[plugins]
-dbWolf=dbWolf.ini
-cacheRedis=redis.ini
-sessionCache=sessionCache.ini
-[/plugins]
-[products]
-quartzWolf=quartzWolf.ini
-[/products]

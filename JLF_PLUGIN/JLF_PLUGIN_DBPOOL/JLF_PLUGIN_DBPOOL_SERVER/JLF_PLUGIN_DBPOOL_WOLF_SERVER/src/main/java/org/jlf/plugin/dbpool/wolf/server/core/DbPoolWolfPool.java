@@ -1,10 +1,15 @@
-package org.jlf.plugin.dbpool.wolf.server.core;
+package org.jlf.plugin.dbPool.wolf.server.core;
 
+import java.beans.PropertyVetoException;
 import java.sql.Connection;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.jlf.plugin.dbpool.wolf.server.config.DbPoolWolfConfig;
+import org.jlf.common.exception.JLFException;
+import org.jlf.plugin.dbPool.server.api.JLFDbPool;
+import org.jlf.plugin.dbPool.wolf.server.config.DbPoolWolfChildConfig;
+import org.jlf.plugin.dbPool.wolf.server.config.DbPoolWolfMainConfig;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
@@ -20,39 +25,57 @@ public class DbPoolWolfPool {
 	/**
 	 * 系统已初始化的所有dataSource
 	 */
-	private static Map<String, ComboPooledDataSource> dataSources = new HashMap<String, ComboPooledDataSource>();
+	private static Map<String, ComboPooledDataSource> dataSources = new ConcurrentHashMap<String, ComboPooledDataSource>();
 
 	/**
 	 * 
-	 * @Title: init
-	 * @Description:根据config初始化dataSource
+	 * @Title: initMainDataSource
+	 * @Description:根据config初始化主库dataSource
 	 * @param config
 	 * @throws Exception
 	 */
-	public static void init(DbPoolWolfConfig config) throws Exception {
-		initDataSource(config);
+	public static void initMainDataSource(DbPoolWolfMainConfig config) {
+		String dbName = JLFDbPool.mainDbName;
+		initDataSource(dbName,config);
 	}
-
+	
 	/**
 	 * 
-	 * @Title: initDataSource
-	 * @Description:根据config初始化dataSource
+	 * @Title: initChildDataSource
+	 * @Description:根据config初始化子库dataSource
 	 * @param config
 	 * @throws Exception
 	 */
-	private static void initDataSource(DbPoolWolfConfig config) throws Exception {
-		String dbName = config.getDbName();
+	public static void initChildDataSource(DbPoolWolfChildConfig config) {
+		String dbName = JLFDbPool.mainDbName;
+		initDataSource(dbName,config);
+	}
+	
+	/**
+	 * 
+	    * @Title: initDataSource
+	    * @Description:根据config初始化dataSource
+	    * @param dbName
+	    * @param config
+	 */
+	private static void initDataSource(String dbName,DbPoolWolfMainConfig config){
 		ComboPooledDataSource dataSource = new ComboPooledDataSource();
-		dataSource.setDriverClass(config.getDriver());
+		try {
+			dataSource.setDriverClass(config.getDriver());
+		} catch (PropertyVetoException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 		dataSource.setJdbcUrl(config.getUrl());
 		dataSource.setUser(config.getUserName());
 		dataSource.setPassword(config.getPassword());
-		
+
 		dataSource.setMinPoolSize(10);
 		dataSource.setMaxPoolSize(10);
 		dataSource.setInitialPoolSize(10);
 		dataSources.put(dbName, dataSource);
 	}
+
 
 	/**
 	 * 
@@ -60,13 +83,17 @@ public class DbPoolWolfPool {
 	 * @Description:根据dbName从dataSource中获取conn
 	 * @param dbName
 	 * @return
-	 * @throws Exception
 	 */
-	protected static Connection getConnection(String dbName) throws Exception {
+	protected static Connection getConnection(String dbName) {
 		ComboPooledDataSource dataSource = dataSources.get(dbName);
 		if (dataSource == null) {
 			return null;
 		}
-		return dataSource.getConnection();
+		try {
+			return dataSource.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 }

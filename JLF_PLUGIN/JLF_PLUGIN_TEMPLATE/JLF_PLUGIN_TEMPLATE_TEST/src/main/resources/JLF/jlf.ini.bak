@@ -1,0 +1,5 @@
+codeEnvironment=DEVELOP
+serverJarPath=
+[plugins]
+template=velocity
+[/plugins]

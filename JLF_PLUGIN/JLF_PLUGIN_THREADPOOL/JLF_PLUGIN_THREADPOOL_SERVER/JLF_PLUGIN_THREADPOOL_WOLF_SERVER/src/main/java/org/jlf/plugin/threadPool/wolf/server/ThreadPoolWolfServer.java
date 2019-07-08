@@ -1,8 +1,10 @@
 package org.jlf.plugin.threadPool.wolf.server;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.jlf.core.server.JLFPluginServer;
+import org.jlf.plugin.dbPool.client.JLFDbPoolClient;
 import org.jlf.plugin.threadPool.api.JLFThreadPool;
 import org.jlf.plugin.threadPool.wolf.server.core.ThreadPoolWolfCore;
 
@@ -16,31 +18,15 @@ import org.jlf.plugin.threadPool.wolf.server.core.ThreadPoolWolfCore;
 public class ThreadPoolWolfServer extends JLFPluginServer<JLFThreadPool> {
 
 	@Override
-	public JLFThreadPool get() {
+	public JLFThreadPool getServerApi() {
 		return new ThreadPoolWolfCore();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Class<?>> getDepends() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void jStart() throws Exception {
-
-	}
-
-	@Override
-	public void jStop() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void jreStart() throws Exception {
-		// TODO Auto-generated method stub
-
+		Set<Class<?>> set = new HashSet<Class<?>>();
+		set.add(JLFDbPoolClient.class);
+		return set;
 	}
 }

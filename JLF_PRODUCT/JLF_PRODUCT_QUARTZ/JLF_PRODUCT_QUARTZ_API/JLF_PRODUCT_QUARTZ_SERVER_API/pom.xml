@@ -1,12 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.jlf</groupId>
-    <artifactId>JLF_PRODUCT_QUARTZ_API</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>JLF_PRODUCT_QUARTZ_SERVER_API</artifactId>
-  <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jlf</groupId>
+		<artifactId>JLF_PRODUCT_QUARTZ_API</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>JLF_PRODUCT_QUARTZ_SERVER_API</artifactId>
+	<dependencies>
 		<!--依赖JLF_PLUGIN_JSON_SERVER_API -->
 		<dependency>
 			<groupId>${groupId}</groupId>
@@ -14,4 +15,5 @@
 			<version>${parent.version}</version>
 		</dependency>
 	</dependencies>
+
 </project>

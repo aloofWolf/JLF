@@ -1,4 +1,4 @@
-package org.jlf.plugin.dbpool.wolf.server;
+package org.jlf.plugin.dbPool.wolf.server;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,12 +8,14 @@ import java.util.Set;
 
 import org.jlf.common.util.IniUtil;
 import org.jlf.core.config.JLFConfig;
+import org.jlf.core.exception.JLFClientNoInitExecption;
 import org.jlf.core.server.JLFPluginServer;
 import org.jlf.plugin.check.client.JLFCheckClient;
-import org.jlf.plugin.dbpool.server.api.JLFDbPool;
-import org.jlf.plugin.dbpool.wolf.server.config.DbPoolWolfConfig;
-import org.jlf.plugin.dbpool.wolf.server.core.DbPoolWolfCore;
-import org.jlf.plugin.dbpool.wolf.server.core.DbPoolWolfPool;
+import org.jlf.plugin.check.server.api.JLFCheck;
+import org.jlf.plugin.dbPool.server.api.JLFDbPool;
+import org.jlf.plugin.dbPool.wolf.server.config.DbPoolWolfMainConfig;
+import org.jlf.plugin.dbPool.wolf.server.core.DbPoolWolfCore;
+import org.jlf.plugin.dbPool.wolf.server.core.DbPoolWolfPool;
 
 /**
  * 
@@ -25,7 +27,7 @@ import org.jlf.plugin.dbpool.wolf.server.core.DbPoolWolfPool;
 public class DbPoolWolfServer extends JLFPluginServer<JLFDbPool> {
 
 	@Override
-	public JLFDbPool get() {
+	public JLFDbPool getServerApi() {
 		return new DbPoolWolfCore();
 	}
 
@@ -39,26 +41,17 @@ public class DbPoolWolfServer extends JLFPluginServer<JLFDbPool> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void jStart() throws Exception {
-		String configFileName = JLFConfig.getPluginConfigName("dbWolf");
+	public void initConfig() {
+		JLFCheck ckeck = JLFCheckClient.get();
+		if (ckeck == null) {
+			throw new JLFClientNoInitExecption(JLFCheckClient.class);
+		}
+		String configFileName = JLFConfig.getPluginConfigName("dbPoolWolf");
 		IniUtil ini = new IniUtil(configFileName);
 		Properties prop = ini.getPros();
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		DbPoolWolfConfig config = JLFCheckClient.get().check(map, DbPoolWolfConfig.class);
-		DbPoolWolfPool.init(config);
-
-	}
-
-	@Override
-	public void jStop() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void jreStart() throws Exception {
-		// TODO Auto-generated method stub
-
+		DbPoolWolfMainConfig config = ckeck.check(map, DbPoolWolfMainConfig.class);
+		DbPoolWolfPool.initMainDataSource(config);
 	}
 
 }

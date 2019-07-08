@@ -1,5 +1,7 @@
 package org.jlf.product.quartz.web.api.metadata.request.template;
 
+import org.jlf.common.enums.BooleanType;
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.soa.mvc.metadata.request.JLFMVCIdAndVersionRequest;
 
 /**
@@ -9,31 +11,37 @@ import org.jlf.soa.mvc.metadata.request.JLFMVCIdAndVersionRequest;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-public class QuartzTemplateUpdateReq extends QuartzTemplateSaveReq {
+public class QuartzTemplateUpdateReq extends JLFMVCIdAndVersionRequest {
 
-	private JLFMVCIdAndVersionRequest header; // header信息
+	@JLFCheckAnn(isNull = true, desc = "模板名称")
+	private String templateName;
+	@JLFCheckAnn(isNull = true, desc = "模板类名称")
+	private String clsName;
+	@JLFCheckAnn(isNull = true, desc = "是否启用")
+	private BooleanType enabled;
 
-	public JLFMVCIdAndVersionRequest getHeader() {
-		return header;
+	public String getTemplateName() {
+		return templateName;
 	}
 
-	public void setHeader(JLFMVCIdAndVersionRequest header) {
-		this.header = header;
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
 	}
-	
-	
 
-	/**
-	 * 
-	 * @Title: getTemplate
-	 * @Description:template
-	 * @return
-	 *//*
-	public QuartzTemplate getTemplate() {
-		QuartzTemplate template = super.getTemplate();
-		template.setId(header.getId());
-		template.setVersion(header.getVersion());
-		return template;
-	}*/
+	public String getClsName() {
+		return clsName;
+	}
+
+	public void setClsName(String clsName) {
+		this.clsName = clsName;
+	}
+
+	public BooleanType getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(BooleanType enabled) {
+		this.enabled = enabled;
+	}
 
 }

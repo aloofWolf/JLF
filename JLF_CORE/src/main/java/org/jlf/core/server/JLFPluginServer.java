@@ -2,9 +2,9 @@ package org.jlf.core.server;
 
 import java.util.Set;
 
-import org.jlf.common.exception.JLFException;
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 import org.jlf.core.client.JLFPluginClient;
+import org.jlf.core.exception.JLFClientNoInitExecption;
 
 /**
  * 
@@ -12,17 +12,17 @@ import org.jlf.core.client.JLFPluginClient;
  * @Description:JLF插件服务端
  * @author Lone Wolf
  * @date 2019年5月28日
- * @param <T>
+ * @param <SERVER_API>
  */
-public abstract class JLFPluginServer<API extends JLFIPlugin> {
+public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 
 	/**
 	 * 
-	 * @Title: getApi
+	 * @Title: getServerApi
 	 * @Description:获取api实例
 	 * @return
 	 */
-	public abstract API get();
+	public abstract SERVER_API getServerApi();
 
 	/**
 	 * 
@@ -30,81 +30,45 @@ public abstract class JLFPluginServer<API extends JLFIPlugin> {
 	 * @Description:获取服务端依赖的客户端插件
 	 * @return
 	 */
-	public abstract <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends();
+	public <CLIENT extends JLFPluginClient<SERVER_API>> Set<Class<CLIENT>> getDepends() {
+		return null;
+	}
 
 	/**
 	 * 
-	 * @Title: stop
-	 * @Description:停止插件服务
+	 * @Title: initConfig
+	 * @Description:初始化配置
 	 */
-	public abstract void jStart() throws Exception;
+	public void initConfig() {
+	}
 
 	/**
 	 * 
-	 * @Title: stop
-	 * @Description:停止插件服务
+	 * @Title: doOther
+	 * @Description:启动插件时,除初始化配置以外的其它处理
 	 */
-	public abstract void jStop() throws Exception;
-
-	/**
-	 * 
-	 * @Title: reSatrt
-	 * @Description:重启插件服务
-	 */
-	public abstract void jreStart() throws Exception;
+	public void doOther() {
+	}
 
 	/**
 	 * 
 	 * @Title: start
 	 * @Description:启动插件服务
+	 * @throws JLFClientNoInitExecption
 	 */
-	public void start() throws Exception {
+	public void start() throws JLFClientNoInitExecption {
 		String serverName = this.getClass().getName();
 		System.out.println(String.format("%s启动开始。。。", serverName));
 		try {
-			jStart();
+			initConfig();
+			doOther();
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println(String.format("%s启动失败。。。", serverName));
-			throw new JLFException(e);
+			throw e;
 		}
 
 		System.out.println(String.format("%s启动成功。。。", serverName));
-	}
-
-	/**
-	 * 
-	 * @Title: stop
-	 * @Description:停止插件服务
-	 */
-	public void stop() throws Exception {
-		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s停止开始。。。", serverName));
-		try {
-			jStop();
-		} catch (Exception e) {
-			System.out.println(String.format("%s停止失败。。。", serverName));
-			throw new JLFException(e);
-		}
-
-		System.out.println(String.format("%s停止成功。。。", serverName));
-	}
-
-	/**
-	 * 
-	 * @Title: reSatrt
-	 * @Description:重启插件服务
-	 */
-	public void reSatrt() throws Exception {
-		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s重启开始。。。", serverName));
-		try {
-			jreStart();
-		} catch (Exception e) {
-			System.out.println(String.format("%s重启失败。。。", serverName));
-			throw new JLFException(e);
-		}
-
-		System.out.println(String.format("%s重启成功。。。", serverName));
 	}
 
 }

@@ -2,6 +2,7 @@ package org.jlf.plugin.aop.cglib.server.core;
 
 import java.lang.reflect.Method;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.aop.user.api.JLFAopDo;
 
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -31,9 +32,8 @@ public class AInterceptor<T> implements MethodInterceptor {
 	 * @param method
 	 * @param args
 	 * @param proxy
-	 * @throws Exception
 	 */
-	public T doBefore(Object obj, Method method, Object[] args, MethodProxy proxy) throws Exception {
+	public T doBefore(Object obj, Method method, Object[] args, MethodProxy proxy) {
 		return this.aopDo.doBefore(obj, method, args);
 	}
 
@@ -44,9 +44,8 @@ public class AInterceptor<T> implements MethodInterceptor {
 	 * @param method
 	 * @param args
 	 * @param proxy
-	 * @throws Exception
 	 */
-	public T doAfter(Object obj, Method method, Object[] args, MethodProxy proxy, T t) throws Exception {
+	public T doAfter(Object obj, Method method, Object[] args, MethodProxy proxy, T t) {
 		return this.aopDo.doAfter(obj, method, args, t);
 	}
 
@@ -57,9 +56,8 @@ public class AInterceptor<T> implements MethodInterceptor {
 	 * @param method
 	 * @param args
 	 * @param proxy
-	 * @throws Exception
 	 */
-	public T doException(Object obj, Method method, Object[] args, MethodProxy proxy, T t) throws Exception {
+	public T doException(Object obj, Method method, Object[] args, MethodProxy proxy, T t) {
 		return this.aopDo.doException(obj, method, args, t);
 	}
 
@@ -67,7 +65,7 @@ public class AInterceptor<T> implements MethodInterceptor {
 	 * »Øµ÷º¯Êý
 	 */
 	@Override
-	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) {
 		return proxyIntercept(obj, method, args, proxy);
 	}
 
@@ -79,19 +77,18 @@ public class AInterceptor<T> implements MethodInterceptor {
 	 * @param args
 	 * @param proxy
 	 * @return
-	 * @throws Throwable
 	 */
-	private Object proxyIntercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+	private Object proxyIntercept(Object obj, Method method, Object[] args, MethodProxy proxy) {
 		T t = null;
 		Object resp = null;
 		try {
 			t = doBefore(obj, method, args, proxy);
 			resp = proxy.invokeSuper(obj, args);
 			doAfter(obj, method, args, proxy, t);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			doException(obj, method, args, proxy, t);
-			throw e;
+			throw new JLFException(e);
 		}
 		return resp;
 	}

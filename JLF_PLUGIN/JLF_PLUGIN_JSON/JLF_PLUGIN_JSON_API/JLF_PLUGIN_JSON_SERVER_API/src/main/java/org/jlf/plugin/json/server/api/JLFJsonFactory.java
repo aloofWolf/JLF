@@ -2,7 +2,7 @@ package org.jlf.plugin.json.server.api;
 
 import java.util.Map;
 
-import org.jlf.core.api.JLFIPlugin;
+import org.jlf.core.api.JLFPluginServerApi;
 
 /**
  * 
@@ -11,7 +11,7 @@ import org.jlf.core.api.JLFIPlugin;
  * @author Lone Wolf
  * @date 2019年6月5日
  */
-public interface JLFJsonFactory extends JLFIPlugin {
+public interface JLFJsonFactory extends JLFPluginServerApi {
 
 	/**
 	 * 
@@ -23,43 +23,39 @@ public interface JLFJsonFactory extends JLFIPlugin {
 
 	/**
 	 * 
-	    * @Title: beanToJson
-	    * @Description:将bean对象转json
-	    * @param bean
-	    * @return
-	    * @throws Exception
+	 * @Title: beanToJson
+	 * @Description:将bean对象转json
+	 * @param bean
+	 * @return
 	 */
-	public JLFJson beanToJson(Object bean)throws Exception;
-	
-	/**
-	 * 
-	    * @Title: beanToJsonStr
-	    * @Description:将bean对象转json字符串
-	    * @param bean
-	    * @return
-	 * @throws Exception 
-	 */
-	public String beanToJsonStr(Object bean) throws Exception;
+	public JLFJson beanToJson(Object bean);
 
 	/**
 	 * 
-	    * @Title: mapToJson
-	    * @Description:将map对象转json
-	    * @param map
-	    * @return
-	    * @throws Exception
+	 * @Title: beanToJsonStr
+	 * @Description:将bean对象转json字符串
+	 * @param bean
+	 * @return
 	 */
-	public JLFJson mapToJson(Map<String, Object> map)throws Exception;
-	
+	public String beanToJsonStr(Object bean);
+
 	/**
 	 * 
-	    * @Title: mapToJsonStr
-	    * @Description:将map对象转json字符串
-	    * @param map
-	    * @return
-	    * @throws Exception
+	 * @Title: mapToJson
+	 * @Description:将map对象转json
+	 * @param map
+	 * @return
 	 */
-	public String mapToJsonStr(Map<String, Object> map)throws Exception;
+	public JLFJson mapToJson(Map<String, Object> map);
+
+	/**
+	 * 
+	 * @Title: mapToJsonStr
+	 * @Description:将map对象转json字符串
+	 * @param map
+	 * @return
+	 */
+	public String mapToJsonStr(Map<String, Object> map);
 
 	/**
 	 * 
@@ -67,38 +63,33 @@ public interface JLFJsonFactory extends JLFIPlugin {
 	 * @Description:将json字符串转json
 	 * @param jsonStr
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFJson jsonStrToJson(String jsonStr)throws Exception;
-	
+	public JLFJson jsonStrToJson(String jsonStr);
+
 	/**
 	 * 
 	 * @Title: jsonStrToBean
 	 * @Description:将json字符串转bean
 	 * @param jsonStr
 	 * @return
-	 * @throws Exception
 	 */
-	public <T> T jsonStrToBean(String jsonStr,Class<T> beanCls)throws Exception;
-	
+	public <T> T jsonStrToBean(String jsonStr, Class<T> beanCls);
+
 	/**
 	 * 
 	 * @Title: toJson
 	 * @Description:将json字符串转map
 	 * @param jsonStr
 	 * @return
-	 * @throws Exception
 	 */
-	public Map<String,Object> jsonStrToMap(String jsonStr)throws Exception;
-
+	public Map<String, Object> jsonStrToMap(String jsonStr);
 
 	/**
 	 * 
 	 * @Title: newJsonArray
 	 * @Description:创建json数组对象
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFJsonArray newJsonArray()throws Exception;
+	public JLFJsonArray newJsonArray();
 
 }

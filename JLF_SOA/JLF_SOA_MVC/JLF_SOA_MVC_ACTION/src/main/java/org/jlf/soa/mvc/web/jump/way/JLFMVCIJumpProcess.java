@@ -22,9 +22,8 @@ public interface JLFMVCIJumpProcess {
 	 * @param response
 	 * @param respBean
 	 * @param url
-	 * @throws Exception
 	 */
-	public void process(HttpServletRequest request, HttpServletResponse response, JLFMVCResponse<?> respBean, String url)
-			throws Exception;
+	public void process(HttpServletRequest request, HttpServletResponse response, JLFMVCResponse<?> respBean,
+			String url);
 
 }

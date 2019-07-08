@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PRODUCT</artifactId>
 	<packaging>pom</packaging>
@@ -19,5 +19,7 @@
 	<modules>
 		<module>JLF_PRODUCT_QUARTZ</module>
 		<module>JLF_PRODUCT_WORKFLOW</module>
+		<module>JLF_PRODUCT_OPS</module>
 	</modules>
+
 </project>

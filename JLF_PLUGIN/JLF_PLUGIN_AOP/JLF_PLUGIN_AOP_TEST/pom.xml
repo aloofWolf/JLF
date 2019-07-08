@@ -4,11 +4,25 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PLUGIN_AOP</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PLUGIN_AOP_TEST</artifactId>
-	<packaging>pom</packaging>
-	<modules>
-		<module>JLF_PLUGIN_AOP_CGLIB_TEST</module>
-	</modules>
+
+	<properties>
+		<log4j.version>1.7.2</log4j.version>
+	</properties>
+	<dependencies>
+		<!--依赖JLF_PLUGIN_AOP_CLIENT -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_PLUGIN_AOP_CLIENT</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+	</dependencies>
 </project>

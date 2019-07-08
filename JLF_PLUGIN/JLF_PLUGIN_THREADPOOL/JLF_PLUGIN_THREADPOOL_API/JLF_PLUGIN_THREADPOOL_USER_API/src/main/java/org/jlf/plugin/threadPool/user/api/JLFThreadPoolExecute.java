@@ -34,7 +34,7 @@ public abstract class JLFThreadPoolExecute {
 	 * @Title: execute
 	 * @Description:每个线程的具体执行方法
 	 * @param bean
-	 * @throws Exception
+	 * @throws Exception 
 	 */
 	public abstract void execute(Object bean) throws Exception;
 }

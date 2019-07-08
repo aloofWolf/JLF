@@ -20,9 +20,8 @@ public interface JLFDatagramTool {
 	 * @param inter
 	 * @param req
 	 * @return
-	 * @throws Exception 
 	 */
-	public String createDatagram(JLFInter<?, ?, ?> inter, JLFPushRequest req) throws Exception;
+	public String createDatagram(JLFInter<?, ?, ?> inter, JLFPushRequest req);
 
 	/**
 	 * 
@@ -31,8 +30,7 @@ public interface JLFDatagramTool {
 	 * @param inter
 	 * @param respDatagram
 	 * @return
-	 * @throws Exception 
 	 */
-	public JLFPushResponse createResponseBean(JLFInter<?, ?, ?> inter, String respDatagram) throws Exception;
+	public JLFPushResponse createResponseBean(JLFInter<?, ?, ?> inter, String respDatagram);
 
 }

@@ -1,9 +1,11 @@
 package org.jlf.plugin.mq.activeMq.server.core;
 
+import javax.jms.JMSException;
 import javax.jms.QueueConnection;
 import javax.jms.TopicConnection;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.mq.activeMq.server.config.ActiveMqConfig;
 
 /**
@@ -17,14 +19,11 @@ public class ActiveMqPool {
 
 	private static ActiveMQConnectionFactory factory = null;
 
-	public static void init(ActiveMqConfig config) throws Exception {
-		factory = new ActiveMQConnectionFactory(config.getUrl());
-		if (factory == null) {
-			factory = new ActiveMQConnectionFactory();
-		}
-		factory.setBrokerURL(config.getUrl());
-		factory.setUserName(config.getUserName());
-		factory.setPassword(config.getPassword());
+	public static void init(ActiveMqConfig config) {
+		ActiveMQConnectionFactory factoryBak = new ActiveMQConnectionFactory(config.getUrl());
+		factoryBak.setUserName(config.getUserName());
+		factoryBak.setPassword(config.getPassword());
+		factory = factoryBak;
 	}
 
 	/**
@@ -32,10 +31,14 @@ public class ActiveMqPool {
 	 * @Title: getQueueConnection
 	 * @Description:获取队列的连接
 	 * @return
-	 * @throws Exception
 	 */
-	public static QueueConnection getQueueConnection() throws Exception {
-		return factory.createQueueConnection();
+	public static QueueConnection getQueueConnection() {
+		try {
+			return factory.createQueueConnection();
+		} catch (JMSException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	/**
@@ -43,9 +46,13 @@ public class ActiveMqPool {
 	 * @Title: getTopicConnection
 	 * @Description:获取主题的连接
 	 * @return
-	 * @throws Exception
 	 */
-	public static TopicConnection getTopicConnection() throws Exception {
-		return factory.createTopicConnection();
+	public static TopicConnection getTopicConnection() {
+		try {
+			return factory.createTopicConnection();
+		} catch (JMSException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 }

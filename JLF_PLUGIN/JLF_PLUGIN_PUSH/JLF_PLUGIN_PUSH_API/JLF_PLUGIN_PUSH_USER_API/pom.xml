@@ -4,21 +4,27 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PLUGIN_PUSH_API</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PLUGIN_PUSH_USER_API</artifactId>
+
+	<properties>
+		<httpclient.version>4.5.3</httpclient.version>
+		<httpasyncclient.version>4.1.3</httpasyncclient.version>
+	</properties>
 	<dependencies>
 		<!--依赖httpclient -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.3</version>
+			<version>${httpclient.version}</version>
 		</dependency>
 		<!--依赖httpasyncclient -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
-			<version>4.1.3</version>
+			<version>${httpasyncclient.version}</version>
 		</dependency>
 	</dependencies>
+
 </project>

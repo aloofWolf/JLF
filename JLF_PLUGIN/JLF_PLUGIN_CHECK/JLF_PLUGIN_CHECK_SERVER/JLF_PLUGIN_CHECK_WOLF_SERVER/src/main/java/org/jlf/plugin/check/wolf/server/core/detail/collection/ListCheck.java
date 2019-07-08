@@ -21,7 +21,7 @@ import org.jlf.plugin.json.server.api.JLFJsonArray;
 public class ListCheck extends CollectionCheck<List<?>> {
 
 	@Override
-	public List<?> getValue(JLFJson json, Field field) throws Exception {
+	public List<?> getValue(JLFJson json, Field field) {
 		Object value = json.get(field.getName());
 		if (value == null) {
 			return null;

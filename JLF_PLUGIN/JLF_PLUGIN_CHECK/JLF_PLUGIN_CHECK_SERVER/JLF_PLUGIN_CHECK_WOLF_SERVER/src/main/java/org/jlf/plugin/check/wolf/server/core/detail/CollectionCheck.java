@@ -2,6 +2,7 @@ package org.jlf.plugin.check.wolf.server.core.detail;
 
 import java.lang.reflect.Field;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
 
 /**
@@ -30,14 +31,13 @@ public abstract class CollectionCheck<C extends Object> extends ICheck<C> {
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMaxLength(JLFCheckAnn ann, Field field, C value) throws Exception {
+	public void checkMaxLength(JLFCheckAnn ann, Field field, C value) {
 		if (value != null) {
-			int maxLength = ann.maxLength();
+			int maxLength = (ann == null?JLFCheckAnn.maxLength:ann.maxLength());
 			if (getSize(value) > maxLength) {
-				throw new Exception(getExceptionDesc(ann, field, MAX_LENGTH_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, field, MAX_LENGTH_EXCEPTION_DESC));
 			}
 		}
 
@@ -50,14 +50,13 @@ public abstract class CollectionCheck<C extends Object> extends ICheck<C> {
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMinLength(JLFCheckAnn ann, Field field, C value) throws Exception {
+	public void checkMinLength(JLFCheckAnn ann, Field field, C value) {
 		if (value != null) {
-			int minLength = ann.minLength();
+			int minLength = (ann == null?JLFCheckAnn.minLength:ann.minLength());
 			if (getSize(value) < minLength) {
-				throw new Exception(getExceptionDesc(ann, field, MIN_LENGTH_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, field, MIN_LENGTH_EXCEPTION_DESC));
 			}
 		}
 

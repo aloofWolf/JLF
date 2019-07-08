@@ -1,0 +1,30 @@
+#foreach($table in $!{obj.tables}))
+  CREATE TABLE `$!{table.tableName}` (
+     #foreach($field in $!{table.fields}))
+         #set($field = "")
+         #set($field = $field+`$!{field.fieldName}`)
+         #set($field = $field+" "+`$!{field.dataType}`)
+        
+        #if($!{field.isNotNull})
+          #set($field = $field +" NOT NULL")
+        #end  
+        
+        #if($!{field.isPrimary})
+          #set($field = $field +" AUTO_INCREMENT")
+        #end 
+        
+         #if($!{field.defaultValue} == "")
+          #set($field = $field +" DEFAULT '$!{field.defaultValue}'")
+        #end 
+        
+        #if($!{field.desc} == "")
+          #set($field = $field +" COMMENT '$!{field.desc}'")
+        #end 
+        
+        #set($field = $field +",")
+        
+        $!{field}
+        
+     #end
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8  #if($!{table.desc}) COMMENT='$!{table.desc}' #end  ;
+#end

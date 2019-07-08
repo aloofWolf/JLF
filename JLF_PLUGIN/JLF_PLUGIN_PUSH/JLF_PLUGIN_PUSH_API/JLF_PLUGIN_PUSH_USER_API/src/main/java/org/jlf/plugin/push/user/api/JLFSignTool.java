@@ -20,9 +20,8 @@ public interface JLFSignTool {
 	 * @param inter
 	 * @param req
 	 * @return
-	 * @throws Exception
 	 */
-	public String sign(String datagram, JLFInter<?, ?, ?> inter, JLFPushRequest req) throws Exception;
+	public String sign(String datagram, JLFInter<?, ?, ?> inter, JLFPushRequest req);
 
 	/**
 	 * 
@@ -32,8 +31,7 @@ public interface JLFSignTool {
 	 * @param inter
 	 * @param req
 	 * @return
-	 * @throws Exception
 	 */
-	public boolean checkSign(String datagram, JLFInter<?, ?, ?> inter, JLFPushRequest req) throws Exception;
+	public boolean checkSign(String datagram, JLFInter<?, ?, ?> inter, JLFPushRequest req);
 
 }

@@ -2,12 +2,22 @@ package org.jlf.plugin.mq.activeMq.server.core.consumer;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import org.jlf.common.exception.JLFException;
+
+/**
+ * 
+ * @ClassName: Consumer
+ * @Description:消费者
+ * @author Lone Wolf
+ * @date 2019年7月5日
+ */
 public abstract class Consumer {
 
 	private Connection conn;
@@ -27,82 +37,102 @@ public abstract class Consumer {
 	 * @Title: getDestination
 	 * @Description:获取destination
 	 * @param session
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public abstract Destination getDestination(Session session) throws Exception;
-	
+	public abstract Destination getDestination(Session session);
+
 	/**
 	 * 
 	 * @Title: getConn
 	 * @Description:获取连接
 	 * @return
 	 */
-	public abstract Connection getConn() throws Exception;
+	public abstract Connection getConn();
 
 	/**
 	 * 
 	 * @Title: process
 	 * @Description:接收消息后的处理方法
 	 * @param result
-	 * @throws Exception
+	 * @
 	 */
-	public abstract void process(String result) throws Exception;
+	public abstract void process(String result);
 
 	/**
 	 * 
 	 * @Title: getConsumer
 	 * @Description:获取consumer
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	public MessageConsumer getConsumer() throws Exception {
+	public MessageConsumer getConsumer() {
 		conn = getConn();
-		conn.start();
-		// 不使用事务
-		// 设置客户端签收模式
-		this.session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		Destination destination = getDestination(session);
-		this.consumer = session.createConsumer(destination);
+		try {
+			conn.start();
+			this.session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			Destination destination = getDestination(session);
+			this.consumer = session.createConsumer(destination);
+		} catch (JMSException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+
 		return consumer;
 	}
 
 	/**
 	 * 
 	 * @Title: start
-	 * @Description:启动监听
-	 * @throws Exception
+	 * @Description:启动监听 @
 	 */
-	public void start() throws Exception {
+	public void start() {
 		MessageConsumer consumer = getConsumer();
-		consumer.setMessageListener(new MessageListener() {
-			@Override
-			public void onMessage(Message message) {
-				TextMessage textMessage = (TextMessage) message;
-				try {
-					process(textMessage.getText());
-				} catch (Exception e) {
-					e.printStackTrace();
+		try {
+			consumer.setMessageListener(new MessageListener() {
+				@Override
+				public void onMessage(Message message) {
+					TextMessage textMessage = (TextMessage) message;
+					try {
+						process(textMessage.getText());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		});
+			});
+		} catch (JMSException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	/**
 	 * 
 	 * @Title: stop
-	 * @Description:关闭监听
-	 * @throws Exception
+	 * @Description:关闭监听 @
 	 */
-	public void stop() throws Exception {
+	public void stop() {
 		if (consumer != null) {
-			consumer.close();
+			try {
+				consumer.close();
+			} catch (JMSException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
 		}
 		if (session != null) {
-			session.close();
+			try {
+				session.close();
+			} catch (JMSException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
 		}
 		if (conn != null) {
-			conn.close();
+			try {
+				conn.close();
+			} catch (JMSException e) {
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
 		}
 
 	}

@@ -26,12 +26,25 @@ public class QuartzTemplateDao extends JLFMVCDao<QuartzTemplate> {
 	 * @Description:根据模板名称查询模板
 	 * @param templateName
 	 * @return
-	 * @throws Exception
 	 */
-	public QuartzTemplate getByTemplateName(String templateName) throws Exception {
+	public QuartzTemplate getByTemplateName(String templateName) {
 		String sql = new StringBuffer("select ").append(this.fieldStr).append(" from ").append(this.tableName)
 				.append(" where templateName = ? and isDelete = ?").toString();
 		return getUnique(sql, templateName, BooleanType.FALSE.getId());
+	}
+	
+	/**
+	 * 
+	    * @Title: getByTemplateNameWithOutId
+	    * @Description:据模板名称查询模板,排除id
+	    * @param templateName
+	    * @param id
+	    * @return
+	 */
+	public QuartzTemplate getByTemplateNameWithOutId(String templateName,Long id) {
+		String sql = new StringBuffer("select ").append(this.fieldStr).append(" from ").append(this.tableName)
+				.append(" where templateName = ? and id != ? and isDelete = ?").toString();
+		return getUnique(sql, templateName, id,BooleanType.FALSE.getId());
 	}
 
 	/**
@@ -40,9 +53,8 @@ public class QuartzTemplateDao extends JLFMVCDao<QuartzTemplate> {
 	 * @Description:查询定时任务分页
 	 * @param req
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFMVCPage<QuartzTemplate> getPage(QuartzTemplatePageReq req) throws Exception {
+	public JLFMVCPage<QuartzTemplate> getPage(QuartzTemplatePageReq req) {
 		JLFMVCSqlBean sqlBean = getSqlBean(req);
 		return this.getPage(sqlBean, req.getPages().getPageNum(), req.getPages().getPageSize());
 
@@ -54,9 +66,8 @@ public class QuartzTemplateDao extends JLFMVCDao<QuartzTemplate> {
 	 * @Description:查询定时任务列表
 	 * @param req
 	 * @return
-	 * @throws Exception
 	 */
-	public List<QuartzTemplate> getList(QuartzTemplateListReq req) throws Exception {
+	public List<QuartzTemplate> getList(QuartzTemplateListReq req) {
 		JLFMVCSqlBean sqlBean = getSqlBean(req);
 		String sql = sqlBean.getQrySql();
 		return this.getList(sql, sqlBean.getParams());

@@ -4,17 +4,15 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PRODUCT_QUARTZ_SERVER</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PRODUCT_QUARTZ_WOLF_SERVER</artifactId>
 	<packaging>pom</packaging>
+
+	<properties>
+		<quartz.version>2.3.1</quartz.version>
+	</properties>
 	<dependencies>
-	<!--依赖JLF_PRODUCT_QUARTZ_WEB_API -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF_PRODUCT_QUARTZ_WEB_API</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
 		<!--依赖JLF_SOA_MVC_SERVER -->
 		<dependency>
 			<groupId>${groupId}</groupId>
@@ -25,7 +23,7 @@
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-			<version>2.3.1</version>
+			<version>${quartz.version}</version>
 		</dependency>
 	</dependencies>
 	<modules>
@@ -35,4 +33,5 @@
 		<module>JLF_PRODUCT_QUARTZ_WOLF_SERVER_ACTION</module>
 		<module>JLF_PRODUCT_QUARTZ_WOLF_SERVER_CORE</module>
 	</modules>
+
 </project>

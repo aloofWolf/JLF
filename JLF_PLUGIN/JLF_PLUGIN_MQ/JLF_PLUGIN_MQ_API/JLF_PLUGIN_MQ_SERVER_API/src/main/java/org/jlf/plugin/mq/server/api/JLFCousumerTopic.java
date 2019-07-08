@@ -13,16 +13,14 @@ public interface JLFCousumerTopic {
 	 * 
 	 * @Title: Listener
 	 * @Description:¿ªÆô¼àÌý
-	 * @throws Exception
 	 */
-	public void start() throws Exception;
+	public void start();
 
 	/**
 	 * 
 	 * @Title: Listener
 	 * @Description:¹Ø±Õ¼àÌý
-	 * @throws Exception
 	 */
-	public void stop() throws Exception;
+	public void stop();
 
 }

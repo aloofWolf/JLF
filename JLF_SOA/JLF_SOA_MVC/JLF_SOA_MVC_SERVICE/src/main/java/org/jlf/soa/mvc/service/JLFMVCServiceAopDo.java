@@ -4,7 +4,10 @@ import java.lang.reflect.Method;
 
 import org.jlf.common.util.LogUtil;
 import org.jlf.plugin.aop.user.api.JLFAopDo;
-import org.jlf.plugin.dbpool.client.JLFDbPoolClient;
+import org.jlf.plugin.dbPool.client.JLFDbPoolClient;
+import org.jlf.plugin.dbPool.server.api.JLFDbPool;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCTrans;
+import org.jlf.soa.mvc.metadata.threadLocal.JLFMVCThreadLocal;
 
 /**
  * 
@@ -16,24 +19,15 @@ import org.jlf.plugin.dbpool.client.JLFDbPoolClient;
 public class JLFMVCServiceAopDo implements JLFAopDo<JLFMVCDbBean> {
 
 	@Override
-	public JLFMVCDbBean doBefore(Object obj, Method method, Object[] args) throws Exception {
+	public JLFMVCDbBean doBefore(Object obj, Method method, Object[] args) {
 		JLFMVCDbBean bean = new JLFMVCDbBean();
-		JLFMAVCConnection conn = method.getAnnotation(JLFMAVCConnection.class);
-		
-		if (conn != null) {
-			String dbName = getDbName(obj);
-			if (!JLFDbPoolClient.get().isOpenConn(dbName)) {
-				JLFDbPoolClient.get().openConn(dbName);
-				bean.isOpenConn = true;
-				LogUtil.get().debug("%s方法打开connection", method.getName());
-			}
-		}
 		JLFMVCTrans trans = method.getAnnotation(JLFMVCTrans.class);
 		if (trans != null) {
-			String dbName = getDbName(obj);
+			String dbName = getDbName(trans);
 			if (!JLFDbPoolClient.get().isOpenTrans(dbName)) {
 				JLFDbPoolClient.get().openTrans(dbName);
 				bean.isOpenTrans = true;
+				bean.dbName = dbName;
 				LogUtil.get().debug("%s方法打开事物", method.getName());
 			}
 		}
@@ -42,29 +36,21 @@ public class JLFMVCServiceAopDo implements JLFAopDo<JLFMVCDbBean> {
 	}
 
 	@Override
-	public JLFMVCDbBean doAfter(Object obj, Method method, Object[] args, JLFMVCDbBean bean) throws Exception {
+	public JLFMVCDbBean doAfter(Object obj, Method method, Object[] args, JLFMVCDbBean bean) {
 		if (bean.isOpenTrans) {
-			String dbName = getDbName(obj);
+			String dbName = bean.dbName;
 			JLFDbPoolClient.get().commitTrans(dbName);
 			LogUtil.get().debug("%s方法提交事物", method.getName());
-		} else if (bean.isOpenConn) {
-			String dbName = getDbName(obj);
-			JLFDbPoolClient.get().closeConn(dbName);
-			LogUtil.get().debug("%s方法关闭connection", method.getName());
 		}
 		return bean;
 
 	}
 
 	@Override
-	public JLFMVCDbBean doException(Object obj, Method method, Object[] args, JLFMVCDbBean bean) throws Exception {
+	public JLFMVCDbBean doException(Object obj, Method method, Object[] args, JLFMVCDbBean bean) {
 		if (bean.isOpenTrans) {
 			JLFDbPoolClient.get().rollbackTrans();
 			LogUtil.get().debug("%s方法回滚事物", method.getName());
-		} else if (bean.isOpenConn) {
-			String dbName = getDbName(obj);
-			JLFDbPoolClient.get().closeConn(dbName);
-			LogUtil.get().debug("%s方法关闭connection", method.getName());
 		}
 		return bean;
 
@@ -75,18 +61,21 @@ public class JLFMVCServiceAopDo implements JLFAopDo<JLFMVCDbBean> {
 	 * @Title: getDbName
 	 * @Description:获取dbName
 	 * @param obj
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
-	private String getDbName(Object obj) throws Exception {
-		JLFMVCService<?, ?> service = (JLFMVCService<?, ?>) obj;
-		String dbName = service.getDbName();
+	private String getDbName(JLFMVCTrans trans) {
+		String dbName = trans.dbName();
+		if(dbName == null || dbName.length() == 0){
+			dbName = JLFDbPool.mainDbName;
+		}else if(dbName.equals("?")){
+			dbName = JLFMVCThreadLocal.getDbName();
+		}
 		return dbName;
 	}
 
 }
 
 class JLFMVCDbBean {
-	boolean isOpenConn;
 	boolean isOpenTrans;
+	String dbName;
 }

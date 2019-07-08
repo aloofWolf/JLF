@@ -15,7 +15,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class IntegerCheck extends NumberCheck<Integer> {
 
 	@Override
-	public Integer getValue(JLFJson json, Field field) throws Exception {
+	public Integer getValue(JLFJson json, Field field) {
 		return json.getInt(field.getName());
 	}
 

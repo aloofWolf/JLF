@@ -1,8 +1,8 @@
-package org.jlf.plugin.dbpool.client;
+package org.jlf.plugin.dbPool.client;
 
 import org.jlf.core.client.JLFPluginClient;
 import org.jlf.core.server.JLFPluginServer;
-import org.jlf.plugin.dbpool.server.api.JLFDbPool;
+import org.jlf.plugin.dbPool.server.api.JLFDbPool;
 
 /**
  * 
@@ -14,22 +14,6 @@ import org.jlf.plugin.dbpool.server.api.JLFDbPool;
 public class JLFDbPoolClient implements JLFPluginClient<JLFDbPool> {
 
 	private static JLFDbPool api; // api实例
-	private JLFPluginServer<JLFDbPool> server; // 绑定服务端
-
-	/**
-	 * 
-	 * 创建一个新的实例 JLFAopClient.
-	 *
-	 * @param server
-	 * @throws Exception
-	 */
-	public <SERVER extends JLFPluginServer<JLFDbPool>> JLFDbPoolClient(SERVER server) throws Exception {
-		if (api != null) {
-			throw new Exception("DbPoolClient不能重复初始化");
-		}
-		api = server.get();
-		this.server = server;
-	}
 
 	/**
 	 * 
@@ -41,10 +25,10 @@ public class JLFDbPoolClient implements JLFPluginClient<JLFDbPool> {
 		return api;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JLFPluginServer<JLFDbPool> getServer() {
-		return server;
+	public <SERVER extends JLFPluginServer<JLFDbPool>> void bindServer(SERVER server) {
+		api = server.getServerApi();
+
 	}
 
 }

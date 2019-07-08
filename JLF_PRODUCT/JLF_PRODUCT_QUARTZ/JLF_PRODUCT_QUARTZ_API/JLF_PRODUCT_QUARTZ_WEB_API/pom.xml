@@ -4,20 +4,22 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_PRODUCT_QUARTZ_API</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_PRODUCT_QUARTZ_WEB_API</artifactId>
 	<dependencies>
+		<!--依赖JLF_PRODUCT_QUARTZ_USER_API -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>JLF_PRODUCT_QUARTZ_USER_API</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF核心模块 -->
+		<!--依赖JLF_SOA_MVC_METADATA -->
 		<dependency>
 			<groupId>${groupId}</groupId>
-			<artifactId>JLF_SOA_MVC_ACTION</artifactId>
+			<artifactId>JLF_SOA_MVC_METADATA</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 	</dependencies>
+
 </project>

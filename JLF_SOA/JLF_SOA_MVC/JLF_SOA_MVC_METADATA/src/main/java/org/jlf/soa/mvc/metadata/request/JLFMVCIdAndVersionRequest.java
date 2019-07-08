@@ -1,7 +1,6 @@
 package org.jlf.soa.mvc.metadata.request;
 
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
-import org.jlf.soa.mvc.metadata.bean.JLFMVCBean;
 
 /**
  * 
@@ -10,25 +9,12 @@ import org.jlf.soa.mvc.metadata.bean.JLFMVCBean;
  * @author Lone Wolf
  * @date 2019年6月1日
  */
-public final class JLFMVCIdAndVersionRequest extends JLFMVCRequest{
+public class JLFMVCIdAndVersionRequest extends JLFMVCRequest{
 
 	@JLFCheckAnn
 	private Long id;
 	@JLFCheckAnn
 	private Long version;
-
-	/**
-	 * 
-	 * @Title: initBean
-	 * @Description:初始化bean信息
-	 * @param b
-	 * @return
-	 */
-	public <B extends JLFMVCBean> B initBean(B b) {
-		b.setId(id);
-		b.setVersion(version);
-		return b;
-	}
 
 	public Long getId() {
 		return id;

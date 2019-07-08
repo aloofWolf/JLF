@@ -31,9 +31,8 @@ public class HttpPool {
 	 * 创建一个新的实例 HttpPool.
 	 *
 	 * @param config
-	 * @throws Exception
 	 */
-	public HttpPool(JLFHttpConfig config) throws Exception {
+	public HttpPool(JLFHttpConfig config) {
 		this.build = HttpClientBuilder.create();
 		initClientConnectionManager(config);
 	}
@@ -43,9 +42,8 @@ public class HttpPool {
 	 * @Title: initClientConnectionManager
 	 * @Description:初始化ClientConnectionManager
 	 * @param config
-	 * @throws Exception
 	 */
-	private void initClientConnectionManager(JLFHttpConfig config) throws Exception {
+	private void initClientConnectionManager(JLFHttpConfig config) {
 
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(config.getConntimeout())
 				.setSocketTimeout(config.getReadconntimeout()).build();
@@ -67,9 +65,8 @@ public class HttpPool {
 	 * @Description:初始化ConnectionSocketFactory
 	 * @param config
 	 * @return
-	 * @throws Exception
 	 */
-	private Registry<ConnectionSocketFactory> initConnectionSocketFactory(JLFHttpConfig config) throws Exception {
+	private Registry<ConnectionSocketFactory> initConnectionSocketFactory(JLFHttpConfig config) {
 		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create()
 				.register("http", PlainConnectionSocketFactory.INSTANCE)
 				.register("https", new SSLConnectionSocketFactory(config.getSSLContext(), new HostnameVerifier() {

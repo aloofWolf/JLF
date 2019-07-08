@@ -1,0 +1,5 @@
+codeEnvironment=DEVELOP
+serverJarPath=
+[plugins]
+aop=cglib
+[/plugins]

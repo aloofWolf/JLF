@@ -28,9 +28,8 @@ public class SocketPools {
 	 * @Description:从连接池中取出一个socket
 	 * @param config
 	 * @return
-	 * @throws Exception
 	 */
-	public static SocketExt getSocket(JLFSocketConfig config) throws Exception {
+	public static SocketExt getSocket(JLFSocketConfig config) {
 		String key = new StringBuffer(config.getIp()).append("_").append(config.getPort()).toString();
 		SocketPool pool = pools.get(key);
 		if (pool == null) {
@@ -51,10 +50,9 @@ public class SocketPools {
 	 * @param is
 	 * @param pw
 	 * @param os
-	 * @throws Exception
 	 */
 	public static void close(JLFSocketConfig config, SocketExt conn, BufferedReader br, InputStream is, PrintWriter pw,
-			OutputStream os) throws Exception {
+			OutputStream os) {
 		String key = new StringBuffer(config.getIp()).append("_").append(config.getPort()).toString();
 		SocketPool pool = pools.get(key);
 		pool.close(br, is, pw, os, conn);

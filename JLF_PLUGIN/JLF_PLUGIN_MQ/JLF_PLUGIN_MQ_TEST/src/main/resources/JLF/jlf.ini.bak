@@ -1,0 +1,10 @@
+codeEnvironment=DEVELOP
+serverJarPath=J:/serverJar
+[plugins]
+json=fastJson
+check=wolf
+mq=active
+[/plugins]
+[pluginsConfig]
+activeMq=activeMq.ini
+[/pluginsConfig]

@@ -2,6 +2,8 @@ package org.jlf.soa.mvc.web.route;
 
 import java.lang.reflect.Method;
 
+import org.jlf.soa.mvc.metadata.ann.JLFMVCRouteMethod;
+
 /**
  * 
  * @ClassName: JLFMVCRouteTarget

@@ -7,10 +7,12 @@ package org.jlf.soa.mvc.metadata.request;
  * @author Lone Wolf
  * @date 2019年5月25日
  */
-public final class JLFMVCPagingRequest extends JLFMVCRequest{
+public final class JLFMVCPagingRequest{
 
 	private Integer pageNum; // 当前页码
 	private Integer pageSize; // 每页显示条数
+	
+	
 
 	public Integer getPageNum() {
 		return pageNum;

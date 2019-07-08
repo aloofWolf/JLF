@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jlf.common.enums.BooleanType;
+import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanFieldMapped;
 
 /**
  * 
@@ -15,20 +16,27 @@ import org.jlf.common.enums.BooleanType;
  * @author Lone Wolf
  * @date 2019年5月25日
  */
-public class JLFMVCBean implements Serializable{
+public class JLFMVCBean implements Serializable {
 
-	@JLFMVCBeanMapped(skipMapped=true)
 	private static final long serialVersionUID = -8754870124474277604L;
-	
-	private Long id; // id
-	private Long version; // 版本号
-	private BooleanType isDelete; // 是否删除
-	private Long deleteNum; // 删除编码
-	private Long createUserId;// 创建记录用户id
-	private Date createTime;// 创建时间
-	private Long updateUserId;// 更新用户id
-	private Date updateTime;// 更新时间
-	@JLFMVCBeanMapped(skipMapped=true)
+
+	@JLFMVCBeanFieldMapped(desc = "主键",isPrimary = true)
+	private Long id;
+	@JLFMVCBeanFieldMapped(desc = "版本号")
+	private Long version;
+	@JLFMVCBeanFieldMapped(desc = "是否删除  0:已删除 1:未删除")
+	private BooleanType isDelete;
+	@JLFMVCBeanFieldMapped(desc = "删除编码")
+	private Long deleteNum;
+	@JLFMVCBeanFieldMapped(desc = "创建记录用户id")
+	private Long createUserId;
+	@JLFMVCBeanFieldMapped(desc = "创建时间")
+	private Date createTime;
+	@JLFMVCBeanFieldMapped(desc = "更新用户id")
+	private Long updateUserId;
+	@JLFMVCBeanFieldMapped(desc = "更新时间")
+	private Date updateTime;
+
 	private Map<String, Object> data = new HashMap<String, Object>();// 其它数据
 
 	public Long getId() {
@@ -46,7 +54,6 @@ public class JLFMVCBean implements Serializable{
 	public void setVersion(Long version) {
 		this.version = version;
 	}
-
 
 	public BooleanType getIsDelete() {
 		return isDelete;

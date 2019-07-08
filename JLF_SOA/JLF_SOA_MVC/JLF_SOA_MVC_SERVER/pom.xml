@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF_SOA_MVC</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>JLF_SOA_MVC_SERVER</artifactId>
 	<dependencies>
@@ -14,5 +14,34 @@
 			<artifactId>JLF_SOA_MVC_ACTION</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
+		<!--依赖JLF_SOA_MVC_UTIL -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF_SOA_MVC_UTIL</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assembly</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

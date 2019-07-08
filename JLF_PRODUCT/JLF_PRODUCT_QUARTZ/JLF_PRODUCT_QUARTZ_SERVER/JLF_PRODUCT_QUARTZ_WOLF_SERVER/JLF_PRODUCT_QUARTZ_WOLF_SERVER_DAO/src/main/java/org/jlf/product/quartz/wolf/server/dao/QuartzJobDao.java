@@ -26,12 +26,10 @@ public class QuartzJobDao extends JLFMVCDao<QuartzJob> {
 	 * @Description:查询定时任务分页
 	 * @param req
 	 * @return
-	 * @throws Exception
 	 */
-	public JLFMVCPage<QuartzJob> getPage(QuartzJobPageReq req) throws Exception {
+	public JLFMVCPage<QuartzJob> getPage(QuartzJobPageReq req) {
 		JLFMVCSqlBean sqlBean = getSqlBean(req);
 		return this.getPage(sqlBean, req.getPages().getPageNum(), req.getPages().getPageSize());
-
 	}
 
 	/**
@@ -40,13 +38,24 @@ public class QuartzJobDao extends JLFMVCDao<QuartzJob> {
 	 * @Description:查询定时任务列表
 	 * @param req
 	 * @return
-	 * @throws Exception
 	 */
-	public List<QuartzJob> getList(QuartzJobListReq req) throws Exception {
+	public List<QuartzJob> getList(QuartzJobListReq req) {
 		JLFMVCSqlBean sqlBean = getSqlBean(req);
 		String sql = sqlBean.getQrySql();
 		return this.getList(sql, sqlBean.getParams());
+	}
 
+	/**
+	 * 
+	 * @Title: getJobDetail
+	 * @Description:获取jobDetail
+	 * @param id
+	 * @return
+	 */
+	public QuartzJob getJobDetail(Long id) {
+		String sql = "select e.id,e.version,e.templateId,e.billId,e.cron,e.enabled,e.params,l.templateName,l.clsName "
+				+ "e,quartzTemplate l where e.templateId=l.id";
+		return this.getUnique(sql, id);
 	}
 
 	/**
@@ -85,9 +94,8 @@ public class QuartzJobDao extends JLFMVCDao<QuartzJob> {
 	 * @Title: reStartByTemplateId
 	 * @Description:重启一个模板下所有已启动的任务
 	 * @param templateId
-	 * @throws Exception
 	 */
-	public void reStartByTemplateId(Long templateId) throws Exception {
+	public void reStartByTemplateId(Long templateId) {
 		String sql = "update QuartzJob set ready = ? where templateId = ? and enabled = ? and isDelete = ?";
 		this.execute(sql, BooleanType.TRUE.getId(), templateId, BooleanType.TRUE.getId(), BooleanType.FALSE.getId());
 	}
@@ -97,11 +105,11 @@ public class QuartzJobDao extends JLFMVCDao<QuartzJob> {
 	 * @Title: disabledByTemplateId
 	 * @Description:禁用一个模板下所有已启动的任务
 	 * @param templateId
-	 * @throws Exception
 	 */
-	public void disabledByTemplateId(Long templateId) throws Exception {
+	public void disabledByTemplateId(Long templateId) {
 		String sql = "update QuartzJob set enabled = ?,ready = ? where templateId = ? and enabled = ? and isDelete = ?";
-		this.execute(sql, BooleanType.FALSE.getId(), BooleanType.TRUE.getId(), templateId, BooleanType.TRUE.getId(), BooleanType.FALSE.getId());
+		this.execute(sql, BooleanType.FALSE.getId(), BooleanType.TRUE.getId(), templateId, BooleanType.TRUE.getId(),
+				BooleanType.FALSE.getId());
 	}
 
 	/**
@@ -109,9 +117,8 @@ public class QuartzJobDao extends JLFMVCDao<QuartzJob> {
 	 * @Title: getReadyList
 	 * @Description:根据就绪状态查询定时任务列表
 	 * @return
-	 * @throws Exception
 	 */
-	public List<QuartzJob> getReadyList(BooleanType ready) throws Exception {
+	public List<QuartzJob> getReadyList(BooleanType ready) {
 		String sql = new StringBuffer(
 				"select e.id,e.version,e.templateId,e.billId,e.cron,e.enabled,e.params,l.templateName,l.clsName ")
 						.append(" from ").append(this.tableName).append(" e,QuartzTemplate l where e.templateId=l.id")
@@ -123,9 +130,8 @@ public class QuartzJobDao extends JLFMVCDao<QuartzJob> {
 	 * 
 	 * @Title: updateAllReady
 	 * @Description:将所有的job改为就绪状态
-	 * @throws Exception
 	 */
-	public void updateAllReady() throws Exception {
+	public void updateAllReady() {
 		String sql = "update QuartzJob set ready = ? where isDelete = ?";
 		this.execute(sql, BooleanType.TRUE.getId(), BooleanType.FALSE.getId());
 	}

@@ -1,8 +1,10 @@
 package org.jlf.plugin.push.wolf.server.core.send.socket;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import org.jlf.common.exception.JLFException;
 import org.jlf.plugin.push.user.api.config.JLFSocketConfig;
 
 /**
@@ -22,12 +24,17 @@ public class SocketExt extends Socket {
 	 *
 	 * @param config
 	 * @param preSocket
-	 * @throws Exception
 	 */
-	public SocketExt(JLFSocketConfig config, boolean preSocket) throws Exception {
+	public SocketExt(JLFSocketConfig config, boolean preSocket) {
 		super();
-		this.connect(new InetSocketAddress(config.getIp(), config.getPort()), config.getConntimeout());
-		this.setSoTimeout(config.getReadconntimeout());
+		try {
+			this.connect(new InetSocketAddress(config.getIp(), config.getPort()), config.getConntimeout());
+			this.setSoTimeout(config.getReadconntimeout());
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+
 		this.preSocket = preSocket;
 	}
 

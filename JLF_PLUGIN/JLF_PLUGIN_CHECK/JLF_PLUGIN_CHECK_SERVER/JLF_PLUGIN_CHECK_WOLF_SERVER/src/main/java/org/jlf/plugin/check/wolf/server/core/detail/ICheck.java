@@ -32,9 +32,8 @@ public abstract class ICheck<T extends Object> {
 	 * @param json
 	 * @param field
 	 * @return
-	 * @throws Exception 
 	 */
-	public abstract T getValue(JLFJson json, Field field) throws Exception;
+	public abstract T getValue(JLFJson json, Field field);
 
 	/**
 	 * 
@@ -43,16 +42,14 @@ public abstract class ICheck<T extends Object> {
 	 * @param ann
 	 * @param field
 	 * @param value
-	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkNull(JLFCheckAnn ann, Field field, T value) throws Exception {
-		if (ann.isNull() == false && value == null) {
+	public void checkNull(JLFCheckAnn ann, Field field, T value) {
+		boolean isNull = (ann == null?JLFCheckAnn.isNull:ann.isNull());
+		if (isNull == false && value == null) {
 			throw new JLFException(getExceptionDesc(ann, field, NULL_EXCEPTION_DESC));
 		}
 	}
-
-	
 
 	/**
 	 * 
@@ -64,7 +61,7 @@ public abstract class ICheck<T extends Object> {
 	 * @return
 	 */
 	protected String getExceptionDesc(JLFCheckAnn ann, Field field, String exceptionMsg) {
-		String fieldDesc = ann.desc();
+		String fieldDesc = (ann == null?null:ann.desc());
 		if (fieldDesc == null || fieldDesc.length() <= 0) {
 			fieldDesc = field.getName();
 		}

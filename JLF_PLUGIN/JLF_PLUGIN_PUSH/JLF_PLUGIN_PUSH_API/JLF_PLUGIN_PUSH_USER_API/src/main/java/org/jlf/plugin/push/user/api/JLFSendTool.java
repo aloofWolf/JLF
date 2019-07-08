@@ -18,8 +18,7 @@ public interface JLFSendTool {
 	 * @param inter
 	 * @param datagram
 	 * @return
-	 * @throws Exception
 	 */
-	public String send(JLFInter<?, ?, ?> inter, String datagram) throws Exception;
+	public String send(JLFInter<?, ?, ?> inter, String datagram);
 
 }

@@ -1,9 +1,13 @@
 package org.jlf.core.server;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.jlf.common.exception.JLFException;
-import org.jlf.core.api.JLFIProduct;
+import org.jlf.common.util.SingletonUtil;
+import org.jlf.core.api.JLFProductServerApi;
+import org.jlf.core.api.JLFProductWebApi;
 import org.jlf.core.client.JLFPluginClient;
 
 /**
@@ -12,17 +16,26 @@ import org.jlf.core.client.JLFPluginClient;
  * @Description:JLF产品服务端
  * @author Lone Wolf
  * @date 2019年6月2日
- * @param <T>
+ * @param <SERVER_API>
+ * @param <WEB_API>
  */
-public abstract class JLFProductServer<API extends JLFIProduct> {
+public abstract class JLFProductServer<SERVER_API extends JLFProductServerApi, WEB_API extends JLFProductWebApi> {
 
 	/**
 	 * 
-	 * @Title: getApi
-	 * @Description:获取api实例
+	 * @Title: getServerApi
+	 * @Description:获取serverApi实例
 	 * @return
 	 */
-	public abstract API get();
+	public abstract SERVER_API getServerApi();
+
+	/**
+	 * 
+	 * @Title: getWebApi
+	 * @Description:获取webApi实例
+	 * @return
+	 */
+	public abstract WEB_API getWebApi();
 
 	/**
 	 * 
@@ -32,79 +45,65 @@ public abstract class JLFProductServer<API extends JLFIProduct> {
 	 */
 	public abstract <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends();
 
-	/**
-	 * 
-	 * @Title: stop
-	 * @Description:停止插件服务
-	 */
-	public abstract void jStart() throws Exception;
 
 	/**
 	 * 
-	 * @Title: stop
-	 * @Description:停止插件服务
+	 * @Title: initConfig
+	 * @Description:初始化配置
 	 */
-	public abstract void jStop() throws Exception;
+	public void initConfig() {
+	}
+	
+	
 
 	/**
 	 * 
-	 * @Title: reSatrt
-	 * @Description:重启插件服务
+	 * @Title: doOther
+	 * @Description:启动插件时,除初始化配置以外的其它处理
 	 */
-	public abstract void jreStart() throws Exception;
-
+	public void doOther() {
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> void initRoute(){
+		WEB_API webApi = getWebApi();
+		if (webApi == null) {
+			throw new JLFException("webApi不能为空");
+		}
+		Method[] methods = webApi.getClass().getDeclaredMethods();
+		for (Method method : methods) {
+			Class<T> returnType = (Class<T>) method.getReturnType();
+			T obj;
+			try {
+				obj = (T) method.invoke(this);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new JLFException(e);
+			}
+			SingletonUtil.put(returnType, obj);
+		}
+	}
+	
 	/**
 	 * 
+	 * @param <T>
 	 * @Title: start
 	 * @Description:启动插件服务
 	 */
-	public void start() throws Exception {
+	public <T> void start() {
 		String serverName = this.getClass().getName();
 		System.out.println(String.format("%s启动开始。。。", serverName));
 		try {
-			jStart();
+			initConfig();
+			initRoute();
+			doOther();
 		} catch (Exception e) {
 			System.out.println(String.format("%s启动失败。。。", serverName));
 			throw new JLFException(e);
 		}
 
 		System.out.println(String.format("%s启动成功。。。", serverName));
-	}
-
-	/**
-	 * 
-	 * @Title: stop
-	 * @Description:停止插件服务
-	 */
-	public void stop() throws Exception {
-		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s停止开始。。。", serverName));
-		try {
-			jStop();
-		} catch (Exception e) {
-			System.out.println(String.format("%s停止失败。。。", serverName));
-			throw new JLFException(e);
-		}
-
-		System.out.println(String.format("%s停止成功。。。", serverName));
-	}
-
-	/**
-	 * 
-	 * @Title: reSatrt
-	 * @Description:重启插件服务
-	 */
-	public void reSatrt() throws Exception {
-		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s重启开始。。。", serverName));
-		try {
-			jreStart();
-		} catch (Exception e) {
-			System.out.println(String.format("%s重启失败。。。", serverName));
-			throw new JLFException(e);
-		}
-
-		System.out.println(String.format("%s重启成功。。。", serverName));
 	}
 
 }
