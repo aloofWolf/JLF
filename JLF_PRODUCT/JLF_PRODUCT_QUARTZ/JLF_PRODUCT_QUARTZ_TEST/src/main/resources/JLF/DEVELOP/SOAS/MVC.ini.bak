@@ -1,4 +1,0 @@
-[routes]
-quartz=org.jlf.product.quartz.wolf.server.action
-perm=org.jlf.product.quartz.wolf.test
-[/routes]

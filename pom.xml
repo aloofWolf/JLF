@@ -21,10 +21,8 @@
 		</dependency>
 	</dependencies>
 	<modules>
-		<module>JLF_COMMON</module>
-		<module>JLF_CORE</module>
-		<module>JLF_PLUGIN</module>
-		<module>JLF_SOA</module>
-		<module>JLF_PRODUCT</module>
+		<module>JLF-COMMON</module>
+		<module>JLF-CORE</module>
+		<module>JLF-PLUGIN</module>
 	</modules>
 </project>
