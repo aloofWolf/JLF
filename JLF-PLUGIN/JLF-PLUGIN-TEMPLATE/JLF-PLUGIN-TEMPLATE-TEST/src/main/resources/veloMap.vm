@@ -1,0 +1,60 @@
+<ns0:ESBEnvelope xmlns:ns0="http://MetLifeEAI.EAISchema">
+<ESBHeader>
+<ESBHdVer>20120608_1.1</ESBHdVer>
+<SrvDate>$!map.get('SrvDate')</SrvDate>
+<SrvTime>$!map.get('SrvTime')</SrvTime>
+<SenderID>TMP</SenderID>
+<ReceiverID>LA</ReceiverID>
+<SrvOpName>$!map.get('SrvOpName')</SrvOpName>
+<SrvOpVer>20120606_1.1</SrvOpVer>
+<MsgID>$!map.get('MsgID')</MsgID>
+<CorrID>$!map.get('CorrID')</CorrID>
+<ESBRspCode>0</ESBRspCode>
+<ESBRspDec>Success</ESBRspDec>
+<ResField1></ResField1>
+<ResField2></ResField2>
+<ResField3></ResField3>
+<ResField4></ResField4>
+<ResField5></ResField5>
+</ESBHeader>
+<MsgBody>
+
+<prm:PRMCALI_REC xmlns:msp="http://www.csc.smart/msp/schemas/MSPContext" xmlns:prm="http://www.csc.smart/bo/schemas/PRMCALI">
+<!--Optional:-->
+
+
+<msp:MSPContext xmlns:msp="http://www.csc.smart/msp/schemas/MSPContext">
+<!--Optional:-->
+<msp:UserId>${UserId}</msp:UserId>
+<msp:UserPassword>${UserPassword}</msp:UserPassword>
+#foreach($detail in $!map.get('details'))
+<msp:RequestParameters>
+<!--Zero or more repetitions:-->
+
+<msp:RequestParameter name="BRANCH" value="$!detail.get('company')" />
+<msp:RequestParameter name="COMMIT_FLAG" value="Y" />
+<msp:RequestParameter name="COMPANY" value="$!detail.get('branch')" />
+<msp:RequestParameter name="IGNORE_DRIVER_HELD" value="N" />
+<msp:RequestParameter name="LANGUAGE" value="S" />
+<msp:RequestParameter name="SUPPRESS_RCLRSC" value="N" />
+</msp:RequestParameters>
+#end
+</msp:MSPContext>
+
+#foreach($detail in $!map.get('details'))
+<DRNOUTRECS>
+<COMPANY>$!detail.get('branch')</COMPANY>
+<BRANCH>$!detail.get('company')</BRANCH>
+<REQNNO>$!detail.get('reqnno')</REQNNO>
+<STFLAG>$!detail.get('stflag')</STFLAG>
+<TXTLINE>$!detail.get('txtline')</TXTLINE>
+</DRNOUTRECS>
+#end
+
+</prm:PRMCALI_REC>
+
+
+
+
+</MsgBody>
+</ns0:ESBEnvelope>

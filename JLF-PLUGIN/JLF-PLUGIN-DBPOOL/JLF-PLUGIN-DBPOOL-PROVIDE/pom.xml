@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jlf</groupId>
+    <artifactId>JLF-PLUGIN-DBPOOL</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <artifactId>JLF-PLUGIN-DBPOOL-PROVIDE</artifactId>
+  
+  <dependencies>
+		<!--依赖JLF-PLUGIN-DBPOOL-SERVER-API -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-DBPOOL-SERVER-API</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖JLF-PLUGIN-DBPOOL-C3P0-SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-DBPOOL-C3P0-SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assembly</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

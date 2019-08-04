@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jlf</groupId>
+		<artifactId>JLF-PLUGIN-SESSION</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>JLF-PLUGIN-SESSION-TEST</artifactId>
+	<packaging>war</packaging>
+
+	<properties>
+		<servlet.version>2.5</servlet.version>
+		<log4j.version>1.7.2</log4j.version>
+	</properties>
+
+	<dependencies>
+		<!--依赖JLF-PLUGIN-SESSION-CLIENT -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-SESSION-CLIENT</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖JLF-PLUGIN-SESSION-CACHE-SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-SESSION-CACHE-SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--依赖slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+	</dependencies>
+</project>
