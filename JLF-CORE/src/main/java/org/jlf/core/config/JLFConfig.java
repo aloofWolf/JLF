@@ -1,5 +1,8 @@
 package org.jlf.core.config;
 
+import java.util.Properties;
+
+import org.jlf.common.util.IniUtil;
 import org.jlf.common.util.PathUtil;
 
 /**
@@ -11,45 +14,49 @@ import org.jlf.common.util.PathUtil;
  */
 public class JLFConfig {
 
-	private static String configPath; // 配置文件路径
+	private static String configFilePath = PathUtil.getRootPath(); // 配置文件路径
+	private static String configFileName = "JLF.ini"; // 配置文件名
 
-	/**
-	 * 初始化读取并解析总配置文件
-	 */
+	private static IniUtil jLFConfig; // 项目配置
+
+	private static final String pluginConfigName = "plugin-%s";
+	private static final String productConfigName = "product-%s";
+	private static final String soaConfigName = "soa-%s";
+
 	static {
-		configPath = PathUtil.getConfigFilePath();
+		jLFConfig = new IniUtil(new StringBuffer(configFilePath).append(configFileName).toString());
 	}
 
 	/**
 	 * 
-	 * @Title: getPluginConfigFilePath
-	 * @Description:获取某个插件的配置文件路径
+	 * @Title: getPluginConfig
+	 * @Description:获取某个插件的配置
 	 * @param pluginName
 	 * @return
 	 */
-	public static String getPluginConfigFilePath(String configFileName) {
-		return new StringBuffer(configPath).append("PLUGINS/").append(configFileName).toString();
+	public static Properties getPluginConfig(String pluginName) {
+		return jLFConfig.getSection(String.format(pluginConfigName, pluginName));
 	}
 
 	/**
 	 * 
-	 * @Title: getProductConfigFilePath
-	 * @Description:获取某个产品的配置文件路径
-	 * @param pluginName
+	 * @Title: getProductConfig
+	 * @Description:获取某个产品的配置
+	 * @param productName
 	 * @return
 	 */
-	public static String getProductConfigFilePath(String configFileName) {
-		return new StringBuffer(configPath).append("PRODUCTS/").append(configFileName).toString();
+	public static Properties getProductConfig(String productName) {
+		return jLFConfig.getSection(String.format(productConfigName, productName));
 	}
 
 	/**
 	 * 
 	 * @Title: getSoaConfigFilePath
-	 * @Description:获取某个架构的配置文件路径
+	 * @Description:获取某个架构的配置
 	 * @param pluginName
 	 * @return
 	 */
-	public static String getSoaConfigFilePath(String configFileName) {
-		return new StringBuffer(configPath).append("SOAS/").append(configFileName).toString();
+	public static Properties getSoaConfig(String soaName) {
+		return jLFConfig.getSection(String.format(soaConfigName, soaName));
 	}
 }

@@ -24,7 +24,7 @@ public class ReflectUtil {
 	 */
 	public static List<Field> getAllFields(Class<?> cls) {
 		List<Field> fields = new ArrayList<Field>();
-		while (cls != null) {// 当父类为null的时候说明到达了最上层的父类(Object类).
+		while (cls != null && ClassUtil.clsIsCustom(cls)) {// 当父类为null的时候说明到达了最上层的父类(Object类).
 			fields.addAll(0, Arrays.asList(cls.getDeclaredFields()));
 			cls = cls.getSuperclass(); // 得到父类,然后赋给自己
 		}

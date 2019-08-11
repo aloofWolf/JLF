@@ -2,6 +2,8 @@ package org.jlf.common.util;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -254,5 +256,14 @@ public class StringUtil {
 			sb.append(t.toString()).append(split);
 		}
 		return sb.substring(0, sb.length() - 1);
+	}
+	
+	public static void main(String[] args){
+		Map<String,Integer> map = new HashMap<String,Integer>();
+		map.put("aaa", null);
+		System.out.println(map.get("aaa"));
+		System.out.println(map.get("bbb"));
+		System.out.println(map.containsKey("aaa"));
+		System.out.println(map.containsKey("bbb"));
 	}
 }

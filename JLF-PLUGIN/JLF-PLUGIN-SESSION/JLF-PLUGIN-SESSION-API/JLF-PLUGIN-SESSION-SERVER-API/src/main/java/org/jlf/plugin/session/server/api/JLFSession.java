@@ -61,4 +61,12 @@ public interface JLFSession extends JLFPluginServerApi {
 	 */
 	public <T extends JLFSessionBean> T getSessionBean();
 
+	/**
+	 * 
+	 * @Title: clearThreadLocal
+	 * @Description:清空threadLocal变量,如果服务端没有使用threadLocal,可不用实现此方法
+	 */
+	public default void clearThreadLocal() {
+	}
+
 }

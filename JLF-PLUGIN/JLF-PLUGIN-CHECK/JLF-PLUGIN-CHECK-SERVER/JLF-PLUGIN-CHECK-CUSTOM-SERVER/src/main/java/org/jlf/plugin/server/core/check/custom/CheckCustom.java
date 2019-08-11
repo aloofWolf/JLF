@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,11 @@ import org.jlf.plugin.server.core.check.custom.detail.fac.CheckBeanFactory;
  * @date 2019年5月24日
  */
 public class CheckCustom implements JLFCheck {
+	
+	/**
+	 * 将已经校验过的cls和对应的fields缓存到此map,避免每次都重新获取fields
+	 */
+	private static Map<Class<?>,List<Field>> checkClsMap = new HashMap<Class<?>,List<Field>>();
 
 	@Override
 	public <T> T check(String jsonStr, Class<T> cls) {
@@ -56,7 +62,16 @@ public class CheckCustom implements JLFCheck {
 			e.printStackTrace();
 			throw new JLFException(e);
 		}
-		List<Field> fields = ReflectUtil.getAllFields(cls);
+		
+		List<Field> fields = null;
+		synchronized(this){
+			fields = checkClsMap.get(cls);
+			if(fields == null){
+				fields = ReflectUtil.getAllFields(cls);
+				checkClsMap.put(cls, fields);
+			}
+		}
+		
 		for (Field field : fields) {
 			JLFCheckAnn ann = field.getAnnotation(JLFCheckAnn.class);
 			if (ann != null && ann.isSkipValidate() == true) {

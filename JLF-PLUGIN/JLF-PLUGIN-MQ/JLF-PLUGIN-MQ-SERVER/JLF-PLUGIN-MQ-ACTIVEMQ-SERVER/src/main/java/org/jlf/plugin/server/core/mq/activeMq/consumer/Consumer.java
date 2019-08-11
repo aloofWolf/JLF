@@ -28,9 +28,9 @@ public abstract class Consumer<T extends Serializable> {
 	private Connection conn;
 	private Session session;
 	private MessageConsumer consumer;
-	private JLFThreadPoolSubmit threadPoolSubmit;
+	private JLFThreadPoolSubmit<T> threadPoolSubmit;
 	
-	public Consumer(JLFThreadPoolSubmit threadPoolSubmit){
+	public Consumer(JLFThreadPoolSubmit<T> threadPoolSubmit){
 		this.threadPoolSubmit = threadPoolSubmit;
 	}
 

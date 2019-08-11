@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jlf</groupId>
+    <artifactId>JLF-SOA-MVC</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <artifactId>JLF-SOA-MVC-ACTION</artifactId>
+  
+  <properties>
+		<servlet.version>3.1.0</servlet.version>
+	</properties>
+
+	<dependencies>
+		<!--依赖servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--依赖JLF-SOA-MVC-SERVICE -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-SOA-MVC-SERVICE</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖JLF-PLUGIN-JSON-CLIENT -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-JSON-CLIENT</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖JLF-PLUGIN-JSON-PROVIDE -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-JSON-PROVIDE</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+</project>

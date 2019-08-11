@@ -24,5 +24,6 @@
 		<module>JLF-COMMON</module>
 		<module>JLF-CORE</module>
 		<module>JLF-PLUGIN</module>
+		<module>JLF-SOA</module>
 	</modules>
 </project>

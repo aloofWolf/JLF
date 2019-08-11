@@ -1,7 +1,6 @@
 package org.jlf.plugin.server.core.dbPool.c3p0.config;
 
 import org.jlf.core.exception.JLFException;
-import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.plugin.dbPool.server.api.JLFDbPool;
 
 /**
@@ -13,7 +12,6 @@ import org.jlf.plugin.dbPool.server.api.JLFDbPool;
  */
 public class C3p0ChildConfig extends C3p0MainConfig {
 
-	@JLFCheckAnn
 	private String dbName;
 
 	public String getDbName() {

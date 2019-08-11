@@ -83,6 +83,7 @@ public class C3p0Core implements JLFDbPool {
 			}
 			conns.remove(dbName);
 		}
+		conns.clear();
 
 	}
 

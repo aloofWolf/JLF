@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jlf</groupId>
+    <artifactId>JLF-SOA</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <artifactId>JLF-SOA-MVC</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>JLF-SOA-MVC-METADATA</module>
+  	<module>JLF-SOA-MVC-DAO</module>
+  	<module>JLF-SOA-MVC-SERVICE</module>
+  	<module>JLF-SOA-MVC-ACTION</module>
+  	<module>JLF-SOA-MVC-UTIL</module>
+  	<module>JLF-SOA-MVC-SERVER</module>
+  	<module>JLF-SOA-MVC-UTIL-TEST</module>
+  	<module>JLF-SOA-MVC-CONTAINER</module>
+  	<module>JLF-SOA-MVC-TEST</module>
+  	<module>JLF-SOA-MVC-CONCORRENT-TEST</module>
+  </modules>
+</project>

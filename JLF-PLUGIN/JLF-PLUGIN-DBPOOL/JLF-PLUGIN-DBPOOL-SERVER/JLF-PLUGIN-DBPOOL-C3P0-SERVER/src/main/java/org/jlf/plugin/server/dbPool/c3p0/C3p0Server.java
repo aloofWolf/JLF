@@ -1,12 +1,12 @@
 package org.jlf.plugin.server.dbPool.c3p0;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
-import org.jlf.common.util.IniUtil;
-import org.jlf.core.config.JLFConfig;
-import org.jlf.core.exception.JLFClientNoInitExecption;
+import org.jlf.core.client.JLFPluginClient;
 import org.jlf.core.server.JLFPluginServer;
 import org.jlf.plugin.check.server.api.JLFCheck;
 import org.jlf.plugin.client.check.JLFCheckClient;
@@ -24,22 +24,25 @@ import org.jlf.plugin.server.core.dbPool.c3p0.config.C3p0MainConfig;
  */
 public class C3p0Server extends JLFPluginServer<JLFDbPool> {
 
-	private static final String configFileName = "c3p0.ini";
-
 	@Override
 	public JLFDbPool getServerApi() {
 		return new C3p0Core();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
+		Set<Class<CLIENT>> depends = new HashSet<Class<CLIENT>>();
+		depends.add((Class<CLIENT>) JLFCheckClient.class);
+		return depends;
+		
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void initConfig() {
 		JLFCheck ckeck = JLFCheckClient.get();
-		if (ckeck == null) {
-			throw new JLFClientNoInitExecption(JLFCheckClient.class);
-		}
-		IniUtil ini = new IniUtil(JLFConfig.getPluginConfigFilePath(configFileName));
-		Properties prop = ini.getPros();
+		Properties prop = super.getConfig();
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
 		C3p0MainConfig config = ckeck.check(map, C3p0MainConfig.class);
 		C3p0Pool.initMainDataSource(config);

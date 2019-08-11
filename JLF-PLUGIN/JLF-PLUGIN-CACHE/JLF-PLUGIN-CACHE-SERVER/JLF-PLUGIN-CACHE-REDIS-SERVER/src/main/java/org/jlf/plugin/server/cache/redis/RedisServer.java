@@ -1,12 +1,12 @@
 package org.jlf.plugin.server.cache.redis;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
-import org.jlf.common.util.IniUtil;
-import org.jlf.core.config.JLFConfig;
-import org.jlf.core.exception.JLFClientNoInitExecption;
+import org.jlf.core.client.JLFPluginClient;
 import org.jlf.core.server.JLFPluginServer;
 import org.jlf.plugin.aop.server.api.JLFAop;
 import org.jlf.plugin.cache.server.api.JLFCache;
@@ -27,26 +27,27 @@ import org.jlf.plugin.server.core.cache.redis.config.RedisConfig;
  */
 public class RedisServer extends JLFPluginServer<JLFCache> {
 
-	private static final String configFileName = "redis.ini";
-
 	@Override
 	public JLFCache getServerApi() {
 		JLFAop aop = JLFAopClient.get();
-		if (aop == null) {
-			throw new JLFClientNoInitExecption(JLFAopClient.class);
-		}
 		return aop.getProxy(RedisCore.class, new RedisAopDo());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
+		Set<Class<CLIENT>> depends = new HashSet<Class<CLIENT>>();
+		depends.add((Class<CLIENT>) JLFAopClient.class);
+		depends.add((Class<CLIENT>) JLFCheckClient.class);
+		return depends;
+		
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void initConfig() {
 		JLFCheck ckeck = JLFCheckClient.get();
-		if (ckeck == null) {
-			throw new JLFClientNoInitExecption(JLFCheckClient.class);
-		}
-		IniUtil ini = new IniUtil(JLFConfig.getPluginConfigFilePath(configFileName));
-		Properties prop = ini.getPros();
+		Properties prop = super.getConfig();
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
 		RedisConfig config = ckeck.check(map, RedisConfig.class);
 		RedisPool.init(config);

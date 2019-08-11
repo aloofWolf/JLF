@@ -10,12 +10,11 @@ import org.jlf.plugin.threadPool.user.api.JLFThreadPoolExecute;
  * @author Lone Wolf
  * @date 2019年6月4日
  */
-public class ThreadPoolExecute implements JLFThreadPoolExecute {
+public class ThreadPoolExecute implements JLFThreadPoolExecute<Integer> {
 
 	@Override
-	public void execute(Object bean) throws Exception {
+	public void execute(Integer i) throws Exception {
 		Thread.sleep(1000);
-		Integer i = (Integer) bean;
 		int remainder = i % 2;
 		if (remainder > 0) {
 			throw new JLFException("执行失败");

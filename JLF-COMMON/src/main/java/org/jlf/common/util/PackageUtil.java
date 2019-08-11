@@ -55,7 +55,7 @@ public class PackageUtil {
 				String protocol = url.getProtocol();
 				String pkgPath = url.getPath();
 				if ("file".equals(protocol)) {
-					myClss.addAll(processFile(pkgPath, null, filter));
+					myClss.addAll(processFile(pkgPath, packageName, null, filter));
 				} else if ("jar".equals(protocol)) {
 					myClss.addAll(processJar(url, filePath, filter));
 				}
@@ -69,31 +69,33 @@ public class PackageUtil {
 	 * @Title: processFile
 	 * @Description:递归获取file包下的所有class类
 	 * @param filePath
+	 * @param packageName
 	 * @param clss
 	 * @param filter
 	 * @return
 	 */
-	private static List<Class<?>> processFile(String filePath, List<Class<?>> clss, PackageUtilFilter filter) {
+	private static List<Class<?>> processFile(String filePath, String packageName, List<Class<?>> clss,
+			PackageUtilFilter filter) {
 		List<Class<?>> myClss = new ArrayList<Class<?>>();
 		File file = new File(filePath);
 		File[] childFiles = file.listFiles();
+		if (childFiles == null || childFiles.length == 0) {
+			return myClss;
+		}
 		for (File childFile : childFiles) {
 			if (childFile.isDirectory()) {
-				myClss.addAll(processFile(childFile.getPath(), myClss, filter));
+				String filePathBak = new StringBuffer(filePath).append("/").append(childFile.getName()).toString();
+				String packageNameBak = new StringBuffer(packageName).append(".").append(childFile.getName())
+						.toString();
+				myClss.addAll(processFile(filePathBak, packageNameBak, myClss, filter));
 			} else {
-				String childFilePath = childFile.getPath();
-				if (childFilePath.endsWith(".class")) {
-					if (childFilePath.indexOf("\\classes") > 0) {
-						childFilePath = childFilePath.substring(childFilePath.indexOf("\\classes") + 9,
-								childFilePath.indexOf("."));
-					} else {
-						childFilePath = childFilePath.substring(childFilePath.indexOf("\\test-classes") + 14,
-								childFilePath.indexOf("."));
-					}
-
-					childFilePath = childFilePath.replace("\\", ".");
+				String childFileName = childFile.getName();
+				if (childFileName.endsWith(".class")) {
+					childFileName = new StringBuffer(packageName).append(".")
+							.append(childFileName.substring(0, childFileName.lastIndexOf("."))).toString();
+					childFileName = childFileName.replace("/", ".");
 					try {
-						Class<?> cls = Class.forName(childFilePath);
+						Class<?> cls = Class.forName(childFileName);
 						if (filter == null || !filter.doFilter(cls)) {
 							myClss.add(cls);
 						}
@@ -155,6 +157,18 @@ public class PackageUtil {
 			}
 		}
 		return myClss;
+	}
+
+	/**
+	 * 
+	 * @Title: getPackageName
+	 * @Description:根据cls获取packageName
+	 * @param cls
+	 * @return
+	 */
+	public static String getPackageName(Class<?> cls) {
+		String packageName = cls.getPackage().getName();
+		return packageName;
 	}
 
 }

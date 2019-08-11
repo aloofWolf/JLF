@@ -1,5 +1,7 @@
 package org.jlf.test.common.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.jlf.common.util.DateUtil;
@@ -362,6 +364,22 @@ public class DateUtilTest {
 	@Test
 	public void getAssignedBeforeMonthLaseDay() {
 		System.out.println("34:  " + DateUtil.getAssignedBeforeMonthLaseDay(new Date(), 3));
+	}
+	
+	/**
+	 * 
+	 * @Title: getDateAfterMinute
+	 * @Description:获取几分钟后的时间测试
+	 * @param minute
+	 * @return
+	 */
+	@Test
+	public void getDateAfterMinute() {
+		Date date = DateUtil.getDateAfterMinute(3);
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String nowTime= df.format(date);
+		System.out.println(nowTime);
 	}
 
 }

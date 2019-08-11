@@ -1,8 +1,11 @@
 package org.jlf.plugin.server.push.custom;
 
-import org.jlf.common.util.IniUtil;
-import org.jlf.core.config.JLFConfig;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.jlf.core.client.JLFPluginClient;
 import org.jlf.core.server.JLFPluginServer;
+import org.jlf.plugin.client.check.JLFCheckClient;
 import org.jlf.plugin.push.server.api.JLFPush;
 import org.jlf.plugin.server.core.push.custom.PushCustomCore;
 import org.jlf.plugin.server.core.push.custom.manager.ChannelManager;
@@ -16,17 +19,23 @@ import org.jlf.plugin.server.core.push.custom.manager.ChannelManager;
  */
 public class PushCustomServer extends JLFPluginServer<JLFPush> {
 
-	private static final String configFileName = "pushCustom.ini";
-
 	@Override
 	public JLFPush getServerApi() {
 		return new PushCustomCore();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
+		Set<Class<CLIENT>> depends = new HashSet<Class<CLIENT>>();
+		depends.add((Class<CLIENT>) JLFCheckClient.class);
+		return depends;
+		
+	}
 
 	@Override
 	public void initConfig() {
-		IniUtil ini = new IniUtil(JLFConfig.getPluginConfigFilePath(configFileName));
-		ChannelManager.init(ini);
+		ChannelManager.init(super.getConfig());
 	}
 
 }

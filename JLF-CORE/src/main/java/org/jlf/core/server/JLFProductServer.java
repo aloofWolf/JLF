@@ -3,6 +3,7 @@ package org.jlf.core.server;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.jlf.common.util.LogUtil;
 import org.jlf.common.util.SingletonUtil;
 import org.jlf.core.api.JLFProductServerApi;
 import org.jlf.core.api.JLFProductWebApi;
@@ -80,17 +81,17 @@ public abstract class JLFProductServer<SERVER_API extends JLFProductServerApi, W
 	 */
 	public <T> void start() {
 		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s启动开始。。。", serverName));
+		LogUtil.get().debug(String.format("%s启动开始。。。", serverName));
 		try {
 			initConfig();
 			initRoute();
 			doOther();
 		} catch (Exception e) {
-			System.out.println(String.format("%s启动失败。。。", serverName));
+			LogUtil.get().debug(String.format("%s启动失败。。。", serverName));
 			throw new JLFException(e);
 		}
 
-		System.out.println(String.format("%s启动成功。。。", serverName));
+		LogUtil.get().debug(String.format("%s启动成功。。。", serverName));
 	}
 
 }

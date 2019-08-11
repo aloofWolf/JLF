@@ -12,14 +12,16 @@ import org.jlf.plugin.check.server.api.JLFCheckAnn;
  */
 public class RedisConfig {
 
-	@JLFCheckAnn
 	private String ip;
-	@JLFCheckAnn
 	private Integer port;
-	
+
+	@JLFCheckAnn(isNull = true)
 	private Integer maxTotal;
+	@JLFCheckAnn(isNull = true)
 	private Integer maxIdle;
+	@JLFCheckAnn(isNull = true)
 	private Long maxWaitMillis;
+	@JLFCheckAnn(isNull = true)
 	private BooleanType TestOnBorrow;
 
 	public String getIp() {
@@ -69,7 +71,5 @@ public class RedisConfig {
 	public void setTestOnBorrow(BooleanType testOnBorrow) {
 		TestOnBorrow = testOnBorrow;
 	}
-	
-	
 
 }

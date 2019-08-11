@@ -19,19 +19,20 @@ public class ConsumerTopicProcess implements JLFMqCousumerTopicProcess<Bean> {
 	}
 	
 	@Override
-	public JLFThreadPoolSubmit getThreadPoolSubmit() {
+	public JLFThreadPoolSubmit<Bean> getThreadPoolSubmit() {
 		return new TopicSubmit();
 	}
 }
 
-class TopicSubmit implements JLFThreadPoolSubmit{
+class TopicSubmit implements JLFThreadPoolSubmit<Bean>{
 
 
-	@SuppressWarnings("hiding")
 	@Override
-	public <Bean> void execute(Bean bean) throws Exception {
+	public void execute(Bean bean) throws Exception {
 		LogUtil.get().debug(bean.toString());
 		
 	}
+
+
 	
 }

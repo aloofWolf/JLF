@@ -17,7 +17,7 @@ public class RedisAopDo implements JLFAopDo {
 	@Override
 	public Object doBefore(Object obj, Method method, Object[] args) {
 		RedisCore core = (RedisCore) obj;
-		core.jedis = RedisPool.getJedis();
+		core.jedis.set(RedisPool.getJedis());
 		return core;
 
 	}
@@ -25,8 +25,8 @@ public class RedisAopDo implements JLFAopDo {
 	@Override
 	public Object doAfter(Object obj, Method method, Object[] args, Object bean) {
 		RedisCore core = (RedisCore) obj;
-		core.jedis.close();
-		core.jedis = null;
+		core.jedis.get().close();
+		core.jedis.remove();
 		return core;
 
 	}
@@ -34,9 +34,9 @@ public class RedisAopDo implements JLFAopDo {
 	@Override
 	public Object doException(Object obj, Method method, Object[] args, Object bean) {
 		RedisCore core = (RedisCore) obj;
-		if(core.jedis != null){
-			core.jedis.close();
-			core.jedis = null;
+		if(core.jedis.get() != null){
+			core.jedis.get().close();
+			core.jedis.remove();
 		}
 		return core;
 

@@ -7,7 +7,7 @@ package org.jlf.plugin.threadPool.user.api;
  * @author Lone Wolf
  * @date 2019Äê5ÔÂ28ÈÕ
  */
-public interface JLFThreadPoolExecute extends JLFThreadPoolSubmit{
+public interface JLFThreadPoolExecute<T> extends JLFThreadPoolSubmit<T>{
 
 	/**
 	 * 

@@ -26,7 +26,7 @@ public class EnumUtil {
 				return e;
 			}
 		}
-		throw new RuntimeException(String.format(E.idNoExistExceptionMessage, "ExpressOperatorType", id));
+		throw new RuntimeException(String.format(E.idNoExistExceptionMessage, cls.getSimpleName(), id));
 	}
 
 	/**

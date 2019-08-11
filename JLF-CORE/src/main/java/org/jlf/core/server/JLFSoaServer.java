@@ -1,5 +1,10 @@
 package org.jlf.core.server;
 
+import java.util.Properties;
+
+import org.jlf.common.util.LogUtil;
+import org.jlf.core.config.JLFConfig;
+
 /**
  * 
  * @ClassName: JLFSoaServer
@@ -8,6 +13,14 @@ package org.jlf.core.server;
  * @date 2019年6月2日
  */
 public abstract class JLFSoaServer {
+	
+	/**
+	 * 
+	    * @Title: getSoaName
+	    * @Description:获取架构名称
+	    * @return
+	 */
+	public abstract String getSoaName();
 
 	/**
 	 * 
@@ -32,15 +45,25 @@ public abstract class JLFSoaServer {
 	 */
 	public void start() {
 		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s启动开始。。。", serverName));
+		LogUtil.get().debug(String.format("%s启动开始。。。", serverName));
 		try {
 			initConfig();
 			doOther();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(String.format("%s启动失败。。。", serverName));
+			LogUtil.get().debug(String.format("%s启动失败。。。", serverName));
 			throw e;
 		}
-		System.out.println(String.format("%s启动成功。。。", serverName));
+		LogUtil.get().debug(String.format("%s启动成功。。。", serverName));
+	}
+	
+	/**
+	 * 
+	 * @Title: getConfig
+	 * @Description:获取服务端配置
+	 * @return
+	 */
+	public Properties getConfig() {
+		return JLFConfig.getSoaConfig(getSoaName());
 	}
 }

@@ -1,0 +1,8 @@
+[plugin-push]
+socket=org.jlf.plugin.push.test.socket
+[/plugin-push]
+
+[plugin-push-socket]
+ip=127.0.0.1
+port=8081
+[/plugin-push-socket]

@@ -17,7 +17,7 @@ public interface JLFThreadPool extends JLFPluginServerApi {
 
 	public static final String PLUGIN_NAME = "threadPool";
 	
-	public <T extends Object> void submit(T bean, JLFThreadPoolSubmit submit);
+	public <T extends Object> void submit(T bean, JLFThreadPoolSubmit<T> submit);
 
 	/**
 	 * 
@@ -27,6 +27,6 @@ public interface JLFThreadPool extends JLFPluginServerApi {
 	 * @param config
 	 * @return
 	 */
-	public <T extends Object> JLFThreadPoolResult<T> execute(List<T> beans, JLFThreadPoolExecute execute);
+	public <T extends Object> JLFThreadPoolResult<T> execute(List<T> beans, JLFThreadPoolExecute<T> execute);
 
 }

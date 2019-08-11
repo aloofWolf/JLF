@@ -12,52 +12,83 @@ import org.jlf.plugin.check.server.api.JLFCheckAnn;
  */
 public class C3p0MainConfig {
 
-	@JLFCheckAnn
 	private String driver;
-	@JLFCheckAnn
 	private String url;
-	@JLFCheckAnn
 	private String userName;
-	@JLFCheckAnn
 	private String password;
 
+	@JLFCheckAnn(isNull=true)
 	private Integer acquireIncrement;
+	@JLFCheckAnn(isNull=true)
 	private Integer acquireRetryAttempts;
+	@JLFCheckAnn(isNull=true)
 	private Integer acquireRetryDelay;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType autoCommitOnClose;
+	@JLFCheckAnn(isNull=true)
 	private String automaticTestTable;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType breakAfterAcquireFailure;
+	@JLFCheckAnn(isNull=true)
 	private Integer checkoutTimeout;
+	@JLFCheckAnn(isNull=true)
 	private String connectionCustomizerClassName;
+	@JLFCheckAnn(isNull=true)
 	private String connectionTesterClassName;
+	@JLFCheckAnn(isNull=true)
 	private String contextClassLoaderSource;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType debugUnreturnedConnectionStackTraces;
+	@JLFCheckAnn(isNull=true)
 	private String factoryClassLocation;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType forceIgnoreUnresolvedTransactions;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType forceSynchronousCheckins;
+	@JLFCheckAnn(isNull=true)
 	private String identityToken;
+	@JLFCheckAnn(isNull=true)
 	private Integer idleConnectionTestPeriod;
+	@JLFCheckAnn(isNull=true)
 	private Integer initialPoolSize;
+	@JLFCheckAnn(isNull=true)
 	private Integer maxAdministrativeTaskTime;
+	@JLFCheckAnn(isNull=true)
 	private Integer maxConnectionAge;
+	@JLFCheckAnn(isNull=true)
 	private Integer maxIdleTime;
+	@JLFCheckAnn(isNull=true)
 	private Integer maxIdleTimeExcessConnections;
+	@JLFCheckAnn(isNull=true)
 	private Integer maxPoolSize;
+	@JLFCheckAnn(isNull=true)
 	private Integer maxStatements;
+	@JLFCheckAnn(isNull=true)
 	private Integer maxStatementsPerConnection;
+	@JLFCheckAnn(isNull=true)
 	private Integer minPoolSize;
+	@JLFCheckAnn(isNull=true)
 	private String overrideDefaultPassword;
+	@JLFCheckAnn(isNull=true)
 	private String overrideDefaultUser;
+	@JLFCheckAnn(isNull=true)
 	private String preferredTestQuery;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType privilegeSpawnedThreads;
+	@JLFCheckAnn(isNull=true)
 	private Integer propertyCycle;
+	@JLFCheckAnn(isNull=true)
 	private Integer statementCacheNumDeferredCloseThreads;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType testConnectionOnCheckin;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType testConnectionOnCheckout;
+	@JLFCheckAnn(isNull=true)
 	private Integer unreturnedConnectionTimeout;
+	@JLFCheckAnn(isNull=true)
 	private String userOverridesAsString;
+	@JLFCheckAnn(isNull=true)
 	private BooleanType usesTraditionalReflectiveProxies;
-
 	public String getDriver() {
 		return driver;
 	}

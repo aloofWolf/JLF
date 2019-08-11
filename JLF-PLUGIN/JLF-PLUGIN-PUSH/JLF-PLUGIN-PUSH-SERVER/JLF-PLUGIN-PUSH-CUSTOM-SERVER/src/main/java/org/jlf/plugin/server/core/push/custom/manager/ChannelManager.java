@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jlf.common.util.IniUtil;
 import org.jlf.common.util.LogUtil;
 import org.jlf.common.util.PackageUtil;
+import org.jlf.core.config.JLFConfig;
 import org.jlf.core.exception.JLFException;
+import org.jlf.plugin.push.server.api.JLFPush;
 import org.jlf.plugin.push.server.api.JLFPushChannelAnn;
 import org.jlf.plugin.push.server.api.JLFPushInterAnn;
 import org.jlf.plugin.push.user.api.channel.JLFPushChannel;
@@ -40,13 +41,12 @@ public class ChannelManager {
 	 * @param ini
 	 * @
 	 */
-	public static void init(IniUtil ini) {
-		Properties props = ini.getSection("channls");
+	public static void init(Properties props) {
 		if (props != null) {
 			for (Enumeration<Object> keys = props.keys(); keys.hasMoreElements();) {
 				String channelCode = (String) keys.nextElement();
 				String packages = props.getProperty(channelCode);
-				Properties config = ini.getSection(channelCode);
+				Properties config = JLFConfig.getPluginConfig(JLFPush.PLUGIN_NAME+"-"+channelCode);
 				if (config == null || config.isEmpty()) {
 					throw new JLFException("«˛µ¿±‡∫≈" + channelCode + "Œ¥’“µΩ≈‰÷√–≈œ¢");
 				}

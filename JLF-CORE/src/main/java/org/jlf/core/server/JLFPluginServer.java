@@ -1,7 +1,15 @@
 package org.jlf.core.server;
 
+import java.lang.reflect.Field;
+import java.util.Properties;
+import java.util.Set;
+
+import org.jlf.common.util.GenericityUtil;
+import org.jlf.common.util.LogUtil;
 import org.jlf.core.api.JLFPluginServerApi;
-import org.jlf.core.exception.JLFClientNoInitExecption;
+import org.jlf.core.client.JLFPluginClient;
+import org.jlf.core.config.JLFConfig;
+import org.jlf.core.exception.JLFException;
 
 /**
  * 
@@ -20,6 +28,16 @@ public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 	 * @return
 	 */
 	public abstract SERVER_API getServerApi();
+	
+	/**
+	 * 
+	    * @Title: getDepends
+	    * @Description:获取服务端依赖的其它插件的客户端
+	    * @return
+	 */
+	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends(){
+		return null;
+	}
 
 	/**
 	 * 
@@ -43,19 +61,39 @@ public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 	 * @Description:启动插件服务
 	 * @throws JLFClientNoInitExecption
 	 */
-	public void start() throws JLFClientNoInitExecption {
+	public void start() {
 		String serverName = this.getClass().getName();
-		System.out.println(String.format("%s启动开始。。。", serverName));
+		LogUtil.get().debug(String.format("%s启动开始。。。", serverName));
 		try {
 			initConfig();
 			doOther();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(String.format("%s启动失败。。。", serverName));
+			LogUtil.get().debug(String.format("%s启动失败。。。", serverName));
 			throw e;
 		}
 
-		System.out.println(String.format("%s启动成功。。。", serverName));
+		LogUtil.get().debug(String.format("%s启动成功。。。", serverName));
+	}
+
+	/**
+	 * 
+	 * @Title: getConfig
+	 * @Description:获取服务端配置
+	 * @return
+	 */
+	public Properties getConfig() {
+		Class<SERVER_API> serverApiCls = GenericityUtil.getObjSuperClsGenerCls(this.getClass());
+		Field pluginField;
+		try {
+			pluginField = serverApiCls.getField("PLUGIN_NAME");
+			String pluginName = (String) pluginField.get(serverApiCls);
+			return JLFConfig.getPluginConfig(pluginName);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+
 	}
 
 }

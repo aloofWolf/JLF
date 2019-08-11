@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jlf</groupId>
+    <artifactId>JLF-SOA-MVC</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <artifactId>JLF-SOA-MVC-TEST</artifactId>
+  <packaging>war</packaging>
+  
+  <properties>
+		<servlet.version>3.1.0</servlet.version>
+		<log4j.version>1.7.2</log4j.version>
+	</properties>
+  <dependencies>
+         <!--依赖JLF-SOA-MVC-SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-SOA-MVC-SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>6.0.6</version>
+		</dependency>
+		<!--依赖slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+    <plugins>
+        <!--添加此plugin可以不用web.xml -->
+        <!-- <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.6</version>
+            <configuration>
+                <failOnMissingWebXml>false</failOnMissingWebXml>
+            </configuration>
+        </plugin> -->
+    </plugins>
+    <finalName>mvctest</finalName>
+	</build>
+</project>

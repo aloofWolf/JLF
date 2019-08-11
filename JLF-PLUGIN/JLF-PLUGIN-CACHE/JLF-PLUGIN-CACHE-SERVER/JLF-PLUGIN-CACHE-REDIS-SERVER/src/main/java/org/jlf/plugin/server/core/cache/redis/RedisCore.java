@@ -8,6 +8,7 @@ import org.jlf.plugin.cache.server.api.JLFCache;
 
 import redis.clients.jedis.Jedis;
 
+
 /**
  * 
  * @ClassName: RedisCore
@@ -17,69 +18,69 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisCore implements JLFCache {
 
-	protected Jedis jedis;
+	protected ThreadLocal<Jedis> jedis = new ThreadLocal<Jedis>();
 
 	@Override
 	public void save(String key, String value) {
-		jedis.set(key, value);
+		jedis.get().set(key, value);
 	}
 
 	@Override
 	public void save(String key, Serializable bean) {
 		String ser = SerializeUtil.serialize(bean);
-		jedis.set(key, ser);
+		jedis.get().set(key, ser);
 
 	}
 
 	@Override
 	public void save(String key, String value, int seconds) {
-		jedis.set(key, value);
-		jedis.expire(key, seconds);
+		jedis.get().set(key, value);
+		jedis.get().expire(key, seconds);
 
 	}
 
 	@Override
 	public void save(String key, Serializable bean, int seconds) {
 		String ser = SerializeUtil.serialize(bean);
-		jedis.set(key, ser);
-		jedis.expire(key, seconds);
+		jedis.get().set(key, ser);
+		jedis.get().expire(key, seconds);
 	}
 
 	@Override
 	public void update(String key, String value) {
-		jedis.set(key, value);
+		jedis.get().set(key, value);
 	}
 
 	@Override
 	public void update(String key, Serializable bean) {
 		String ser = SerializeUtil.serialize(bean);
-		jedis.set(key, ser);
+		jedis.get().set(key, ser);
 
 	}
 
 	@Override
 	public void update(String key, String value, int seconds) {
-		jedis.set(key, value);
-		jedis.expire(key, seconds);
+		jedis.get().set(key, value);
+		jedis.get().expire(key, seconds);
 
 	}
 
 	@Override
 	public void update(String key, Serializable bean, int seconds) {
 		String ser = SerializeUtil.serialize(bean);
-		jedis.set(key, ser);
-		jedis.expire(key, seconds);
+		jedis.get().set(key, ser);
+		jedis.get().expire(key, seconds);
 
 	}
 
 	@Override
 	public String getString(String key) {
-		return jedis.get(key);
+		return jedis.get().get(key);
 	}
 
 	@Override
 	public <T extends Serializable> T getObj(String key, Class<T> cls) {
-		String ser = jedis.get(key);
+		String ser = jedis.get().get(key);
 		if (ser == null) {
 			return null;
 		}
@@ -89,31 +90,31 @@ public class RedisCore implements JLFCache {
 
 	@Override
 	public void save(String key, String... values) {
-		jedis.sadd(key, values);
+		jedis.get().sadd(key, values);
 
 	}
 
 	@Override
 	public void add(String key, String... values) {
-		jedis.sadd(key, values);
+		jedis.get().sadd(key, values);
 
 	}
 
 	@Override
 	public void save(String key, int seconds, String... values) {
-		jedis.sadd(key, values);
-		jedis.expire(key, seconds);
+		jedis.get().sadd(key, values);
+		jedis.get().expire(key, seconds);
 	}
 
 	@Override
 	public void add(String key, int seconds, String... values) {
-		jedis.sadd(key, values);
-		jedis.expire(key, seconds);
+		jedis.get().sadd(key, values);
+		jedis.get().expire(key, seconds);
 	}
 
 	@Override
 	public int getArrSize(String key) {
-		Set<String> set = jedis.smembers(key);
+		Set<String> set = jedis.get().smembers(key);
 		if (set == null) {
 			return 0;
 		}
@@ -122,13 +123,13 @@ public class RedisCore implements JLFCache {
 
 	@Override
 	public void delete(String key) {
-		jedis.del(key);
+		jedis.get().del(key);
 
 	}
 
 	@Override
 	public void setKeyPeriod(String key, int seconds) {
-		jedis.expire(key, seconds);
+		jedis.get().expire(key, seconds);
 	}
 
 }

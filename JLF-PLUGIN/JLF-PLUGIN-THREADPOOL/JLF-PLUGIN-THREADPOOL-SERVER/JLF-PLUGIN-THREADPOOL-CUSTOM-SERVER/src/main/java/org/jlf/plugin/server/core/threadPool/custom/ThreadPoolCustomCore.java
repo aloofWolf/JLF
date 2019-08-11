@@ -35,9 +35,9 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 	}
 
 	@Override
-	public <T extends Object> JLFThreadPoolResult<T> execute(List<T> beans, JLFThreadPoolExecute execute) {
+	public <T extends Object> JLFThreadPoolResult<T> execute(List<T> beans, JLFThreadPoolExecute<T> execute) {
 		Long statrTime = System.currentTimeMillis();
-		LogUtil.get().debug("%s:线程池任务开始", execute.getThreadPoolName());
+		LogUtil.get().info("%s:线程池任务开始", execute.getThreadPoolName());
 		Vector<T> successBeans = new Vector<T>();
 		ConcurrentHashMap<T, String> failBeans = new ConcurrentHashMap<T, String>();
 		if (beans == null) {
@@ -60,7 +60,7 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 				break;
 			}
 		}
-		for (FutureExt<T> future : futures) {
+		/*for (FutureExt<T> future : futures) {
 			String result = null;
 			try {
 				result = future.getFuture().get();
@@ -73,15 +73,15 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 			} else {
 				failBeans.put(future.getBean(), result);
 			}
-		}
-		LogUtil.get().debug("%s:线程池任务结束", execute.getThreadPoolName());
+		}*/
+		LogUtil.get().info("%s:线程池任务结束", execute.getThreadPoolName());
 		Long endTime = System.currentTimeMillis();
-		LogUtil.get().debug("所花费时间" + (endTime - statrTime));
+		LogUtil.get().info("所花费时间" + (endTime - statrTime));
 		return new JLFThreadPoolResult<T>(successBeans, failBeans);
 	}
 	
 	@Override
-	public <T> void submit(T bean, JLFThreadPoolSubmit submit) {
+	public <T> void submit(T bean, JLFThreadPoolSubmit<T> submit) {
 		executeService.submit(new ExecuteThread<T>(bean, submit));
 		
 	}
@@ -96,9 +96,9 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 	class ExecuteThread<T extends Object> implements Callable<String> {
 
 		private T bean;
-		private JLFThreadPoolSubmit submit;
+		private JLFThreadPoolSubmit<T> submit;
 
-		public ExecuteThread(T bean, JLFThreadPoolSubmit submit) {
+		public ExecuteThread(T bean, JLFThreadPoolSubmit<T> submit) {
 			this.bean = bean;
 			this.submit = submit;
 		}

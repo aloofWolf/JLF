@@ -21,9 +21,19 @@ public class PackageUtilTest {
 	 */
 	@Test
 	public void getClss() {
-		List<Class<?>> clsNames = PackageUtil.getPackageClss("/");
+		List<Class<?>> clsNames = PackageUtil.getPackageClss("org.jlf");
 		for (Class<?> cls : clsNames) {
 			System.out.println(cls.getName());
 		}
+	}
+
+	/**
+	 * 
+	 * @Title: getPackageName
+	 * @Description:根据cls获取packageName测试
+	 */
+	@Test
+	public void getPackageName() {
+		System.out.println(PackageUtil.getPackageName(PackageUtilTest.class));
 	}
 }

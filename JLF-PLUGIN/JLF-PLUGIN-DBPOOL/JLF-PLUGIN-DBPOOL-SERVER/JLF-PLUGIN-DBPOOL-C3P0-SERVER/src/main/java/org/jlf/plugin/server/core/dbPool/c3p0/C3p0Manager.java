@@ -82,4 +82,7 @@ public class C3p0Manager {
 		return conns.get();
 	}
 
+	public void removeConns(){
+		conns.remove();
+	}
 }

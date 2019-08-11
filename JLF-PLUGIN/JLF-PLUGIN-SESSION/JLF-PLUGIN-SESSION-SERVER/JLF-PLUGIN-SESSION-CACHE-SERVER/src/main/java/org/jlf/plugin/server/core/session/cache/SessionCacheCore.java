@@ -60,4 +60,8 @@ public class SessionCacheCore implements JLFSession {
 		return (T) SessionCacheBean.getSessionBean();
 	}
 
+	@Override
+	public void clearThreadLocal() {
+		SessionCacheBean.clear();
+	}
 }

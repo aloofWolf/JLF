@@ -21,5 +21,5 @@ public interface JLFMqCousumerTopicProcess<T extends Serializable> {
 	 */
 	public String getTopicName();
 	
-	public JLFThreadPoolSubmit getThreadPoolSubmit();
+	public JLFThreadPoolSubmit<T> getThreadPoolSubmit();
 }

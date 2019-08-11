@@ -21,6 +21,6 @@ public interface JLFMqCousumerQueueProcess<T extends Serializable> {
 	 */
 	public String getQueueName();
 
-	public JLFThreadPoolSubmit getThreadPoolSubmit();
+	public JLFThreadPoolSubmit<T> getThreadPoolSubmit();
 
 }

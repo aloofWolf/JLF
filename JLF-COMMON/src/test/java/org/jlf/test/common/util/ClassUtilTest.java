@@ -20,7 +20,7 @@ public class ClassUtilTest {
 	@Test
 	public <T> void clsIsCustom() {
 		System.out.println(ClassUtil.clsIsCustom(String.class));
-		System.out.println(ClassUtil.clsIsCustom(ChildC.class));
+		//System.out.println(ClassUtil.clsIsCustom(ChildC.class));
 	}
 
 }

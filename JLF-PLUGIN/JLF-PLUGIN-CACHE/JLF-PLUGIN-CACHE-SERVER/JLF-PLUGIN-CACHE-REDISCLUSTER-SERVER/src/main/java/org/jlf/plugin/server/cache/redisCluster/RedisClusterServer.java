@@ -1,10 +1,12 @@
 package org.jlf.plugin.server.cache.redisCluster;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
-import org.jlf.common.util.IniUtil;
+import org.jlf.core.client.JLFPluginClient;
 import org.jlf.core.config.JLFConfig;
 import org.jlf.core.server.JLFPluginServer;
 import org.jlf.plugin.cache.server.api.JLFCache;
@@ -22,22 +24,28 @@ import org.jlf.plugin.server.core.cache.redisCluster.config.RedisClusterConfig;
  */
 public class RedisClusterServer extends JLFPluginServer<JLFCache> {
 
-	private static final String configFileName = "redisCluster.ini";
-
 	@Override
 	public JLFCache getServerApi() {
 		return new RedisClusterCore();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
+		Set<Class<CLIENT>> depends = new HashSet<Class<CLIENT>>();
+		depends.add((Class<CLIENT>) JLFCheckClient.class);
+		return depends;
+		
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initConfig() {
-		IniUtil ini = new IniUtil(JLFConfig.getPluginConfigFilePath(configFileName));
-		Properties prop = ini.getPros();
+		Properties prop = super.getConfig();
 		@SuppressWarnings("rawtypes")
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
 		RedisClusterConfig config = JLFCheckClient.get().check(map, RedisClusterConfig.class);
-		config.setHostAndPosts(ini.getSection("hosts"));
+		config.setHostAndPosts(JLFConfig.getPluginConfig(JLFCache.PLUGIN_NAME+"-hosts"));
 		RedisClusterPool.init(config);
 	}
 

@@ -30,5 +30,9 @@ public class SessionCacheBean {
 	public static void setConfig(SessionCacheConfig config) {
 		SessionCacheBean.config = config;
 	}
+	
+	public static void clear(){
+		sessionBean.remove();
+	}
 
 }
