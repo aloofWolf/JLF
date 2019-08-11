@@ -10,7 +10,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<servlet.version>2.5</servlet.version>
+		<servlet.version>3.1.0</servlet.version>
 		<log4j.version>1.7.2</log4j.version>
 	</properties>
 
@@ -30,7 +30,7 @@
 		<!--依赖servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
