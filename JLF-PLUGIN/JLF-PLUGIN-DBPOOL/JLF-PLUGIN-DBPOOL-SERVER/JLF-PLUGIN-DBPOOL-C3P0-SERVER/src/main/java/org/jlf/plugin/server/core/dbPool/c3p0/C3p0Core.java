@@ -73,7 +73,6 @@ public class C3p0Core implements JLFDbPool {
 			return;
 		}
 		for (Map.Entry<String, C3p0ConnectionExt> entry : conns.entrySet()) {
-			String dbName = entry.getKey();
 			Connection conn = entry.getValue().getConn();
 			try {
 				conn.close();
@@ -81,7 +80,6 @@ public class C3p0Core implements JLFDbPool {
 				e.printStackTrace();
 				throw new JLFException(e);
 			}
-			conns.remove(dbName);
 		}
 		conns.clear();
 
@@ -145,8 +143,9 @@ public class C3p0Core implements JLFDbPool {
 				e.printStackTrace();
 				throw new JLFException(e);
 			}
-			conns.remove(dbName);
+			
 		}
+		conns.clear();
 
 	}
 
@@ -154,7 +153,6 @@ public class C3p0Core implements JLFDbPool {
 	public void rollbackTrans() {
 		Map<String, C3p0ConnectionExt> conns = manager.getConns();
 		for (Map.Entry<String, C3p0ConnectionExt> entry : conns.entrySet()) {
-			String dbName = entry.getKey();
 			Connection conn = entry.getValue().getConn();
 			try {
 				conn.rollback();
@@ -163,9 +161,8 @@ public class C3p0Core implements JLFDbPool {
 				e.printStackTrace();
 				throw new JLFException(e);
 			}
-
-			conns.remove(dbName);
 		}
+		conns.clear();
 	}
 
 	@Override

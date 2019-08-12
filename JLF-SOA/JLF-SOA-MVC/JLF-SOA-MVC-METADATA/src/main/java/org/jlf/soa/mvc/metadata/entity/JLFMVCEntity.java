@@ -1,7 +1,6 @@
 package org.jlf.soa.mvc.metadata.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +36,8 @@ public class JLFMVCEntity implements Serializable {
 	@JLFMVCBeanFieldMapped(desc = "更新时间")
 	private Date updateTime;
 
-	private Map<String, Object> data = new HashMap<String, Object>();// 其它数据
+	@JLFMVCBeanFieldMapped(isSkipMapped=true)
+	private Map<Class<? extends JLFMVCEntity>, JLFMVCEntity> relationMap = new HashMap<Class<? extends JLFMVCEntity>, JLFMVCEntity>();// 其它数据
 
 	public Long getId() {
 		return id;
@@ -103,41 +103,22 @@ public class JLFMVCEntity implements Serializable {
 		this.updateTime = updateTime;
 	}
 
-	public String getStr(String key) {
-		return (String) data.get(key);
+	@SuppressWarnings("unchecked")
+	public <ENTITY extends JLFMVCEntity> ENTITY get(Class<ENTITY> entityCls) {
+		return (ENTITY) relationMap.get(entityCls);
 	}
 
-	public Byte getByte(String key) {
-		return (byte) data.get(key);
+	public <ENTITY extends JLFMVCEntity> void set(Class<? extends JLFMVCEntity> entityCls, JLFMVCEntity entity) {
+		relationMap.put(entityCls, entity);
 	}
-
-	public Short getShort(String key) {
-		return (Short) data.get(key);
-	}
-
-	public Integer getInt(String key) {
-		return (Integer) data.get(key);
-	}
-
-	public Long getLong(String key) {
-		return (Long) data.get(key);
-	}
-
-	public BigDecimal getDouble(String key) {
-		return (BigDecimal) data.get(key);
-	}
-
-	public void set(String key, Object value) {
-		this.data.put(key, value);
-	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
 		result = prime * result + ((createUserId == null) ? 0 : createUserId.hashCode());
-		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + ((relationMap == null) ? 0 : relationMap.hashCode());
 		result = prime * result + ((deleteNum == null) ? 0 : deleteNum.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((isDelete == null) ? 0 : isDelete.hashCode());
@@ -166,10 +147,10 @@ public class JLFMVCEntity implements Serializable {
 				return false;
 		} else if (!createUserId.equals(other.createUserId))
 			return false;
-		if (data == null) {
-			if (other.data != null)
+		if (relationMap == null) {
+			if (other.relationMap != null)
 				return false;
-		} else if (!data.equals(other.data))
+		} else if (!relationMap.equals(other.relationMap))
 			return false;
 		if (deleteNum == null) {
 			if (other.deleteNum != null)
@@ -205,7 +186,7 @@ public class JLFMVCEntity implements Serializable {
 	public String toString() {
 		return "JLFMVCBean [id=" + id + ", version=" + version + ", isDelete=" + isDelete + ", deleteNum=" + deleteNum
 				+ ", createUserId=" + createUserId + ", createTime=" + createTime + ", updateUserId=" + updateUserId
-				+ ", updateTime=" + updateTime + ", data=" + data + "]";
+				+ ", updateTime=" + updateTime + ", relationMap=" + relationMap + "]";
 	}
 
 }

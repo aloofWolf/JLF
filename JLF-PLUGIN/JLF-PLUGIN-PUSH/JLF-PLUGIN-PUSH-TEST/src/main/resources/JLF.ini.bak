@@ -10,5 +10,5 @@ port=8081
 
 [plugin-push-http]
 hostName=mvctest
-url=http://127.0.0.1:8080/sayHello
+url=http://127.0.0.1:8080/mvctest/JLF
 [/plugin-push-http]

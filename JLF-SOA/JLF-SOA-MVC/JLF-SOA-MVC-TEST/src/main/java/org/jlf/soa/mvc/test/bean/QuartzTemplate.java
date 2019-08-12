@@ -12,7 +12,7 @@ import org.jlf.soa.mvc.metadata.entity.JLFMVCEntity;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-@JLFMVCBeanTableMapped(dbName = "?", desc = "定时任务模板表")
+@JLFMVCBeanTableMapped(dbName = "wolf2", desc = "定时任务模板表")
 public class QuartzTemplate extends JLFMVCEntity {
 
 	private static final long serialVersionUID = -1968380561688821868L;

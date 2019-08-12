@@ -1,6 +1,6 @@
 [plugin-dbPool]
-driver=com.mysql.jdbc.Driver
-url=jdbc:mysql://39.108.166.34:3306/wolf1
+driver=com.mysql.cj.jdbc.Driver
+url=jdbc:mysql://39.108.166.34:3306/wolf1?serverTimezone=Asia/Shanghai
 userName=root
 password=yun4xue2wen2
 [/plugin-dbPool]
@@ -20,15 +20,6 @@ password=admin
 timeOut=60
 sessionBeanClsName=org.jlf.plugin.session.user.api.JLFSessionBean
 [/plugin-session]
-
-[plugin-push]
-http=org.jlf.plugin.push.test.http
-[/plugin-push]
-
-[plugin-push-http]
-hostName=mvctest
-url=http://127.0.0.1:8080/mvctest/JLF
-[/plugin-push-http]
 
 [soa-mvc]
 beanPackages=org.jlf.soa.mvc.test

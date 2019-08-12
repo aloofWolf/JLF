@@ -12,7 +12,7 @@ import org.jlf.soa.mvc.metadata.entity.JLFMVCEntity;
  * @author Lone Wolf
  * @date 2019年5月31日
  */
-@JLFMVCBeanTableMapped(desc = "定时任务表",cache=true)
+@JLFMVCBeanTableMapped(desc = "定时任务表")
 public class QuartzJob extends JLFMVCEntity {
 
 	private static final long serialVersionUID = -4226760968283776369L;
@@ -28,6 +28,8 @@ public class QuartzJob extends JLFMVCEntity {
 	private BooleanType ready;
 	@JLFMVCBeanFieldMapped(desc = "执行参数",isNotNull = false,strLength = 100)
 	private String params;
+	@JLFMVCBeanFieldMapped(isSkipMapped=true)
+	private QuartzTemplate template;
 
 	public Long getTemplateId() {
 		return templateId;
@@ -77,6 +79,14 @@ public class QuartzJob extends JLFMVCEntity {
 		this.params = params;
 	}
 
+	public QuartzTemplate getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(QuartzTemplate template) {
+		this.template = template;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -86,6 +96,7 @@ public class QuartzJob extends JLFMVCEntity {
 		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
 		result = prime * result + ((params == null) ? 0 : params.hashCode());
 		result = prime * result + ((ready == null) ? 0 : ready.hashCode());
+		result = prime * result + ((template == null) ? 0 : template.hashCode());
 		result = prime * result + ((templateId == null) ? 0 : templateId.hashCode());
 		return result;
 	}
@@ -118,6 +129,11 @@ public class QuartzJob extends JLFMVCEntity {
 			return false;
 		if (ready != other.ready)
 			return false;
+		if (template == null) {
+			if (other.template != null)
+				return false;
+		} else if (!template.equals(other.template))
+			return false;
 		if (templateId == null) {
 			if (other.templateId != null)
 				return false;
@@ -128,7 +144,9 @@ public class QuartzJob extends JLFMVCEntity {
 
 	@Override
 	public String toString() {
-		return "QuartzExecute [templateId=" + templateId + ", billId=" + billId + ", cron=" + cron + ", enabled="
-				+ enabled + ", ready=" + ready + ", params=" + params + ", toString()=" + super.toString() + "]";
+		return "QuartzJob [templateId=" + templateId + ", billId=" + billId + ", cron=" + cron + ", enabled=" + enabled
+				+ ", ready=" + ready + ", params=" + params + ", template=" + template + ", toString()="
+				+ super.toString() + "]";
 	}
+
 }

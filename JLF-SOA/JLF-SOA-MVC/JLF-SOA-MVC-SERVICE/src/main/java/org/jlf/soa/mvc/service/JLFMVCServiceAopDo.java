@@ -28,7 +28,7 @@ public class JLFMVCServiceAopDo implements JLFAopDo<JLFMVCDbBean> {
 				JLFDbPoolClient.get().openTrans(dbName);
 				bean.isOpenTrans = true;
 				bean.dbName = dbName;
-				LogUtil.get().debug("%s方法打开事物", method.getName());
+				LogUtil.get().debug("{}方法打开事物", method.getName());
 			}
 		}
 		return bean;
@@ -40,7 +40,7 @@ public class JLFMVCServiceAopDo implements JLFAopDo<JLFMVCDbBean> {
 		if (bean.isOpenTrans) {
 			String dbName = bean.dbName;
 			JLFDbPoolClient.get().commitTrans(dbName);
-			LogUtil.get().debug("%s方法提交事物", method.getName());
+			LogUtil.get().debug("{}方法提交事物", method.getName());
 		}
 		return bean;
 
@@ -50,7 +50,7 @@ public class JLFMVCServiceAopDo implements JLFAopDo<JLFMVCDbBean> {
 	public JLFMVCDbBean doException(Object obj, Method method, Object[] args, JLFMVCDbBean bean) {
 		if (bean.isOpenTrans) {
 			JLFDbPoolClient.get().rollbackTrans();
-			LogUtil.get().debug("%s方法回滚事物", method.getName());
+			LogUtil.get().debug("{}方法回滚事物", method.getName());
 		}
 		return bean;
 

@@ -47,7 +47,7 @@ public class C3p0Pool {
 	 * @throws Exception
 	 */
 	public static void initChildDataSource(C3p0ChildConfig config) {
-		String dbName = JLFDbPool.mainDbName;
+		String dbName = config.getDbName();
 		initDataSource(dbName, config);
 	}
 
