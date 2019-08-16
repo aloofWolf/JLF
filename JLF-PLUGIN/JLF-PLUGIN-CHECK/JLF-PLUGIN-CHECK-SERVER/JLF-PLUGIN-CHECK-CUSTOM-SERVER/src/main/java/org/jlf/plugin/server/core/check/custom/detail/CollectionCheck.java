@@ -1,7 +1,5 @@
 package org.jlf.plugin.server.core.check.custom.detail;
 
-import java.lang.reflect.Field;
-
 import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
 
@@ -33,11 +31,11 @@ public abstract class CollectionCheck<C extends Object> extends ICheck<C> {
 	 * @param value
 	 */
 	@JLFCheckAnn
-	public void checkMaxLength(JLFCheckAnn ann, Field field, C value) {
+	public void checkMaxLength(JLFCheckAnn ann, String checkName, C value) {
 		if (value != null) {
 			int maxLength = (ann == null ? JLFCheckAnn.maxLength : ann.maxLength());
 			if (getSize(value) > maxLength) {
-				throw new JLFException(getExceptionDesc(ann, field, MAX_LENGTH_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, MAX_LENGTH_EXCEPTION_DESC));
 			}
 		}
 
@@ -52,11 +50,11 @@ public abstract class CollectionCheck<C extends Object> extends ICheck<C> {
 	 * @param value
 	 */
 	@JLFCheckAnn
-	public void checkMinLength(JLFCheckAnn ann, Field field, C value) {
+	public void checkMinLength(JLFCheckAnn ann, String checkName, C value) {
 		if (value != null) {
 			int minLength = (ann == null ? JLFCheckAnn.minLength : ann.minLength());
 			if (getSize(value) < minLength) {
-				throw new JLFException(getExceptionDesc(ann, field, MIN_LENGTH_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, MIN_LENGTH_EXCEPTION_DESC));
 			}
 		}
 

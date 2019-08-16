@@ -1,10 +1,9 @@
 package org.jlf.plugin.server.core.check.custom.detail;
 
-import java.lang.reflect.Field;
-
 import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.plugin.json.server.api.JLFJson;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
@@ -27,13 +26,16 @@ public abstract class ICheck<T extends Object> {
 
 	/**
 	 * 
-	 * @Title: getValue
-	 * @Description:从惊悚中获取field字段的值
-	 * @param json
-	 * @param field
-	 * @return
+	    * @Title: getValue
+	    * @Description:从惊悚中获取field字段的值
+	    * @param json
+	    * @param CheckObj
+	    * @param type
+	    * @param checkCls
+	    * @param checkName
+	    * @return
 	 */
-	public abstract T getValue(JLFJson json, Field field);
+	public abstract T getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName);
 
 	/**
 	 * 
@@ -44,10 +46,10 @@ public abstract class ICheck<T extends Object> {
 	 * @param value
 	 */
 	@JLFCheckAnn
-	public void checkNull(JLFCheckAnn ann, Field field, T value) {
+	public void checkNull(JLFCheckAnn ann, String checkName, T value) {
 		boolean isNull = (ann == null ? JLFCheckAnn.isNull : ann.isNull());
 		if (isNull == false && value == null) {
-			throw new JLFException(getExceptionDesc(ann, field, NULL_EXCEPTION_DESC));
+			throw new JLFException(getExceptionDesc(ann, checkName, NULL_EXCEPTION_DESC));
 		}
 	}
 
@@ -60,10 +62,10 @@ public abstract class ICheck<T extends Object> {
 	 * @param exceptionMsg
 	 * @return
 	 */
-	protected String getExceptionDesc(JLFCheckAnn ann, Field field, String exceptionMsg) {
+	protected String getExceptionDesc(JLFCheckAnn ann, String checkName, String exceptionMsg) {
 		String fieldDesc = (ann == null ? null : ann.desc());
 		if (fieldDesc == null || fieldDesc.length() <= 0) {
-			fieldDesc = field.getName();
+			fieldDesc = checkName;
 		}
 		return new StringBuffer(fieldDesc).append(exceptionMsg).toString();
 	}

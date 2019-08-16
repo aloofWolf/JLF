@@ -1,8 +1,9 @@
 package org.jfl.plugin.check.test;
 
-import java.util.Date;
+import java.lang.reflect.Method;
+import java.util.List;
 
-import org.jfl.plugin.check.test.bean.ChildBean;
+import org.jfl.plugin.check.test.bean.MethodTest;
 import org.jlf.common.util.LogUtil;
 import org.jlf.core.JLFCore;
 import org.jlf.plugin.client.check.JLFCheckClient;
@@ -13,22 +14,22 @@ import org.jlf.plugin.json.server.api.JLFJsonArray;
 /**
  * 
  * @ClassName: CheckTest
- * @Description:Check²âÊÔ
+ * @Description:Checkï¿½ï¿½ï¿½ï¿½
  * @author Lone Wolf
- * @date 2019Äê6ÔÂ4ÈÕ
+ * @date 2019ï¿½ï¿½6ï¿½ï¿½4ï¿½ï¿½
  */
 public class CheckTest {
 
 	/**
 	 * 
 	 * @Title: main
-	 * @Description:checkWolf²âÊÔ
+	 * @Description:checkWolfï¿½ï¿½ï¿½ï¿½
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		LogUtil.get().debug("aa");
 		JLFCore.starts();
-		JLFJson json = JLFJsonClient.get().newJson();
+		/*JLFJson json = JLFJsonClient.get().newJson();
 		json.put("f", 99.99);
 		JLFJsonArray array = JLFJsonClient.get().newJsonArray();
 
@@ -39,7 +40,7 @@ public class CheckTest {
 
 		JLFJson b2 = JLFJsonClient.get().newJson();
 		b2.put("str", "ww");
-		//b2.put("date", new Date());
+		b2.put("date", new Date());
 		b2.put("b", 2);
 
 		JLFJson b3 = JLFJsonClient.get().newJson();
@@ -71,7 +72,39 @@ public class CheckTest {
 		json.put("d", 11.2);
 		System.out.println(json.toStr());
 		ChildBean bean = JLFCheckClient.get().check(json.toStr(), ChildBean.class);
-		System.out.println(bean.toString());
+		System.out.println(bean.toString());*/
+		
+		JLFJson json = JLFJsonClient.get().newJson();
+		json.put("str1", "qq");
+		json.put("l2", 123);
+		JLFJson b1 = JLFJsonClient.get().newJson();
+		b1.put("l", -1);
+		b1.put("d", 0.1);
+		
+		JLFJson b2 = JLFJsonClient.get().newJson();
+		b2.put("l", -2);
+		b2.put("d", 0.2);
+		
+		JLFJson b3 = JLFJsonClient.get().newJson();
+		b3.put("l", -3);
+		b3.put("d", 0.3);
+		
+		JLFJsonArray array = JLFJsonClient.get().newJsonArray();
+		array.add(b1);
+		array.add(b2);
+		array.add(b3);
+		json.put("bean", array);
+		Method method = null;
+		try {
+			method = MethodTest.class.getDeclaredMethod("test", String.class,Long.class,List.class);
+		} catch (NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Object[] values = JLFCheckClient.get().check(json.toStr(), method);
+		for(Object value : values){
+			LogUtil.get().debug(value.toString());
+		}
 	}
 
 }

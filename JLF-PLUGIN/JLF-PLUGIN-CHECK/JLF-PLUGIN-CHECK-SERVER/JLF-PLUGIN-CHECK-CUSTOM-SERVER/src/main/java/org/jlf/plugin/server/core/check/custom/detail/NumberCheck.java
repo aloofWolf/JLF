@@ -1,11 +1,11 @@
 package org.jlf.plugin.server.core.check.custom.detail;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.plugin.json.server.api.JLFJson;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
@@ -19,8 +19,8 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public N getValue(JLFJson json, Field field) {
-		return (N) json.get(field.getName());
+	public N getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
+		return (N) json.get(checkName);
 	}
 
 	/**
@@ -54,11 +54,11 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 	 * @param value
 	 */
 	@JLFCheckAnn
-	public void checkMaxValue(JLFCheckAnn ann, Field field, N value) {
+	public void checkMaxValue(JLFCheckAnn ann, String checkName, N value) {
 		if (value != null) {
 			double maxValue = (ann == null ? JLFCheckAnn.maxValue : ann.maxValue());
 			if (numberToBigdecimal(value).compareTo(doubleBigdecimal(maxValue)) == 1) {
-				throw new JLFException(getExceptionDesc(ann, field, MAX_VALUE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, MAX_VALUE_EXCEPTION_DESC));
 			}
 		}
 
@@ -73,11 +73,11 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 	 * @param value
 	 */
 	@JLFCheckAnn
-	public void checkMinValue(JLFCheckAnn ann, Field field, N value) {
+	public void checkMinValue(JLFCheckAnn ann, String checkName, N value) {
 		if (value != null) {
 			double minValue = (ann == null ? JLFCheckAnn.minValue : ann.minValue());
 			if (numberToBigdecimal(value).compareTo(doubleBigdecimal(minValue)) == -1) {
-				throw new JLFException(getExceptionDesc(ann, field, MIN_VALUE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, MIN_VALUE_EXCEPTION_DESC));
 			}
 		}
 
@@ -92,7 +92,7 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 	 * @param value
 	 */
 	@JLFCheckAnn
-	public void check(JLFCheckAnn ann, Field field, N value) {
+	public void check(JLFCheckAnn ann, String checkName, N value) {
 		if (value != null) {
 			String[] checks = (ann == null ? JLFCheckAnn.checked : ann.checked());
 			if (checks != null && checks.length > 0) {
@@ -102,7 +102,7 @@ public class NumberCheck<N extends Number> extends ICheck<N> {
 						return;
 					}
 				}
-				throw new JLFException(getExceptionDesc(ann, field, CHECKED_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, CHECKED_EXCEPTION_DESC));
 			}
 		}
 	}

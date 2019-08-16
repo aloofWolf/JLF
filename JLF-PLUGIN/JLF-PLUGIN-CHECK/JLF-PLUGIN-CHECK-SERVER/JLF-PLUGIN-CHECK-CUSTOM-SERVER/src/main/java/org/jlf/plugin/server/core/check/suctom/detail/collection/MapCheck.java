@@ -1,10 +1,10 @@
 package org.jlf.plugin.server.core.check.suctom.detail.collection;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.jlf.plugin.json.server.api.JLFJson;
 import org.jlf.plugin.server.core.check.custom.detail.CollectionCheck;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
@@ -16,8 +16,8 @@ import org.jlf.plugin.server.core.check.custom.detail.CollectionCheck;
 public class MapCheck extends CollectionCheck<Map<String, Object>> {
 
 	@Override
-	public Map<String, Object> getValue(JLFJson json, Field field) {
-		JLFJson jsonValue = json.getJson(field.getName());
+	public Map<String, Object> getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
+		JLFJson jsonValue = json.getJson(checkName);
 		Map<String, Object> map = jsonValue.toMap();
 		return map;
 	}

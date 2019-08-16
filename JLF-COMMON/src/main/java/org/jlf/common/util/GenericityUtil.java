@@ -1,11 +1,8 @@
 package org.jlf.common.util;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * 
@@ -112,19 +109,5 @@ public class GenericityUtil {
 	public static <T> Class<T> getObjSuperInterGenerCls(Class<?> obj, int interIndex, int generIndex) {
 		return (Class<T>) ((ParameterizedType) obj.getGenericInterfaces()[interIndex])
 				.getActualTypeArguments()[generIndex];
-	}
-	
-	public void aa(List<String> list){}
-	public static void main(String[] args) throws NoSuchMethodException, SecurityException{
-		Method method = GenericityUtil.class.getDeclaredMethod("aa", List.class);
-		Parameter[] ps = method.getParameters();
-		for(Parameter p : ps){
-			ParameterizedType pt = (ParameterizedType) p.getParameterizedType();
-			Type[] pts = pt.getActualTypeArguments();
-			for(Type t : pts){
-				System.out.println(t.getTypeName());
-			}
-		}
-		
 	}
 }

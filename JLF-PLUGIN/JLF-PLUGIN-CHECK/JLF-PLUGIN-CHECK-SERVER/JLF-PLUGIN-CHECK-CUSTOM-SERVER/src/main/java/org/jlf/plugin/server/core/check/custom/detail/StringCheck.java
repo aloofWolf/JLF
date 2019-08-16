@@ -1,10 +1,9 @@
 package org.jlf.plugin.server.core.check.custom.detail;
 
-import java.lang.reflect.Field;
-
 import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.plugin.json.server.api.JLFJson;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
@@ -16,15 +15,15 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class StringCheck extends ICheck<String> {
 
 	@Override
-	public String getValue(JLFJson json, Field field) {
-		return json.getStr(field.getName());
+	public String getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
+		return json.getStr(checkName);
 	}
 
 	@Override
-	public void checkNull(JLFCheckAnn ann, Field field, String value) {
+	public void checkNull(JLFCheckAnn ann, String checkName, String value) {
 		boolean isNull = (ann == null ? JLFCheckAnn.isNull : ann.isNull());
 		if (isNull == false && (value == null || value.length() == 0)) {
-			throw new JLFException(getExceptionDesc(ann, field, NULL_EXCEPTION_DESC));
+			throw new JLFException(getExceptionDesc(ann, checkName, NULL_EXCEPTION_DESC));
 		}
 	}
 
@@ -38,11 +37,11 @@ public class StringCheck extends ICheck<String> {
 	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMaxLength(JLFCheckAnn ann, Field field, String value) {
+	public void checkMaxLength(JLFCheckAnn ann, String checkName, String value) {
 		if (value != null) {
 			int maxLength = (ann == null ? JLFCheckAnn.maxLength : ann.maxLength());
 			if (value.length() > maxLength) {
-				throw new JLFException(getExceptionDesc(ann, field, MAX_VALUE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, MAX_VALUE_EXCEPTION_DESC));
 			}
 		}
 	}
@@ -57,11 +56,11 @@ public class StringCheck extends ICheck<String> {
 	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void checkMinLength(JLFCheckAnn ann, Field field, String value) {
+	public void checkMinLength(JLFCheckAnn ann, String checkName, String value) {
 		if (value != null) {
 			int minLength = (ann == null ? JLFCheckAnn.minLength : ann.minLength());
 			if (value.length() < minLength) {
-				throw new JLFException(getExceptionDesc(ann, field, MIN_VALUE_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, MIN_VALUE_EXCEPTION_DESC));
 			}
 		}
 
@@ -77,7 +76,7 @@ public class StringCheck extends ICheck<String> {
 	 * @throws Exception
 	 */
 	@JLFCheckAnn
-	public void check(JLFCheckAnn ann, Field field, String value) {
+	public void check(JLFCheckAnn ann, String checkName, String value) {
 		if (value != null) {
 			String[] checks = (ann == null ? JLFCheckAnn.checked : ann.checked());
 			if (checks != null && checks.length > 0) {
@@ -87,7 +86,7 @@ public class StringCheck extends ICheck<String> {
 						return;
 					}
 				}
-				throw new JLFException(getExceptionDesc(ann, field, CHECKED_EXCEPTION_DESC));
+				throw new JLFException(getExceptionDesc(ann, checkName, CHECKED_EXCEPTION_DESC));
 			}
 		}
 	}

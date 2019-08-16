@@ -1,10 +1,9 @@
 package org.jlf.plugin.server.core.check.custom.detail;
 
-import java.lang.reflect.Field;
-
 import org.jlf.common.enums.api.IEnum;
 import org.jlf.common.util.EnumUtil;
 import org.jlf.plugin.json.server.api.JLFJson;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
@@ -18,12 +17,12 @@ public class EnumCheck<E extends IEnum> extends ICheck<IEnum> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IEnum getValue(JLFJson json, Field field) {
-		Integer valueInt = json.getInt(field.getName());
+	public IEnum getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
+		Integer valueInt = json.getInt(checkName);
 		if (valueInt == null) {
 			return null;
 		}
-		IEnum value = EnumUtil.getByID((Class<E>) field.getType(), valueInt);
+		IEnum value = EnumUtil.getByID((Class<E>) checkCls, valueInt);
 		return value;
 	}
 

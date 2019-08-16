@@ -1,9 +1,8 @@
 package org.jlf.plugin.server.core.check.custom.detail.number;
 
-import java.lang.reflect.Field;
-
 import org.jlf.plugin.json.server.api.JLFJson;
 import org.jlf.plugin.server.core.check.custom.detail.NumberCheck;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
@@ -15,7 +14,7 @@ import org.jlf.plugin.server.core.check.custom.detail.NumberCheck;
 public class FloatCheck extends NumberCheck<Float> {
 
 	@Override
-	public Float getValue(JLFJson json, Field field) {
-		return json.getFloat(field.getName());
+	public Float getValue(JLFJson json,Object checkObj,JLFCheckType type, Class<?> checkCls,String checkName) {
+		return json.getFloat(checkName);
 	}
 }

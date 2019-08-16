@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @date 2019Äê5ÔÂ22ÈÕ
  */
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.METHOD })
+@Target({ ElementType.FIELD, ElementType.METHOD,ElementType.PARAMETER })
 public @interface JLFCheckAnn {
 	
 	public static final boolean isNull = false;

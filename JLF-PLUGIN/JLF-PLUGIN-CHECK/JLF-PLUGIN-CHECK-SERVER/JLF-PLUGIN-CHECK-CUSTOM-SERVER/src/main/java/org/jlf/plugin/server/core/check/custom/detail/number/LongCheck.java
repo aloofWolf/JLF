@@ -1,9 +1,8 @@
 package org.jlf.plugin.server.core.check.custom.detail.number;
 
-import java.lang.reflect.Field;
-
 import org.jlf.plugin.json.server.api.JLFJson;
 import org.jlf.plugin.server.core.check.custom.detail.NumberCheck;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
@@ -15,7 +14,7 @@ import org.jlf.plugin.server.core.check.custom.detail.NumberCheck;
 public class LongCheck extends NumberCheck<Long> {
 
 	@Override
-	public Long getValue(JLFJson json, Field field) {
-		return json.getLong(field.getName());
+	public Long getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
+		return json.getLong(checkName);
 	}
 }

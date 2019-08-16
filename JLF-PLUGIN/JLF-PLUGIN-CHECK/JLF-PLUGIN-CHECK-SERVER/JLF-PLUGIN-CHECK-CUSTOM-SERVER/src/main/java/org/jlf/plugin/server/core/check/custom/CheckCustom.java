@@ -3,6 +3,7 @@ package org.jlf.plugin.server.core.check.custom;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,42 +20,57 @@ import org.jlf.plugin.client.json.JLFJsonClient;
 import org.jlf.plugin.json.server.api.JLFJson;
 import org.jlf.plugin.server.core.check.custom.bean.CheckBean;
 import org.jlf.plugin.server.core.check.custom.detail.fac.CheckBeanFactory;
+import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
 
 /**
  * 
  * @ClassName: CheckWolf
- * @Description:CheckWolfºËÐÄ
+ * @Description:CheckWolfï¿½ï¿½ï¿½ï¿½
  * @author Lone Wolf
- * @date 2019Äê5ÔÂ24ÈÕ
+ * @date 2019ï¿½ï¿½5ï¿½ï¿½24ï¿½ï¿½
  */
 public class CheckCustom implements JLFCheck {
 	
 	/**
-	 * ½«ÒÑ¾­Ð£Ñé¹ýµÄclsºÍ¶ÔÓ¦µÄfields»º´æµ½´Ëmap,±ÜÃâÃ¿´Î¶¼ÖØÐÂ»ñÈ¡fields
+	 * ï¿½ï¿½ï¿½Ñ¾ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½clsï¿½Í¶ï¿½Ó¦ï¿½ï¿½fieldsï¿½ï¿½ï¿½æµ½ï¿½ï¿½map,ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½Î¶ï¿½ï¿½ï¿½ï¿½Â»ï¿½È¡fields
 	 */
 	private static Map<Class<?>,List<Field>> checkClsMap = new HashMap<Class<?>,List<Field>>();
+	
+	private static Map<Method,Parameter[]> checkMethodMap = new HashMap<Method,Parameter[]>();
 
 	@Override
 	public <T> T check(String jsonStr, Class<T> cls) {
 		JLFJson json = JLFJsonClient.get().jsonStrToJson(jsonStr);
-		return check(json, cls);
+		return checkCls(json, cls);
 	}
 
 	@Override
 	public <T> T check(Map<String, Object> map, Class<T> cls) {
 		JLFJson json = JLFJsonClient.get().mapToJson(map);
-		return check(json, cls);
+		return checkCls(json, cls);
 	}
 
+	@Override
+	public Object[] check(String jsonStr, Method method) {
+		JLFJson json = JLFJsonClient.get().jsonStrToJson(jsonStr);
+		return checkMethod(json, method);
+	}
+
+	@Override
+	public Object[] check(Map<String, Object> map, Method method) {
+		JLFJson json = JLFJsonClient.get().mapToJson(map);
+		return checkMethod(json, method);
+	}
+	
 	/**
 	 * 
-	 * @Title: check
-	 * @Description:¶ÔJSONObject½øÐÐcheck
+	 * @Title: checkCls
+	 * @Description:ï¿½ï¿½JSONObjectï¿½ï¿½ï¿½ï¿½check
 	 * @param json
 	 * @param cls
 	 * @return
 	 */
-	public <T> T check(JLFJson json, Class<T> cls) {
+	public <T> T checkCls(JLFJson json, Class<T> cls) {
 		T t;
 		try {
 			t = cls.newInstance();
@@ -77,42 +93,80 @@ public class CheckCustom implements JLFCheck {
 			if (ann != null && ann.isSkipValidate() == true) {
 				continue;
 			}
+			String fieldName = field.getName();
 			Class<?> fieldCls = field.getType();
 			CheckBean<?> checkBean = CheckBeanFactory.getCheckBean(fieldCls);
-			Object value = getValue(json, checkBean, field);
-			checkValue(field, ann, checkBean, value);
-			value = recursive(field, fieldCls, value);
+			Object value = getValue(json, checkBean, field,JLFCheckType.FIELD,field.getType(),field.getName());
+			checkValue(fieldName, ann, checkBean, value);
+			value = recursive(field,JLFCheckType.FIELD, fieldCls, value);
 			setValue(cls, t, field, fieldCls, value);
 		}
 		return t;
+	}
+	
+	/**
+	 * 
+	 * @Title: checkCls
+	 * @Description:ï¿½ï¿½JSONObjectï¿½ï¿½ï¿½ï¿½check
+	 * @param json
+	 * @param cls
+	 * @return
+	 */
+	public Object[] checkMethod(JLFJson json, Method method) {
+		
+		Parameter[] parameters = null;
+		synchronized(this){
+			parameters = checkMethodMap.get(method);
+			if(parameters == null){
+				parameters = method.getParameters();
+				checkMethodMap.put(method, parameters);
+			}
+		}
+		Object[] values = new Object[parameters.length];
+		int index = 0;
+		for (Parameter parameter : parameters) {
+			JLFCheckAnn ann = parameter.getAnnotation(JLFCheckAnn.class);
+			if (ann != null && ann.isSkipValidate() == true) {
+				continue;
+			}
+			String parameterName = parameter.getName();
+			Class<?> fieldCls = parameter.getType();
+			CheckBean<?> checkBean = CheckBeanFactory.getCheckBean(fieldCls);
+			Object value = getValue(json, checkBean, parameter,JLFCheckType.PARAMETER,parameter.getType(),parameter.getName());
+			checkValue(parameterName, ann, checkBean, value);
+			value = recursive(parameter,JLFCheckType.PARAMETER, fieldCls, value);
+			values[index] = value;
+			index = index + 1;
+		}
+		return values;
 	}
 
 	/**
 	 * 
 	 * @Title: getValue
-	 * @Description:´ÓjsonÖÐ»ñÈ¡×Ö¶ÎµÄÖµ
+	 * @Description:ï¿½ï¿½jsonï¿½Ð»ï¿½È¡ï¿½Ö¶Îµï¿½Öµ
 	 * @param json
 	 * @param checkBean
 	 * @param field
 	 * @return
 	 */
-	private Object getValue(JLFJson json, CheckBean<?> checkBean, Field field) {
-		return checkBean.getObj().getValue(json, field);
+	private Object getValue(JLFJson json, CheckBean<?> checkBean,  Object CheckObj,JLFCheckType type,Class<?> checkCls,String checkName) {
+		return checkBean.getObj().getValue(json, CheckObj,type,checkCls,checkName);
 	}
 
 	/**
 	 * 
 	 * @Title: checkValue
-	 * @Description:¶Ô²ÎÊýÖµ½øÐÐÐ£Ñé
+	 * @Description:ï¿½Ô²ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½
 	 * @param field
 	 * @param checkBean
 	 * @param value
 	 */
-	private void checkValue(Field field, JLFCheckAnn ann, CheckBean<?> checkBean, Object value) {
+	private void checkValue(String checkName, JLFCheckAnn ann, CheckBean<?> checkBean, Object value) {
 		List<Method> methods = checkBean.getMethods();
 		for (Method method : methods) {
 			try {
-				method.invoke(checkBean.getObj(), ann, field, value);
+				method.invoke(checkBean.getObj(), ann, checkName, value);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 				throw new JLFException(e);
@@ -123,24 +177,29 @@ public class CheckCustom implements JLFCheck {
 	/**
 	 * 
 	 * @Title: recursive
-	 * @Description:¶Ô×Ô¶¨ÒåÀàÐÍ£¬ÒÔ¼°listÖÐ·ºÐÍÎª×Ô¶¨ÒåÀàÐÍµÄ£¬×öµÝ¹é£¬µÝ¹éºó·µ»ØÕæÕýµÄfieldValue,Ã¶¾ÙÀàÐÍ³ýÍâ
+	 * @Description:ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½Ô¼ï¿½listï¿½Ð·ï¿½ï¿½ï¿½Îªï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÍµÄ£ï¿½ï¿½ï¿½ï¿½Ý¹é£¬ï¿½Ý¹ï¿½ó·µ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fieldValue,Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½ï¿½
 	 * @param field
 	 * @param fieldCls
 	 * @param value
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public Object recursive(Field field, Class<?> fieldCls, Object value) {
-		if (IEnum.class.isAssignableFrom(fieldCls)) {
+	public Object recursive(Object checkObj,JLFCheckType type, Class<?> checkCls, Object value) {
+		if (IEnum.class.isAssignableFrom(checkCls)) {
 			return value;
 		}
 		if (value != null) {
-			if (ClassUtil.clsIsCustom(fieldCls)) {
-				return check((JLFJson) value, fieldCls);
-			} else if (fieldCls.isAssignableFrom(List.class)) {
-				Class<?> listTCls = GenericityUtil.getFieldGenerCls(field);
+			if (ClassUtil.clsIsCustom(checkCls)) {
+				return checkCls((JLFJson) value, checkCls);
+			} else if (checkCls.isAssignableFrom(List.class)) {
+				Class<?> listTCls = null;  //ï¿½ï¿½È¡listï¿½Ð·ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½
+				if(type.equals(JLFCheckType.FIELD)){
+					listTCls = GenericityUtil.getFieldGenerCls((Field) checkObj);
+				}else{
+					listTCls = GenericityUtil.getParameterGenerCls((Parameter) checkObj);
+				}
 				if (ClassUtil.clsIsCustom(listTCls)) {
-					return recursiveList(listTCls, fieldCls, (List<JLFJson>) value);
+					return recursiveList(listTCls, checkCls, (List<JLFJson>) value);
 				}
 			}
 		}
@@ -150,7 +209,7 @@ public class CheckCustom implements JLFCheck {
 	/**
 	 * 
 	 * @Title: recursiveList
-	 * @Description:¶ÔlistÖÐ·ºÐÍÎª×Ô¶¨ÒåÀàÐÍµÄ×öµÝ¹é
+	 * @Description:ï¿½ï¿½listï¿½Ð·ï¿½ï¿½ï¿½Îªï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Ý¹ï¿½
 	 * @param listTCls
 	 * @param fieldCls
 	 * @param values
@@ -166,7 +225,7 @@ public class CheckCustom implements JLFCheck {
 		}
 
 		for (JLFJson json : values) {
-			list.add(check(json, listTCls));
+			list.add(checkCls(json, listTCls));
 		}
 		return list;
 
@@ -175,7 +234,7 @@ public class CheckCustom implements JLFCheck {
 	/**
 	 * 
 	 * @Title: setValue
-	 * @Description:½«Ð£ÑéÍ¨¹ýµÄÖµ,¸³¸øfield
+	 * @Description:ï¿½ï¿½Ð£ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Öµ,ï¿½ï¿½ï¿½ï¿½field
 	 * @param cls
 	 * @param obj
 	 * @param field
@@ -192,4 +251,8 @@ public class CheckCustom implements JLFCheck {
 		}
 
 	}
+
+	
+
+	
 }
