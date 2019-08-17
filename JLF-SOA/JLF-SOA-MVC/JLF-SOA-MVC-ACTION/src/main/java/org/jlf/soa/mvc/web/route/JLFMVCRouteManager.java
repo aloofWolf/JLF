@@ -9,7 +9,6 @@ import org.jlf.common.util.PackageUtil;
 import org.jlf.common.util.ReflectUtil;
 import org.jlf.core.exception.JLFException;
 import org.jlf.soa.mvc.container.JLFMVCBeanContainer;
-import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
 import org.jlf.soa.mvc.web.ann.JLFMVCRoute;
 import org.jlf.soa.mvc.web.ann.JLFMVCRouteMethod;
 
@@ -62,23 +61,13 @@ public class JLFMVCRouteManager {
 	 */
 	private static void parseMethod(Class<?> routeCls, Method routeMethod, String routeName,
 			Object webObj) {
-		Class<?>[] paramterTypes = routeMethod.getParameterTypes();
-		if (paramterTypes.length != 1) {
-			return;
-		}
-
-		Class<?> paramType = paramterTypes[0];
-		if (!JLFMVCRequest.class.isAssignableFrom(paramType)) {
-			return;
-		}
-
 		String methodName = routeMethod.getName();
 		JLFMVCRouteMethod routeMethodAnn = routeMethod.getAnnotation(JLFMVCRouteMethod.class);
 		if (routeMethodAnn != null && routeMethodAnn.name() != null && routeMethodAnn.name().length() > 0) {
 			methodName = routeMethodAnn.name();
 		}
 		String routeKey = new StringBuffer(routeName).append(methodName).toString();
-		JLFMVCRouteTarget target = new JLFMVCRouteTarget(PackageUtil.getPackageName(routeCls), routeCls, webObj, routeMethod, paramterTypes[0],
+		JLFMVCRouteTarget target = new JLFMVCRouteTarget(PackageUtil.getPackageName(routeCls), routeCls, webObj, routeMethod,
 				routeMethodAnn);
 		routes.put(routeKey, target);
 	}

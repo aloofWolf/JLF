@@ -19,8 +19,8 @@ public class JLFMVCDaoBlackList {
 		
 		String key = new StringBuffer(dbName).append("-").append(tableName).append("-").append(id).toString();
 		if(!blackList.containsKey(key)){
-			blackList.put(key, null);
 			Date date = DateUtil.formatDate("2100-12-13 23:59:59",DateUtil.DEFAULT_DATETIMEPATTERN);
+			blackList.put(key, date);
 			JLFMVCBlackListMqTopicProduct.send(JLFMVCBlackListOperatorType.ADD, dbName, tableName, id, date);
 		}
 		

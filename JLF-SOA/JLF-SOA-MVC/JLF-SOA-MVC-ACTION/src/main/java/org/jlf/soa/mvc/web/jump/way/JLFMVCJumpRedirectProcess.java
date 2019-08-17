@@ -2,7 +2,8 @@ package org.jlf.soa.mvc.web.jump.way;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jlf.core.exception.JLFException;
@@ -18,10 +19,10 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class JLFMVCJumpRedirectProcess implements JLFMVCIJumpProcess {
 
 	@Override
-	public void process(HttpServletRequest request, HttpServletResponse response, JLFJson respJson,
+	public void process(ServletRequest request, ServletResponse response, JLFJson respJson,
 			String url) {
 		try {
-			response.sendRedirect(url);
+			((HttpServletResponse) response).sendRedirect(url);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new JLFException(e);

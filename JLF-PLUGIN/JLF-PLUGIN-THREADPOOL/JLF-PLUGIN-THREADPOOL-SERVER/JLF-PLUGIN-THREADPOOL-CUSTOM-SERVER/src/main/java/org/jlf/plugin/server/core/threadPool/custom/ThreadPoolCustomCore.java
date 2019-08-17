@@ -29,8 +29,8 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 	private static ExecutorService executeService;
 	
 	static{
-		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(20);
-		executeService = new ThreadPoolExecutor(10, 10,
+		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(1);
+		executeService = new ThreadPoolExecutor(1, 1,
                 0L, TimeUnit.MILLISECONDS,queue);
 	}
 
@@ -45,7 +45,7 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 		}
 		int size = beans.size();
 		LogUtil.get().debug(size + "");
-		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(size);
+		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(1);
 		ExecutorService executeService = new ThreadPoolExecutor(execute.getThreadPoolNum(), execute.getThreadPoolNum(),
                 0L, TimeUnit.MILLISECONDS,queue);
 		List<FutureExt<T>> futures = new ArrayList<FutureExt<T>>();
@@ -108,7 +108,7 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 			try {
 				submit.execute(bean);
 				return "success";
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 				String errMsg = e.getMessage();
 				if (errMsg == null || errMsg.length() == 0) {

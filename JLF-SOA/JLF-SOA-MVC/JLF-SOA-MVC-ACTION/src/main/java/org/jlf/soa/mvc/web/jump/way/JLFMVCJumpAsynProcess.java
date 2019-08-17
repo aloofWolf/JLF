@@ -3,8 +3,8 @@ package org.jlf.soa.mvc.web.jump.way;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.json.server.api.JLFJson;
@@ -19,7 +19,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class JLFMVCJumpAsynProcess implements JLFMVCIJumpProcess {
 
 	@Override
-	public void process(HttpServletRequest request, HttpServletResponse response, JLFJson respJson,
+	public void process(ServletRequest request, ServletResponse response, JLFJson respJson,
 			String url) {
 		response.setCharacterEncoding("UTF-8");
 		String respJsonStr = respJson.toStr();

@@ -33,7 +33,7 @@ public class HttpSend {
 	 */
 	public static String send(JLFPushHttpConfig config, String datagram) {
 		CloseableHttpClient client = HttpPools.getClient(config);
-		HttpEntity entity = config.getHttpEntity(datagram);
+		HttpEntity entity = config.getHttpEntity("qqqq");
 		HttpPost httpPost = new HttpPost(config.getUrl());
 
 		HttpResponse response = null;

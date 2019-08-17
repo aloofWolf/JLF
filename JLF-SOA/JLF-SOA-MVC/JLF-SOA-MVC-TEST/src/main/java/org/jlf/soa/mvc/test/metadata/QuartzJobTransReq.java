@@ -1,7 +1,6 @@
 package org.jlf.soa.mvc.test.metadata;
 
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
-import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
 
 /**
  * 
@@ -10,7 +9,7 @@ import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
  * @author Lone Wolf
  * @date 2019Äê8ÔÂ12ÈÕ
  */
-public class QuartzJobTransReq extends JLFMVCRequest {
+public class QuartzJobTransReq {
 
 	@JLFCheckAnn(isNull = true)
 	private Long templateId;

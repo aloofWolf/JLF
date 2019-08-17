@@ -30,4 +30,5 @@ public class HttpRequest extends JLFPushRequest {
 		this.id = id;
 	}
 
+	
 }

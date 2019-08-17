@@ -1,5 +1,7 @@
 package org.jlf.core.exception;
 
+import org.jlf.common.util.LogUtil;
+
 /**
  * 
  * @ClassName: JLFException
@@ -13,14 +15,17 @@ public class JLFException extends RuntimeException {
 
 	public JLFException(String message) {
 		super(message);
+		LogUtil.get().error(message);
 	}
 
 	public JLFException(Exception e) {
 		super(e);
+		LogUtil.get().error(e.getMessage(),e);
 	}
 	
 	public JLFException(Throwable e) {
 		super(e);
+		LogUtil.get().error(e.getMessage(),e);
 	}
 
 }

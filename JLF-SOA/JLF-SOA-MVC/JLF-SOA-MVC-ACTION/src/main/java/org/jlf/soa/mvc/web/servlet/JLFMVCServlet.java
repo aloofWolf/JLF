@@ -1,5 +1,7 @@
 package org.jlf.soa.mvc.web.servlet;
 
+import java.lang.reflect.Method;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +15,6 @@ import org.jlf.plugin.client.json.JLFJsonClient;
 import org.jlf.plugin.client.session.JLFSessionClient;
 import org.jlf.plugin.json.server.api.JLFJson;
 import org.jlf.soa.mvc.metadata.enums.JLFMVCOperatorResult;
-import org.jlf.soa.mvc.metadata.request.JLFMVCRequest;
 import org.jlf.soa.mvc.metadata.response.JLFMVCResponse;
 import org.jlf.soa.mvc.metadata.threadLocal.JLFMVCThreadLocal;
 import org.jlf.soa.mvc.web.jump.way.JLFMVCIJumpProcess;
@@ -57,11 +58,9 @@ public class JLFMVCServlet extends HttpServlet {
 		try {
 			String reqTypeObj = params.getStr("reqType");
 			JLFMVCRouteTarget target = JLFMVCRouteManager.getTarget(reqTypeObj);
-			JLFMVCRequest requestBean = (JLFMVCRequest) JLFCheckClient.get().check(params.toStr(),
-					target.getCheckCls());
-			requestBean.setRequest(request);
-			requestBean.setResponse(response);
-			Object resp = target.getMethod().invoke(target.getWebObj(), requestBean);
+			Method targetMethod = target.getMethod();
+            Object[] paramsValues = JLFCheckClient.get().check(params.toStr(), targetMethod);
+			Object resp = target.getMethod().invoke(target.getWebObj(), paramsValues);
 			JLFMVCResponse<?> responseBean = new JLFMVCResponse<Object>(resp);
 			JLFMVCJumpWay jumpWay;
 			String jumpUrl = null;
@@ -77,8 +76,9 @@ public class JLFMVCServlet extends HttpServlet {
 			jumpProcess.process(request, response, respJson, jumpUrl);
 			LogUtil.get().debug("请求结果:{}",JLFMVCOperatorResult.SUCCESS.getDesc());
 			LogUtil.get().debug("响应参数:{}",respJson.toStr());
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
+			LogUtil.get().error(e.getMessage(),e);
 			exceptionProcess(request, response, e);
 		}finally{
 			LogUtil.get().debug("线程结束,开始回收线程资源.......");
@@ -98,7 +98,7 @@ public class JLFMVCServlet extends HttpServlet {
 	 * @param response
 	 * @param e
 	 */
-	public void exceptionProcess(HttpServletRequest request, HttpServletResponse response, Exception e) {
+	public void exceptionProcess(HttpServletRequest request, HttpServletResponse response, Throwable e) {
 		String errMsg = e.getMessage();
 		if (errMsg == null || errMsg.length() == 0) {
 			errMsg = "操作失败";

@@ -24,6 +24,6 @@ public class ThreadPoolExecute implements JLFThreadPoolExecute<Integer> {
 
 	@Override
 	public int getThreadPoolNum() {
-		return 100;
+		return 1;
 	}
 }

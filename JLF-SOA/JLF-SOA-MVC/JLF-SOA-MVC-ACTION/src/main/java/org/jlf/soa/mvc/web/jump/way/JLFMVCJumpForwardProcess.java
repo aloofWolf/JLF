@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.json.server.api.JLFJson;
@@ -20,7 +20,7 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class JLFMVCJumpForwardProcess implements JLFMVCIJumpProcess {
 
 	@Override
-	public void process(HttpServletRequest request, HttpServletResponse response,JLFJson respJson,
+	public void process(ServletRequest request, ServletResponse response,JLFJson respJson,
 			String url) {
 		request.setAttribute("resp", respJson);
 		RequestDispatcher dispatcher = request.getRequestDispatcher(url);

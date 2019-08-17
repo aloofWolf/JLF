@@ -13,17 +13,17 @@ import org.junit.Test;
 /**
  * 
  * @ClassName: GenericityUtilTest
- * @Description:ï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @Description:·ºÐÍ¹¤¾ßÀà²âÊÔ
  * @author Lone Wolf
- * @date 2019ï¿½ï¿½7ï¿½ï¿½4ï¿½ï¿½
+ * @date 2019Äê7ÔÂ4ÈÕ
  */
 public class GenericityUtilTest {
 
 	/**
 	 * 
 	 * @Title: getParameterGenerCls
-	 * @Description:ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½classï¿½ï¿½ï¿½ï¿½
-	 *//*
+	 * @Description:»ñÈ¡·½·¨²ÎÊýÖÐµÄ·ºÐÍËùÊôµÄclass²âÊÔ
+	 */
 	@Test
 	public <T> void getParameterGenerCls() {
 		Method method = null;
@@ -38,11 +38,11 @@ public class GenericityUtilTest {
 		System.out.println(GenericityUtil.getParameterGenerCls(parameter, 1));
 	}
 
-	*//**
+	/**
 	 * 
 	 * @Title: getFieldGenerCls
-	 * @Description:ï¿½ï¿½È¡ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ÐµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½classï¿½ï¿½ï¿½ï¿½
-	 *//*
+	 * @Description:»ñÈ¡³ÉÔ±±äÁ¿×Ö¶ÎÖÐµÄ·ºÐÍËùÊôµÄclass²âÊÔ
+	 */
 	@Test
 	public <T> void getFieldGenerCls() {
 		Field field = null;
@@ -55,22 +55,22 @@ public class GenericityUtilTest {
 		System.out.println(GenericityUtil.getFieldGenerCls(field, 1));
 	}
 
-	*//**
+	/**
 	 * 
 	 * @Title: getObjSuperClsGenerCls
-	 * @Description:ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½classï¿½ï¿½ï¿½ï¿½
-	 *//*
+	 * @Description:»ñ»ñÈ¡µ±Ç°¶ÔÏó¼Ì³ÐÀàµÄ·ºÐÍËùÊôµÄclass²âÊÔ
+	 */
 	@Test
 	public <T> void getObjSuperClsGenerCls() {
 		System.out.println(GenericityUtil.getObjSuperClsGenerCls(ChildC.class));
 		System.out.println(GenericityUtil.getObjSuperClsGenerCls(ChildC.class, 1));
 	}
 
-	*//**
+	/**
 	 * 
 	 * @Title: getObjSuperClsGenerCls
-	 * @Description:ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Êµï¿½Ö½Ó¿ÚµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½classï¿½ï¿½ï¿½ï¿½
-	 *//*
+	 * @Description:»ñ»ñÈ¡µ±Ç°¶ÔÏóÊµÏÖ½Ó¿ÚµÄ·ºÐÍËùÊôµÄclass²âÊÔ
+	 */
 	@Test
 	public <T> void getObjSuperInterGenerCls() {
 		System.out.println(GenericityUtil.getObjSuperInterGenerCls(ChildI.class));
@@ -78,10 +78,10 @@ public class GenericityUtilTest {
 	}
 
 	public void test(List<String> list, Map<Long, Object> map) {
-	}*/
+	}
 }
 
-/*class ParentC<T extends Object, V extends List<?>> {
+class ParentC<T extends Object, V extends List<?>> {
 
 }
 
@@ -104,4 +104,3 @@ class ChildI implements ParentI<Long, ArrayList> {
 	private Map<String, Long> l;
 
 }
-*/

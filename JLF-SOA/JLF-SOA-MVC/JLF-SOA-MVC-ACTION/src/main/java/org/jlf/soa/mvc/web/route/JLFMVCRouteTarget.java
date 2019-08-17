@@ -17,16 +17,14 @@ public class JLFMVCRouteTarget {
 	private Class<?> webCls; // 路由类的class对象
 	private Object webObj; // 路由类对象
 	private Method method;// 路由方法
-	private Class<?> checkCls;// 路由方法校验类的class对称
 	private JLFMVCRouteMethod routeMethodAnn;// 路由方法的注解
 
-	public JLFMVCRouteTarget(String packageName, Class<?> webCls, Object webObj, Method method, Class<?> checkCls,
+	public JLFMVCRouteTarget(String packageName, Class<?> webCls, Object webObj, Method method, 
 			JLFMVCRouteMethod routeMethodAnn) {
 		this.packageName = packageName;
 		this.webCls = webCls;
 		this.webObj = webObj;
 		this.method = method;
-		this.checkCls = checkCls;
 		this.routeMethodAnn = routeMethodAnn;
 	}
 
@@ -61,15 +59,7 @@ public class JLFMVCRouteTarget {
 	public void setMethod(Method method) {
 		this.method = method;
 	}
-
-	public Class<?> getCheckCls() {
-		return checkCls;
-	}
-
-	public void setCheckCls(Class<?> checkCls) {
-		this.checkCls = checkCls;
-	}
-
+	
 	public JLFMVCRouteMethod getRouteMethodAnn() {
 		return routeMethodAnn;
 	}

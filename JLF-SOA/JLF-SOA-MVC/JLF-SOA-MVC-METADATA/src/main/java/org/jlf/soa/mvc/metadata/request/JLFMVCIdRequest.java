@@ -9,7 +9,7 @@ import org.jlf.plugin.check.server.api.JLFCheckAnn;
  * @author Lone Wolf
  * @date 2019Äê5ÔÂ31ÈÕ
  */
-public final class JLFMVCIdRequest extends JLFMVCRequest {
+public final class JLFMVCIdRequest {
 
 	@JLFCheckAnn
 	private Long id;

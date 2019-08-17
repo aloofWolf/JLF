@@ -1,5 +1,6 @@
 package org.jlf.soa.mvc.test.action;
 
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.soa.mvc.metadata.request.JLFMVCIdAndVersionRequest;
 import org.jlf.soa.mvc.metadata.request.JLFMVCIdRequest;
 import org.jlf.soa.mvc.test.bean.QuartzJob;
@@ -31,8 +32,8 @@ public class QuartzJobAction {
 	 * @return
 	 */
 	@JLFMVCRouteMethod(name = "getQuartzJob")
-	public QuartzJob getQuartzJob(JLFMVCIdRequest req) {
-		return quartzJobService.getQuartzJob(req.getId());
+	public QuartzJob getQuartzJob(@JLFCheckAnn Long id) {
+		return quartzJobService.getQuartzJob(id);
 	}
 
 	/**

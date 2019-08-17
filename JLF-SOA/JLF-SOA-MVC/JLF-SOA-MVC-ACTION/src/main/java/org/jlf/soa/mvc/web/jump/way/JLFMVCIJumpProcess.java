@@ -1,7 +1,7 @@
 package org.jlf.soa.mvc.web.jump.way;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.jlf.plugin.json.server.api.JLFJson;
 
@@ -23,7 +23,7 @@ public interface JLFMVCIJumpProcess {
 	 * @param respBean
 	 * @param url
 	 */
-	public void process(HttpServletRequest request, HttpServletResponse response, JLFJson respJson,
+	public void process(ServletRequest request, ServletResponse response, JLFJson respJson,
 			String url);
 
 }
