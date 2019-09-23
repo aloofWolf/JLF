@@ -9,6 +9,7 @@
 	<servlet>
 		<servlet-name>JLF</servlet-name>
 		<servlet-class>org.jlf.soa.mvc.web.servlet.JLFMVCServlet</servlet-class>
+		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>JLF</servlet-name>
@@ -23,20 +24,4 @@
 		<servlet-name>init</servlet-name>
 		<url-pattern>/a</url-pattern>
 	</servlet-mapping>
-	<filter>
-		<filter-name>sessionFilter</filter-name>
-		<filter-class>org.jlf.soa.mvc.web.filter.JLFMVCSessionFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>sessionFilter</filter-name>
-		<url-pattern>/session</url-pattern>
-	</filter-mapping>
-	<filter>
-		<filter-name>paramsFilter</filter-name>
-		<filter-class>org.jlf.soa.mvc.web.filter.JLFMVCParamsFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>paramsFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
 </web-app>

@@ -18,7 +18,7 @@ public class JLFMVCConcurrentTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ConcurrentUtil.concurrent(1, new JLFMVCConcurrentOperator());
+		ConcurrentUtil.concurrent(2000, new JLFMVCConcurrentOperator());
 	}
 
 }

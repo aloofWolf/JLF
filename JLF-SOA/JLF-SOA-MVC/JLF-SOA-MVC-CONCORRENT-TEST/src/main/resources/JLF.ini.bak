@@ -4,5 +4,5 @@ http=org.jlf.plugin.push.test.http
 
 [plugin-push-http]
 hostName=mvctest
-url=http://127.0.0.1:8080/mvctest/JLF
+url=http://39.108.166.34:8080/mvctest/JLF
 [/plugin-push-http]

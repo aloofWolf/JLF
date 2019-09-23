@@ -33,7 +33,14 @@ public class QuartzJobAction {
 	 */
 	@JLFMVCRouteMethod(name = "getQuartzJob")
 	public QuartzJob getQuartzJob(@JLFCheckAnn Long id) {
+		/*try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		return quartzJobService.getQuartzJob(id);
+		//return null;
 	}
 
 	/**

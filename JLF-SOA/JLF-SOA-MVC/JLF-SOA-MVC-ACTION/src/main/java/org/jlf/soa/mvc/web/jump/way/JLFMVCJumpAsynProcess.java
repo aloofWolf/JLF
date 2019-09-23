@@ -1,13 +1,14 @@
 package org.jlf.soa.mvc.web.jump.way;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.AsyncContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.json.server.api.JLFJson;
+import org.jlf.soa.mvc.web.servlet.JLFMVCWriteListener;
 
 /**
  * 
@@ -19,20 +20,18 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class JLFMVCJumpAsynProcess implements JLFMVCIJumpProcess {
 
 	@Override
-	public void process(ServletRequest request, ServletResponse response, JLFJson respJson,
-			String url) {
-		response.setCharacterEncoding("UTF-8");
-		String respJsonStr = respJson.toStr();
-		PrintWriter out = null;
+	public void process(AsyncContext asyncContext, JLFJson respJson,
+			String url, ServletOutputStream outputStream) {
+		HttpServletResponse response = (HttpServletResponse) asyncContext.getResponse();
+		response.setHeader("Content-type", "text/html;charset=UTF-8");  
 		try {
-			out = response.getWriter();
-			out.write(respJsonStr);
+			outputStream.write(respJson.toStr().getBytes("UTF-8"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new JLFException(e);
-		} finally {
-			out.close();
 		}
+		JLFMVCWriteListener responseListener = new JLFMVCWriteListener(asyncContext);
+		outputStream.setWriteListener(responseListener);
 
 	}
 

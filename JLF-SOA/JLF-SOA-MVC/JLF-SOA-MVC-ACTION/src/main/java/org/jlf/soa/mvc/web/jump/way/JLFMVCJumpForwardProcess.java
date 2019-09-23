@@ -2,8 +2,10 @@ package org.jlf.soa.mvc.web.jump.way;
 
 import java.io.IOException;
 
+import javax.servlet.AsyncContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
@@ -20,8 +22,10 @@ import org.jlf.plugin.json.server.api.JLFJson;
 public class JLFMVCJumpForwardProcess implements JLFMVCIJumpProcess {
 
 	@Override
-	public void process(ServletRequest request, ServletResponse response,JLFJson respJson,
-			String url) {
+	public void process(AsyncContext asyncContext,JLFJson respJson,
+			String url, ServletOutputStream outputStream) {
+		ServletRequest request = asyncContext.getRequest();
+		ServletResponse response = asyncContext.getResponse();
 		request.setAttribute("resp", respJson);
 		RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 		try {

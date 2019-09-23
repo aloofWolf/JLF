@@ -1,7 +1,7 @@
 package org.jlf.soa.mvc.web.jump.way;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.AsyncContext;
+import javax.servlet.ServletOutputStream;
 
 import org.jlf.plugin.json.server.api.JLFJson;
 
@@ -18,12 +18,11 @@ public interface JLFMVCIJumpProcess {
 	 * 
 	 * @Title: process
 	 * @Description:Ìø×ª´¦Àí
-	 * @param request
-	 * @param response
-	 * @param respBean
+	 * @param asyncContext
+	 * @param respJson
 	 * @param url
+	 * @param outputStream
 	 */
-	public void process(ServletRequest request, ServletResponse response, JLFJson respJson,
-			String url);
+	public void process(AsyncContext asyncContext, JLFJson respJson, String url, ServletOutputStream outputStream);
 
 }
