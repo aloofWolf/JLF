@@ -33,7 +33,7 @@ public class JLFMvcServer extends JLFSoaServer {
 	/**
 	 * 需要扫描JLFMVC框架的包
 	 */
-	private static final String JLF_BAEN_SCAN_PACKAGE = "org.jlf.soa.mvc";
+	private static final String JLF_BAEN_SCAN_PACKAGE = "org.jlf";
 
 	/**
 	 * beanManager的class
@@ -75,17 +75,31 @@ public class JLFMvcServer extends JLFSoaServer {
 		return "mvc";
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void initConfig() {
+	public void start() {
 		try {
 			Properties prop = getConfig();
-			Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-			JLFMVCConfig config = JLFCheckClient.get().check(map, JLFMVCConfig.class);
-			initAllBeans(config.getBeanPackages());
+			start(prop);
 		} catch (Exception e) {
 			throw new JLFException(e);
 		}
+	}
+
+	@Override
+	public void reStart() {
+		try {
+			Properties prop = getConfig(true);
+			start(prop);
+		} catch (Exception e) {
+			throw new JLFException(e);
+		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void start(Properties prop) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
+		JLFMVCConfig config = JLFCheckClient.get().check(map, JLFMVCConfig.class);
+		initAllBeans(config.getBeanPackages());
 	}
 
 	/**

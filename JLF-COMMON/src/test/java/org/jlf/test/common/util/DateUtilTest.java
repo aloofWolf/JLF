@@ -130,7 +130,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayBefore() {
-		System.out.println("11:  " + DateUtil.getSomeDayBefore(new Date(), 11));
+		System.out.println("11:  " + DateUtil.getSomeDayBefore(new Date(), 11,DateUtil.DEFAULT_DATEPATTERN));
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getSomeDayAfter() {
-		System.out.println("17:  " + DateUtil.getSomeDayAfter(new Date(), 3));
+		System.out.println("17:  " + DateUtil.getSomeDayAfter(new Date(), 3,DateUtil.DEFAULT_DATEPATTERN));
 	}
 
 	/**

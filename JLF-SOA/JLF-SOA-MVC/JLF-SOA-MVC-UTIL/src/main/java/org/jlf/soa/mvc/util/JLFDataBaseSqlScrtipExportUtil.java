@@ -25,6 +25,8 @@ public class JLFDataBaseSqlScrtipExportUtil extends JLFDataBaseExport {
 		JLFMVCTablesMetadata metadatas = genDataBaseMetadata(packageName);
 		String sqlScript = templateApi.getStringFromClassPath("sql.vm", metadatas, "obj");
 		sqlScript = sqlScript.replaceAll(",\r\n  \\)", "\r\n  )");
+		sqlScript = sqlScript.replaceAll(", uniqueEnd", "");
+		
 		FileUtil.strWriteToFile(sqlScript, filePath);
 	}
 

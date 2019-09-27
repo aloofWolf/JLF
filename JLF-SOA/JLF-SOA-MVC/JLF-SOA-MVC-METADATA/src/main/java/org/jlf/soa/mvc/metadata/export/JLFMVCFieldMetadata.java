@@ -15,11 +15,11 @@ public class JLFMVCFieldMetadata {
 
 	private String dataType; // 数据类型
 
-	private boolean isPrimary; // 是否主键
+	private boolean primary; // 是否主键
 
-	private boolean isNotNull; // 是否非空
+	private boolean notNull; // 是否非空
 
-	private boolean isUnique; // 是否唯一
+	private boolean unique; // 是否唯一
 
 	private String uniqueName; // 唯一约束名称
 
@@ -49,28 +49,28 @@ public class JLFMVCFieldMetadata {
 		this.dataType = dataType;
 	}
 
-	public boolean isPrimary() {
-		return isPrimary;
+	public Boolean isPrimary() {
+		return primary;
 	}
 
-	public void setPrimary(boolean isPrimary) {
-		this.isPrimary = isPrimary;
+	public void setPrimary(Boolean primary) {
+		this.primary = primary;
 	}
 
 	public boolean isNotNull() {
-		return isNotNull;
+		return notNull;
 	}
 
-	public void setNotNull(boolean isNotNull) {
-		this.isNotNull = isNotNull;
+	public void setNotNull(boolean notNull) {
+		this.notNull = notNull;
 	}
 
 	public boolean isUnique() {
-		return isUnique;
+		return unique;
 	}
 
-	public void setUnique(boolean isUnique) {
-		this.isUnique = isUnique;
+	public void setUnique(boolean unique) {
+		this.unique = unique;
 	}
 
 	public String getUniqueName() {

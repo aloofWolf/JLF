@@ -8,7 +8,7 @@
   <artifactId>JLF-SOA-MVC-METADATA</artifactId>
   
   <properties>
-		<servlet.version>2.5</servlet.version>
+		<servlet.version>3.1.0</servlet.version>
 	</properties>
 	<dependencies>
 		<!--依赖JLF-PLUGIN-CHECK-SERVER-API -->
@@ -20,7 +20,7 @@
 		<!--依赖servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>

@@ -12,9 +12,12 @@ import org.jlf.common.util.LogUtil;
 public class JLFException extends RuntimeException {
 
 	private static final long serialVersionUID = -8160733995315079111L;
+	
+	private static ThreadLocal<String> exceptionMsg = new ThreadLocal<String>();
 
 	public JLFException(String message) {
 		super(message);
+		exceptionMsg.set(message);
 		LogUtil.get().error(message);
 	}
 
@@ -28,4 +31,11 @@ public class JLFException extends RuntimeException {
 		LogUtil.get().error(e.getMessage(),e);
 	}
 
+	public static String getExceptionMsg(){
+		return exceptionMsg.get();
+	}
+	
+	public static void deleteExceptionMsg(){
+		exceptionMsg.set(null);
+	}
 }

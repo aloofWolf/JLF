@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jlf.common.enums.BooleanType;
+import org.jlf.plugin.check.server.api.JLFCheckAnn;
 import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanFieldMapped;
 
 /**
@@ -19,23 +20,32 @@ public class JLFMVCEntity implements Serializable {
 
 	private static final long serialVersionUID = -8754870124474277604L;
 
+	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(desc = "主键",isPrimary = true)
 	private Long id;
-	@JLFMVCBeanFieldMapped(desc = "版本号")
+	@JLFCheckAnn(isSkipValidate=true)
+	@JLFMVCBeanFieldMapped(desc = "版本号",defaultValue="0")
 	private Long version;
-	@JLFMVCBeanFieldMapped(desc = "是否删除  0:已删除 1:未删除")
+	@JLFCheckAnn(isSkipValidate=true)
+	@JLFMVCBeanFieldMapped(desc = "是否删除  0:已删除 1:未删除",defaultValue="1")
 	private BooleanType isDelete;
-	@JLFMVCBeanFieldMapped(desc = "删除编码")
+	@JLFCheckAnn(isSkipValidate=true)
+	@JLFMVCBeanFieldMapped(desc = "删除编码",defaultValue="-1")
 	private Long deleteNum;
+	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(desc = "创建记录用户id")
 	private Long createUserId;
+	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(desc = "创建时间")
 	private Date createTime;
+	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(desc = "更新用户id")
 	private Long updateUserId;
+	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(desc = "更新时间")
 	private Date updateTime;
 
+	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(isSkipMapped=true)
 	private Map<Class<? extends JLFMVCEntity>, JLFMVCEntity> relationMap = new HashMap<Class<? extends JLFMVCEntity>, JLFMVCEntity>();// 其它数据
 

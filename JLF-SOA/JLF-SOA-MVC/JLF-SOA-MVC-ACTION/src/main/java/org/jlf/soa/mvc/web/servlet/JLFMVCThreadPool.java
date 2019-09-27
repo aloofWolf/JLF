@@ -9,9 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jlf.common.util.EnumUtil;
 import org.jlf.common.util.LogUtil;
+import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.client.check.JLFCheckClient;
 import org.jlf.plugin.client.dbPool.JLFDbPoolClient;
 import org.jlf.plugin.client.json.JLFJsonClient;
@@ -62,12 +64,20 @@ public class JLFMVCThreadPool {
 		@Override
 		public String call() {
 			try {
-				JLFJson paramsJson = JLFJsonClient.get().jsonStrToJson(paramsStr);
+				HttpServletRequest request = (HttpServletRequest) asyncContext.getRequest();
+				String url = request.getRequestURI();
+				String routeKey = request.getPathInfo();
+				LogUtil.get().debug("请求url:{}", url);
+				LogUtil.get().debug("请求routeKey:{}", routeKey);
 				LogUtil.get().debug("请求参数:{}", paramsStr);
-				String reqTypeObj = paramsJson.getStr("reqType");
-				JLFMVCRouteTarget target = JLFMVCRouteManager.getTarget(reqTypeObj);
+				
+				JLFMVCRouteTarget target = JLFMVCRouteManager.getTarget(routeKey);
+				if(target == null){
+					throw new JLFException("未找到请求:"+routeKey);
+				}
 				Method targetMethod = target.getMethod();
 	            Object[] paramsValues = JLFCheckClient.get().check(paramsStr, targetMethod);
+	            JLFMVCThreadLocal.setAsyncContext(asyncContext);
 				Object resp = target.getMethod().invoke(target.getWebObj(), paramsValues);
 				JLFMVCResponse<?> responseBean = new JLFMVCResponse<Object>(resp);
 				JLFMVCJumpWay jumpWay;
@@ -94,6 +104,7 @@ public class JLFMVCThreadPool {
 				LogUtil.get().debug("线程结束,开始回收线程资源.......");
 				JLFDbPoolClient.get().closeAllConn();
 				JLFMVCThreadLocal.deleteDbName();
+				JLFMVCThreadLocal.deleteAsyncContext();
 				JLFSessionClient.get().clearThreadLocal();
 				LogUtil.get().debug("线程结束,回收线程资源结束.......");
 			}
@@ -108,11 +119,11 @@ public class JLFMVCThreadPool {
 		 * @param e
 		 */
 		public void exceptionProcess(Throwable e) {
-			String errMsg = e.getMessage();
+			String errMsg = JLFException.getExceptionMsg();
 			if (errMsg == null || errMsg.length() == 0) {
 				errMsg = "操作失败";
 			}
-			JLFMVCResponse<?> responseBean = new JLFMVCResponse<Object>(JLFMVCOperatorResult.FAIL, "操作失败");
+			JLFMVCResponse<?> responseBean = new JLFMVCResponse<Object>(JLFMVCOperatorResult.FAIL, errMsg);
 			JLFJson respJson = JLFJsonClient.get().beanToJson(responseBean);
 			JLFMVCJumpWay.ASYN.getType().process(asyncContext,respJson, null,outputStream);
 			LogUtil.get().debug("请求结果:{}",JLFMVCOperatorResult.FAIL.getDesc());

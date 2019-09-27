@@ -106,6 +106,17 @@ public class RedisClusterCore implements JLFCache {
 		RedisClusterPool.getJedis().sadd(key, values);
 		RedisClusterPool.getJedis().expire(key, seconds);
 	}
+	
+	@Override
+	public void remove(String key, String... values) {
+		RedisClusterPool.getJedis().srem(key, values);
+		
+	}
+
+	@Override
+	public String getRandom(String key) {
+		return RedisClusterPool.getJedis().srandmember(key);
+	}
 
 	@Override
 	public int getArrSize(String key) {
@@ -117,6 +128,11 @@ public class RedisClusterCore implements JLFCache {
 	}
 
 	@Override
+	public Set<String> getSet(String key) {
+		return RedisClusterPool.getJedis().smembers(key);
+	}
+
+	@Override
 	public void delete(String key) {
 		RedisClusterPool.getJedis().del(key);
 
@@ -125,6 +141,37 @@ public class RedisClusterCore implements JLFCache {
 	@Override
 	public void setKeyPeriod(String key, int seconds) {
 		RedisClusterPool.getJedis().expire(key, seconds);
+	}
+
+	@Override
+	public boolean setnx(String key, String value) {
+		long flg = RedisClusterPool.getJedis().setnx(key, value);
+		if (flg == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean setnx(String key, int seconds, String value) {
+		long flg = RedisClusterPool.getJedis().setnx(key, value);
+		if (flg == 1) {
+			RedisClusterPool.getJedis().expire(key, seconds);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public String getset(String key, String value) {
+		return RedisClusterPool.getJedis().getSet(key, value);
+	}
+
+	@Override
+	public String getset(String key, int seconds, String value) {
+		String oldValue = RedisClusterPool.getJedis().getSet(key, value);
+		RedisClusterPool.getJedis().expire(key, seconds);
+		return oldValue;
 	}
 
 }

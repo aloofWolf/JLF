@@ -1,14 +1,14 @@
 #foreach($table in $!{obj.tables})
-  CREATE TABLE `$!{table.tableName}` (
+  CREATE TABLE IF NOT EXISTS `$!{table.tableName}` (
 #foreach($field in $!{table.fields})
 #set($fieldStr = "`")
 #set($fieldName = $!{field.fieldName})
 #set($fieldStr = $fieldStr+$fieldName+"`")
 #set($fieldStr = $fieldStr+" "+$!{field.dataType})
-#if($!{field.isNotNull})
+#if($!{field.notNull})
 #set($fieldStr = $fieldStr +" NOT NULL")
 #end
-#if($!{field.isPrimary})
+#if($!{field.primary})
 #set($fieldStr = $fieldStr +" AUTO_INCREMENT")
 #end
 #if($!{field.defaultValue} != "")
@@ -21,20 +21,19 @@
      $fieldStr
 #end
 #foreach($field in $!{table.fields})
-#if($!{field.isPrimary})
+#if($!{field.primary})
      PRIMARY KEY (`$!{field.fieldName}`),
 #end
-#if($!{field.isUnique})
-     UNIQUE KEY `$!{field.uniqueName}` (`field.fieldName`) 
-#end
-#if($!{field.isJoinUnique})
-#set($uniqueFields = "")
+#if($!{field.unique})
+#set($uniqueFields = "`$!{field.fieldName}`,")
+#if($!{field.joinUniqueField} != "")
 #foreach($uniqueField in $$!{field.joinUniqueField})
-#set($uniqueFields = $uniqueFields+$uniqueField+",")
+#set($uniqueFields = $uniqueFields+"`$uniqueField`,")
 #end
-#set($uniqueFields = $uniqueFields.substring(0,$uniqueFields-1))
-     UNIQUE KEY `$!{field.uniqueName}` (`field.fieldName`) 
+#end
+     UNIQUE KEY `$!{field.uniqueName}` ($uniqueFields uniqueEnd)
 #end
 #end
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8  #if($!{table.desc}) COMMENT='$!{table.desc}' #end;
+  
 #end

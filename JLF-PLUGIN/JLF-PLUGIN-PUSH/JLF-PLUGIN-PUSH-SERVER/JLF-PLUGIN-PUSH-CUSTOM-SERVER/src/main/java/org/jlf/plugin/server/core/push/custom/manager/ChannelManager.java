@@ -33,6 +33,7 @@ public class ChannelManager {
 	 * 接口的集合,key为channelCode+"_"interCode
 	 */
 	public static Map<String, JLFPushInter<?, ?, ?>> inters = new HashMap<String, JLFPushInter<?, ?, ?>>();
+	public static Map<String, JLFPushInter<?, ?, ?>> intersBak = null;
 
 	/**
 	 * 
@@ -43,6 +44,7 @@ public class ChannelManager {
 	 */
 	public static void init(Properties props) {
 		if (props != null) {
+			intersBak = new HashMap<String, JLFPushInter<?, ?, ?>>();
 			for (Enumeration<Object> keys = props.keys(); keys.hasMoreElements();) {
 				String channelCode = (String) keys.nextElement();
 				String packages = props.getProperty(channelCode);
@@ -54,6 +56,9 @@ public class ChannelManager {
 				JLFPushChannel<?> channel = pasreChannel(channelCode, clss, config);
 				pasreInter(channelCode, clss, channel);
 			}
+			
+			inters = intersBak;
+			intersBak = null;
 		} else {
 			throw new JLFException("PUSH插件未配置扫描包");
 		}
@@ -121,7 +126,7 @@ public class ChannelManager {
 				if (JLFPushInter.class.isAssignableFrom(interCls)) {
 					String interCode = channelAnn.interCode();
 					String intersMapKey = new StringBuffer(channelCode).append("_").append(interCode).toString();
-					if (inters.get(intersMapKey) != null) {
+					if (intersBak.get(intersMapKey) != null) {
 						throw new JLFException("有重复的渠道编号:" + channelCode + "和接口编号:" + interCode);
 					}
 
@@ -136,7 +141,7 @@ public class ChannelManager {
 						throw new JLFException(e);
 					}
 
-					inters.put(intersMapKey, inter);
+					intersBak.put(intersMapKey, inter);
 				}
 
 			}

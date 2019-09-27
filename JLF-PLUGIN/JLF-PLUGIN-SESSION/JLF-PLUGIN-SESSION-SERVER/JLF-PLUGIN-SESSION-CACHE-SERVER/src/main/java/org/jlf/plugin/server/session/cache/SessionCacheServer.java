@@ -40,15 +40,29 @@ public class SessionCacheServer extends JLFPluginServer<JLFSession> {
 		
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void initConfig() {
-		JLFCheck ckeck = JLFCheckClient.get();
+	public void start() {
 		Properties prop = super.getConfig();
+		start(prop);
+	}
+
+	@Override
+	public void reStart() {
+		Properties prop = super.getConfig(true);
+		start(prop);
+	}
+
+	/**
+	 * 
+	 * @Title: start
+	 * @Description:Æô¶¯·þÎñ
+	 * @param prop
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void start(Properties prop) {
+		JLFCheck ckeck = JLFCheckClient.get();
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
 		SessionCacheConfig config = ckeck.check(map, SessionCacheConfig.class);
 		SessionCacheBean.setConfig(config);
-
 	}
-
 }

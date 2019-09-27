@@ -1,12 +1,12 @@
 package org.jlf.core.server;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.util.Properties;
 
+import org.jlf.common.util.GenericityUtil;
 import org.jlf.common.util.LogUtil;
-import org.jlf.common.util.SingletonUtil;
 import org.jlf.core.api.JLFProductServerApi;
-import org.jlf.core.api.JLFProductWebApi;
+import org.jlf.core.config.JLFConfig;
 import org.jlf.core.exception.JLFException;
 
 /**
@@ -16,9 +16,8 @@ import org.jlf.core.exception.JLFException;
  * @author Lone Wolf
  * @date 2019年6月2日
  * @param <SERVER_API>
- * @param <WEB_API>
  */
-public abstract class JLFProductServer<SERVER_API extends JLFProductServerApi, WEB_API extends JLFProductWebApi> {
+public abstract class JLFProductServer<SERVER_API extends JLFProductServerApi> {
 
 	/**
 	 * 
@@ -27,71 +26,100 @@ public abstract class JLFProductServer<SERVER_API extends JLFProductServerApi, W
 	 * @return
 	 */
 	public abstract SERVER_API getServerApi();
-
+	
 	/**
 	 * 
-	 * @Title: getWebApi
-	 * @Description:获取webApi实例
-	 * @return
-	 */
-	public abstract WEB_API getWebApi();
-
-	/**
-	 * 
-	 * @Title: initConfig
-	 * @Description:初始化配置
-	 */
-	public void initConfig() {
-	}
-
-	/**
-	 * 
-	 * @Title: doOther
-	 * @Description:启动插件时,除初始化配置以外的其它处理
-	 */
-	public void doOther() {
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> void initRoute() {
-		WEB_API webApi = getWebApi();
-		if (webApi == null) {
-			throw new JLFException("webApi不能为空");
-		}
-		Method[] methods = webApi.getClass().getDeclaredMethods();
-		for (Method method : methods) {
-			Class<T> returnType = (Class<T>) method.getReturnType();
-			T obj;
-			try {
-				obj = (T) method.invoke(this);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				throw new JLFException(e);
-			}
-			SingletonUtil.put(returnType, obj);
-		}
-	}
-
-	/**
-	 * 
-	 * @param <T>
 	 * @Title: start
 	 * @Description:启动插件服务
 	 */
-	public <T> void start() {
+	public void start() {
+
+	}
+
+	/**
+	 * 
+	 * @Title: reStart
+	 * @Description:重启插件服务
+	 */
+	public void reStart() {
+
+	}
+
+	/**
+	 * 
+	 * @Title: start
+	 * @Description:启动插件服务
+	 * @throws JLFClientNoInitExecption
+	 */
+	public void startServer() {
 		String serverName = this.getClass().getName();
 		LogUtil.get().debug(String.format("%s启动开始。。。", serverName));
 		try {
-			initConfig();
-			initRoute();
-			doOther();
+			start();
 		} catch (Exception e) {
+			e.printStackTrace();
 			LogUtil.get().debug(String.format("%s启动失败。。。", serverName));
-			throw new JLFException(e);
+			throw e;
 		}
 
 		LogUtil.get().debug(String.format("%s启动成功。。。", serverName));
 	}
 
+	/**
+	 * 
+	 * @Title: reStartServer
+	 * @Description:启动插件服务
+	 * @throws JLFClientNoInitExecption
+	 */
+	public void reStartServer() {
+		String serverName = this.getClass().getName();
+		LogUtil.get().debug(String.format("%s重启开始。。。", serverName));
+		try {
+			reStart();
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogUtil.get().debug(String.format("%s重启失败。。。", serverName));
+			throw e;
+		}
+
+		LogUtil.get().debug(String.format("%s重启成功。。。", serverName));
+	}
+
+	/**
+	 * 
+	 * @Title: getConfig
+	 * @Description:获取服务端配置,不用重新加载配置文件
+	 * @return
+	 */
+	public Properties getConfig() {
+		return getConfig(false);
+
+	}
+
+	/**
+	 * 
+	 * @Title: getConfig
+	 * @Description: 获取服务端配置
+	 * @param reLoadConfig
+	 *            是否需要重新加载配置文件
+	 * @return
+	 */
+	public Properties getConfig(boolean reLoadConfig) {
+		Class<SERVER_API> serverApiCls = GenericityUtil.getObjSuperClsGenerCls(this.getClass());
+		Field productField;
+		try {
+			productField = serverApiCls.getField("PRODUCT_NAME");
+			String productName = (String) productField.get(serverApiCls);
+			Properties config = JLFConfig.getPluginConfig(productName, reLoadConfig);
+
+			if (config == null) {
+				config = new Properties();
+			}
+			return config;
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+
+	}
 }

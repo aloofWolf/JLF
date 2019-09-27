@@ -94,6 +94,10 @@ public class CheckCustom implements JLFCheck {
 				continue;
 			}
 			String fieldName = field.getName();
+			if(fieldName.equals("serialVersionUID")){
+				continue;
+			}
+			
 			Class<?> fieldCls = field.getType();
 			CheckBean<?> checkBean = CheckBeanFactory.getCheckBean(fieldCls);
 			Object value = getValue(json, checkBean, field,JLFCheckType.FIELD,field.getType(),field.getName());

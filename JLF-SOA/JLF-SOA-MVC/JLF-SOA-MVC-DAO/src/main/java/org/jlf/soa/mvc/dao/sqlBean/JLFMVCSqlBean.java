@@ -22,6 +22,11 @@ public class JLFMVCSqlBean {
 	}
 
 	public JLFMVCSqlBean(String selectSql, String totFieldSql, String fromSql, Object[] params) {
+		if(totFieldSql == null){
+			totFieldSql = "select count(1) as cnt ";
+		}else{
+			totFieldSql = totFieldSql + ",count(1) as cnt ";
+		}
 		this.selectSql = selectSql;
 		this.totFieldSql = totFieldSql;
 		this.fromSql = fromSql;
@@ -45,7 +50,7 @@ public class JLFMVCSqlBean {
 	 * @return
 	 */
 	public String getTotSql() {
-		return new StringBuffer(totFieldSql).append(" count(1) as cnt ").append(fromSql).toString();
+		return new StringBuffer(totFieldSql).append(fromSql).toString();
 	}
 
 	/**

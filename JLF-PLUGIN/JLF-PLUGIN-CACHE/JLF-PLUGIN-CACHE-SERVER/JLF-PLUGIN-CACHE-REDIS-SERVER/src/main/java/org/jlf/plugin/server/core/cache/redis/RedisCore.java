@@ -8,7 +8,6 @@ import org.jlf.plugin.cache.server.api.JLFCache;
 
 import redis.clients.jedis.Jedis;
 
-
 /**
  * 
  * @ClassName: RedisCore
@@ -113,12 +112,28 @@ public class RedisCore implements JLFCache {
 	}
 
 	@Override
+	public void remove(String key, String... values) {
+		jedis.get().srem(key, values);
+
+	}
+
+	@Override
+	public String getRandom(String key) {
+		return jedis.get().srandmember(key);
+	}
+
+	@Override
 	public int getArrSize(String key) {
 		Set<String> set = jedis.get().smembers(key);
 		if (set == null) {
 			return 0;
 		}
 		return set.size();
+	}
+
+	@Override
+	public Set<String> getSet(String key) {
+		return jedis.get().smembers(key);
 	}
 
 	@Override
@@ -130,6 +145,39 @@ public class RedisCore implements JLFCache {
 	@Override
 	public void setKeyPeriod(String key, int seconds) {
 		jedis.get().expire(key, seconds);
+	}
+
+	@Override
+	public boolean setnx(String key, String value) {
+		long flg = jedis.get().setnx(key, value);
+		if (flg == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean setnx(String key, int seconds, String value) {
+		long flg = jedis.get().setnx(key, value);
+		if (flg == 1) {
+			jedis.get().expire(key, seconds);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public String getset(String key, String value) {
+		return jedis.get().getSet(key, value);
+	}
+
+	
+
+	@Override
+	public String getset(String key, int seconds, String value) {
+		String oldValue = jedis.get().getSet(key, value);
+		jedis.get().expire(key, seconds);
+		return oldValue;
 	}
 
 }

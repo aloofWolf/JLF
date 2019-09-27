@@ -28,31 +28,33 @@ public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 	 * @return
 	 */
 	public abstract SERVER_API getServerApi();
-	
+
 	/**
 	 * 
-	    * @Title: getDepends
-	    * @Description:获取服务端依赖的其它插件的客户端
-	    * @return
+	 * @Title: getDepends
+	 * @Description:获取服务端依赖的其它插件的客户端
+	 * @return
 	 */
-	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends(){
+	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
 		return null;
 	}
 
 	/**
 	 * 
-	 * @Title: initConfig
-	 * @Description:初始化配置
+	 * @Title: start
+	 * @Description:启动插件服务
 	 */
-	public void initConfig() {
+	public void start() {
+
 	}
 
 	/**
 	 * 
-	 * @Title: doOther
-	 * @Description:启动插件时,除初始化配置以外的其它处理
+	 * @Title: reStart
+	 * @Description:重启插件服务
 	 */
-	public void doOther() {
+	public void reStart() {
+
 	}
 
 	/**
@@ -61,12 +63,11 @@ public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 	 * @Description:启动插件服务
 	 * @throws JLFClientNoInitExecption
 	 */
-	public void start() {
+	public void startServer() {
 		String serverName = this.getClass().getName();
 		LogUtil.get().debug(String.format("%s启动开始。。。", serverName));
 		try {
-			initConfig();
-			doOther();
+			start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			LogUtil.get().debug(String.format("%s启动失败。。。", serverName));
@@ -78,17 +79,55 @@ public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 
 	/**
 	 * 
+	 * @Title: reStartServer
+	 * @Description:启动插件服务
+	 * @throws JLFClientNoInitExecption
+	 */
+	public void reStartServer() {
+		String serverName = this.getClass().getName();
+		LogUtil.get().debug(String.format("%s重启开始。。。", serverName));
+		try {
+			reStart();
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogUtil.get().debug(String.format("%s重启失败。。。", serverName));
+			throw e;
+		}
+
+		LogUtil.get().debug(String.format("%s重启成功。。。", serverName));
+	}
+
+	/**
+	 * 
 	 * @Title: getConfig
-	 * @Description:获取服务端配置
+	 * @Description:获取服务端配置,不用重新加载配置文件
 	 * @return
 	 */
 	public Properties getConfig() {
+		return getConfig(false);
+
+	}
+
+	/**
+	 * 
+	 * @Title: getConfig
+	 * @Description: 获取服务端配置
+	 * @param reLoadConfig
+	 *            是否需要重新加载配置文件
+	 * @return
+	 */
+	public Properties getConfig(boolean reLoadConfig) {
 		Class<SERVER_API> serverApiCls = GenericityUtil.getObjSuperClsGenerCls(this.getClass());
 		Field pluginField;
 		try {
 			pluginField = serverApiCls.getField("PLUGIN_NAME");
 			String pluginName = (String) pluginField.get(serverApiCls);
-			return JLFConfig.getPluginConfig(pluginName);
+			Properties config = JLFConfig.getPluginConfig(pluginName, reLoadConfig);
+
+			if (config == null) {
+				config = new Properties();
+			}
+			return config;
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 			throw new JLFException(e);

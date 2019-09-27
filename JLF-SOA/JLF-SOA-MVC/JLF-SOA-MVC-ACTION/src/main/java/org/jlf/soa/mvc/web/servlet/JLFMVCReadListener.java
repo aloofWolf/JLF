@@ -29,7 +29,7 @@ public class JLFMVCReadListener implements ReadListener{
 		int len = -1;
 		byte b[] = new byte[1024];
 		while (inputStream.isReady() && (len = inputStream.read(b)) != -1) {
-			paramsStr = new String(b, 0, len);
+			paramsStr = new String(b, 0, len,"UTF-8");
 		}
 		
 		LogUtil.get().debug("JLFMVCParamsFilter¹ıÂËÆ÷Ö´ĞĞ½áÊø.......");

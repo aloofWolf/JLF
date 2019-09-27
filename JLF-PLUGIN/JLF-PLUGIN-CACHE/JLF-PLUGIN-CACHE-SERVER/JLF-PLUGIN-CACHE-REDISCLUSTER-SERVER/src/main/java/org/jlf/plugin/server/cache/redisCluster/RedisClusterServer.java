@@ -28,25 +28,40 @@ public class RedisClusterServer extends JLFPluginServer<JLFCache> {
 	public JLFCache getServerApi() {
 		return new RedisClusterCore();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
 		Set<Class<CLIENT>> depends = new HashSet<Class<CLIENT>>();
 		depends.add((Class<CLIENT>) JLFCheckClient.class);
 		return depends;
-		
+
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void initConfig() {
+	public void start() {
 		Properties prop = super.getConfig();
+		start(prop);
+	}
+
+	@Override
+	public void reStart() {
+		Properties prop = super.getConfig(true);
+		start(prop);
+	}
+
+	/**
+	 * 
+	 * @Title: start
+	 * @Description:Æô¶¯·þÎñ
+	 * @param prop
+	 */
+	@SuppressWarnings("unchecked")
+	public void start(Properties prop) {
 		@SuppressWarnings("rawtypes")
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
 		RedisClusterConfig config = JLFCheckClient.get().check(map, RedisClusterConfig.class);
-		config.setHostAndPosts(JLFConfig.getPluginConfig(JLFCache.PLUGIN_NAME+"-hosts"));
+		config.setHostAndPosts(JLFConfig.getPluginConfig(JLFCache.PLUGIN_NAME + "-hosts"));
 		RedisClusterPool.init(config);
 	}
-
 }

@@ -33,7 +33,7 @@ import org.jlf.soa.mvc.dao.sqlBean.JLFMVCSqlBean;
 import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanFieldMapped;
 import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanTableMapped;
 import org.jlf.soa.mvc.metadata.entity.JLFMVCEntity;
-import org.jlf.soa.mvc.metadata.page.JLFMVCPage;
+import org.jlf.soa.mvc.metadata.response.JLFMVCPagingResponse;
 import org.jlf.soa.mvc.metadata.threadLocal.JLFMVCThreadLocal;
 
 /**
@@ -46,6 +46,8 @@ import org.jlf.soa.mvc.metadata.threadLocal.JLFMVCThreadLocal;
  */
 @JLFMVCBean(generate = JLFMVCDaoGenerate.class)
 public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
+
+	public static final String tableNameSeparator = "___";
 
 	protected String fieldStr = null; // bean字段的字符串集合,便于getById和Insert操作
 	private List<Field> fieldList = null; // bean字段的list类型,便于update操作
@@ -110,7 +112,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 		JLFMVCBeanTableMapped mapped = this.entityCls.getAnnotation(JLFMVCBeanTableMapped.class);
 		if (mapped == null) {
 			dbName = JLFDbPool.mainDbName;
-		} else if ("?".equals(dbName)) {
+		} else if ("?".equals(mapped.dbName())) {
 			dbName = JLFMVCThreadLocal.getDbName();
 		} else if (mapped.dbName() == null || mapped.dbName().equals("")) {
 			dbName = JLFDbPool.mainDbName;
@@ -166,16 +168,17 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 		JLFMVCBeanTableMapped mapped = this.entityCls.getAnnotation(JLFMVCBeanTableMapped.class);
 		if (mapped == null) {
 			this.tableName = this.entityCls.getSimpleName();
-			return;
-		}
-		if (mapped.tableName() != null && mapped.tableName().length() > 0) {
-			this.tableName = mapped.tableName();
 		} else {
-			this.tableName = this.entityCls.getSimpleName();
+			if (mapped.tableName() != null && mapped.tableName().length() > 0) {
+				this.tableName = mapped.tableName();
+			} else {
+				this.tableName = this.entityCls.getSimpleName();
+			}
+			this.cacheKey = new StringBuffer("%s").append("_").append(tableName).append("%d").toString();
+			this.isCache = mapped.cache();
+			this.seconds = mapped.seconds();
 		}
-		this.cacheKey = new StringBuffer("%s").append("_").append(tableName).append("%d").toString();
-		this.isCache = mapped.cache();
-		this.seconds = mapped.seconds();
+
 		JLFMVCDaoMapping.addTableNameEntityMapping(tableName, entityCls);
 	}
 
@@ -646,12 +649,12 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	 * @param params
 	 * @return
 	 */
-	public JLFMVCPage<ENTITY> getPage(JLFMVCSqlBean sqlBean, Integer pageNum, Integer pageSize) {
-		JLFMVCPage<ENTITY> page;
+	public JLFMVCPagingResponse<ENTITY> getPage(JLFMVCSqlBean sqlBean, Integer pageNum, Integer pageSize) {
+		JLFMVCPagingResponse<ENTITY> page;
 		try {
 			Integer startNum = (pageNum - 1) * pageSize;
-			String totFieldSql = sqlBean.getTotFieldSql();
-			ResultSet totRs = getRs(totFieldSql, sqlBean.getParams());
+			String totSql = sqlBean.getTotSql();
+			ResultSet totRs = getRs(totSql, sqlBean.getParams());
 			totRs.next();
 			Map<String, Object> totField = ResultSetToMap(totRs);
 			Long totalNum = totRs.getLong("cnt");
@@ -661,13 +664,13 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 				totalPage = totalPage + 1;
 			}
 			String pageSql = sqlBean.getPageSql();
-			ResultSet listRs = getRs(pageSql, startNum, pageSize, sqlBean.getParams());
+			ResultSet listRs = getPageRs(pageSql, sqlBean.getParams(), startNum, pageSize);
 			List<ENTITY> beanList = new ArrayList<ENTITY>();
 			while (listRs.next()) {
 				ENTITY ENTITY = ResultSetToBean(listRs);
 				beanList.add(ENTITY);
 			}
-			page = new JLFMVCPage<ENTITY>(totalNum, totalPage, totField, beanList);
+			page = new JLFMVCPagingResponse<ENTITY>(totalNum, totalPage, totField, beanList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new JLFException(e);
@@ -686,7 +689,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	public PreparedStatement getPs(String sql, Object... params) {
 		PreparedStatement ps;
 		try {
-			ps = getConn().prepareStatement(sql.toString(),Statement.RETURN_GENERATED_KEYS);
+			ps = getConn().prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			StringBuffer paramsStr = new StringBuffer();
 			if (params != null) {
 				int paramsLength = params.length;
@@ -696,6 +699,34 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 					paramsStr = paramsStr.append(param).append(",");
 				}
 			}
+			LogUtil.get().debug("sql= {},params={}", sql, paramsStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+		return ps;
+	}
+
+	public PreparedStatement getPagePs(String sql, Object[] params, int startNum, int pageSize) {
+		PreparedStatement ps;
+		try {
+			ps = getConn().prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+			StringBuffer paramsStr = new StringBuffer();
+			int paramsLength = 0;
+			if (params != null) {
+				paramsLength = params.length;
+				for (int i = 1; i <= paramsLength; i++) {
+					Object param = params[i - 1];
+					ps.setObject(i, param);
+					paramsStr = paramsStr.append(param).append(",");
+				}
+			}
+
+			ps.setObject(paramsLength + 1, startNum);
+			paramsStr = paramsStr.append(startNum).append(",");
+
+			ps.setObject(paramsLength + 2, pageSize);
+			paramsStr = paramsStr.append(pageSize).append(",");
 			LogUtil.get().debug("sql= {},params={}", sql, paramsStr);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -745,6 +776,16 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 		}
 	}
 
+	public ResultSet getPageRs(String sql, Object[] params, int startNum, int pageSize) {
+		PreparedStatement ps = getPagePs(sql, params, startNum, pageSize);
+		try {
+			return ps.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
+	}
+
 	/**
 	 * @Title: ResultSetToBean
 	 * @Description:将ResultSet结果集转成Bean
@@ -785,7 +826,12 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 				JLFMVCEntity entity = tableNameEntityMap.get(tableName);
 				JLFMVCDao<?> dao = tableNameDaoMap.get(tableName);
 				if (entity == null) {
-					Class<? extends JLFMVCEntity> entityCls = JLFMVCDaoMapping.getEntityCls(tableName);
+					int tableNameSeparatorIndex = tableName.indexOf(tableNameSeparator);
+					String baseTableName = tableName;
+					if (tableName.indexOf(tableNameSeparator) >= 0) {
+						baseTableName = tableName.substring(0, tableNameSeparatorIndex);
+					}
+					Class<? extends JLFMVCEntity> entityCls = JLFMVCDaoMapping.getEntityCls(baseTableName);
 					if (entityCls == null) {
 						LogUtil.get().debug("数据库表名{}未找到映射的实体,不封装实体", tableName);
 						continue;
@@ -824,6 +870,11 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 				JLFMVCEntity otherEntity = entry.getValue();
 				currEntity.set(otherEntityCls, otherEntity);
 			}
+
+			/**
+			 * 多返回的多个entity进行组合
+			 */
+			moreBeanGroup(currEntity);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -900,5 +951,15 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 		}
 
 		return map;
+	}
+
+	/**
+	 * 
+	 * @Title: moreBeanGroup
+	 * @Description: 一个结果集返回多个实体时,通过此方法对多个实体进行组合
+	 * @param entity
+	 * @return
+	 */
+	public void moreBeanGroup(ENTITY entity) {
 	}
 }

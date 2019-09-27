@@ -45,8 +45,9 @@ public abstract class JLFCore {
 		// 首先设置当前线程的classLoader,加载服务端的jar包需要此classLoader加载
 		// Thread.currentThread().setContextClassLoader(ClassLoaderUtil.getLoader());
 		startPlugins();
-		startProducts();
 		startSoa();
+		startProducts();
+		
 	}
 
 	/**
@@ -132,7 +133,7 @@ public abstract class JLFCore {
 					startPlugin(dependClientCls);
 				}
 			}
-			server.start();
+			server.startServer();
 			client.bindServer(server);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -150,17 +151,17 @@ public abstract class JLFCore {
 		List<Class<?>> clientClss = PackageUtil.getPackageClss(PRODUCT_CLIENT_PACKAGE_NAME,
 				new JLFProductClientClsFilter());
 
-		JLFProductClient<SERVER_API, WEB_API> client;
+		JLFProductClient<SERVER_API> client;
 		Class<?> apiCls;
 		Field productField;
 		String productName;
 		String productServerPackageName;
 		List<Class<?>> serverClss;
 		Class<?> serverCls;
-		JLFProductServer<SERVER_API, WEB_API> server;
+		JLFProductServer<SERVER_API> server;
 		for (Class<?> clientCls : clientClss) {
 			try {
-				client = (JLFProductClient<SERVER_API, WEB_API>) clientCls.newInstance();
+				client = (JLFProductClient<SERVER_API>) clientCls.newInstance();
 				apiCls = GenericityUtil.getObjSuperInterGenerCls(clientCls);
 				productField = apiCls.getField(PRODUCT_FIELD_NAME);
 				productName = (String) productField.get(apiCls);
@@ -175,9 +176,9 @@ public abstract class JLFCore {
 					throw new JLFException(exceptionDesc);
 				}
 				serverCls = serverClss.get(0);
-				server = (JLFProductServer<SERVER_API, WEB_API>) serverCls.newInstance();
+				server = (JLFProductServer<SERVER_API>) serverCls.newInstance();
 				client.bindServer(server);
-				server.start();
+				server.startServer();
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new JLFException(e);
@@ -195,7 +196,7 @@ public abstract class JLFCore {
 		for (Class<?> soaCls : soaClss) {
 			try {
 				JLFSoaServer soaServer = (JLFSoaServer) soaCls.newInstance();
-				soaServer.start();
+				soaServer.startServer();
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new JLFException(e);

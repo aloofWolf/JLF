@@ -42,12 +42,28 @@ public class RedisServer extends JLFPluginServer<JLFCache> {
 		return depends;
 		
 	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	
 	@Override
-	public void initConfig() {
-		JLFCheck ckeck = JLFCheckClient.get();
+	public void start() {
 		Properties prop = super.getConfig();
+		start(prop);
+	}
+
+	@Override
+	public void reStart() {
+		Properties prop = super.getConfig(true);
+		start(prop);
+	}
+
+	/**
+	 * 
+	 * @Title: start
+	 * @Description:Æô¶¯·þÎñ
+	 * @param prop
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void start(Properties prop) {
+		JLFCheck ckeck = JLFCheckClient.get();
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
 		RedisConfig config = ckeck.check(map, RedisConfig.class);
 		RedisPool.init(config);

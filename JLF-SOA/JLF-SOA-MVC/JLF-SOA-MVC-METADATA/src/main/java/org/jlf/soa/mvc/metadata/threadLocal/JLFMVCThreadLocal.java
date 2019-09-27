@@ -1,5 +1,7 @@
 package org.jlf.soa.mvc.metadata.threadLocal;
 
+import javax.servlet.AsyncContext;
+
 /**
  * 
  * @ClassName: JLFMVCThreadLocal
@@ -13,6 +15,11 @@ public class JLFMVCThreadLocal {
 	 * 当前线程以及子线程的dbName
 	 */
 	private static InheritableThreadLocal<String> dbName = new InheritableThreadLocal<String>();// 当前session保存的实体
+	
+	/**
+	 * 当前线程以及子线程的asyncContext
+	 */
+	private static InheritableThreadLocal<AsyncContext> asyncContext = new InheritableThreadLocal<AsyncContext>();// 当前session保存的实体
 
 	/**
 	 * 
@@ -41,5 +48,34 @@ public class JLFMVCThreadLocal {
 	 */
 	public static void deleteDbName() {
 		dbName.remove();
+	}
+	
+	/**
+	 * 
+	 * @Title: getAsyncContext
+	 * @Description:获取当前线程的asyncContext
+	 * @return
+	 */
+	public static AsyncContext getAsyncContext() {
+		return asyncContext.get();
+	}
+
+	/**
+	 * 
+	 * @Title: setAsyncContext
+	 * @Description:设置当前线程的asyncContext
+	 * @param value
+	 */
+	public static void setAsyncContext(AsyncContext value) {
+		asyncContext.set(value);
+	}
+
+	/**
+	 * 
+	 * @Title: deleteAsyncContext
+	 * @Description:删除当前线程的asyncContext
+	 */
+	public static void deleteAsyncContext() {
+		asyncContext.remove();
 	}
 }

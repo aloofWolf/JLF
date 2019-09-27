@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jlf</groupId>
+		<artifactId>JLF</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>JLF-PRODUCT</artifactId>
+	<packaging>pom</packaging>
+	<dependencies>
+		<!--依赖JLF核心模块 -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-CORE</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!--依赖JLF-SOA-MVC-SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-SOA-MVC-SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+	<modules>
+		<module>JLF-PRODUCT-QUARTZ</module>
+		<module>JLF-PRODUCT-OPS</module>
+		<module>JLF-PRODUCT-LOG</module>
+		<module>JLF-PRODUCT-WORKFLOW</module>
+	</modules>
+</project>

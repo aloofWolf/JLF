@@ -10,7 +10,6 @@ import org.jlf.soa.mvc.test.metadata.QuartzJobTransReq;
 import org.jlf.soa.mvc.test.metadata.QuartzJobUpdateReq;
 import org.jlf.soa.mvc.test.service.QuartzJobService;
 import org.jlf.soa.mvc.web.ann.JLFMVCRoute;
-import org.jlf.soa.mvc.web.ann.JLFMVCRouteMethod;
 
 /**
  * 
@@ -31,7 +30,7 @@ public class QuartzJobAction {
 	 * @param req
 	 * @return
 	 */
-	@JLFMVCRouteMethod(name = "getQuartzJob")
+	@JLFMVCRoute(name = "getQuartzJob")
 	public QuartzJob getQuartzJob(@JLFCheckAnn Long id) {
 		/*try {
 			Thread.sleep(5000);
@@ -50,7 +49,7 @@ public class QuartzJobAction {
 	 * @param id
 	 * @return
 	 */
-	@JLFMVCRouteMethod(name = "getQuartzJobRelate")
+	@JLFMVCRoute(name = "getQuartzJobRelate")
 	public QuartzJob getQuartzJobRelate(JLFMVCIdRequest req) {
 		return quartzJobService.getQuartzJobRelate(req.getId());
 	}
@@ -62,7 +61,7 @@ public class QuartzJobAction {
 	 * @param req
 	 * @return
 	 */
-	@JLFMVCRouteMethod(name = "saveQuartzJob")
+	@JLFMVCRoute(name = "saveQuartzJob")
 	public QuartzJob saveQuartzJob(QuartzJobSaveReq req) {
 		QuartzJob job = new QuartzJob();
 		job.setTemplateId(req.getTemplateId());
@@ -76,7 +75,7 @@ public class QuartzJobAction {
 	 * @Description:update方法测试
 	 * @param req
 	 */
-	@JLFMVCRouteMethod(name = "updateQuartzJob")
+	@JLFMVCRoute(name = "updateQuartzJob")
 	public void updateQuartzJob(QuartzJobUpdateReq req) {
 		QuartzJob job = new QuartzJob();
 		job.setId(req.getId());
@@ -91,7 +90,7 @@ public class QuartzJobAction {
 	 * @Description:delete方法测试
 	 * @param req
 	 */
-	@JLFMVCRouteMethod(name = "deleteQuartzJob")
+	@JLFMVCRoute(name = "deleteQuartzJob")
 	public void deleteQuartzJob(JLFMVCIdAndVersionRequest req) {
 		QuartzJob job = new QuartzJob();
 		job.setId(req.getId());
@@ -105,7 +104,7 @@ public class QuartzJobAction {
 	 * @Description:多数据库之间事物测试
 	 * @param req
 	 */
-	@JLFMVCRouteMethod(name = "transQuartzJob")
+	@JLFMVCRoute(name = "transQuartzJob")
 	public void transQuartzJob(QuartzJobTransReq req) {
 		QuartzJob job = new QuartzJob();
 		job.setTemplateId(req.getTemplateId());

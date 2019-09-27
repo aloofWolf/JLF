@@ -37,6 +37,7 @@ public class JLFMVCSessionFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		LogUtil.get().debug("dddddd="+((HttpServletRequest) request).getServletPath());
 		LogUtil.get().debug("JLFMVCSessionFilter过滤器开始执行.......");
 		JLFSessionBean sessionBean = null;
 		sessionBean = JLFSessionClient.get().validateToken((HttpServletRequest) request);

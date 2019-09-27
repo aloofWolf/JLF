@@ -25,7 +25,7 @@ public class SessionCacheConfig {
 	}
 
 	public void setTimeOut(Integer timeOut) {
-		this.timeOut = timeOut;
+		this.timeOut = timeOut*60;
 	}
 
 	public String getSessionBeanClsName() {

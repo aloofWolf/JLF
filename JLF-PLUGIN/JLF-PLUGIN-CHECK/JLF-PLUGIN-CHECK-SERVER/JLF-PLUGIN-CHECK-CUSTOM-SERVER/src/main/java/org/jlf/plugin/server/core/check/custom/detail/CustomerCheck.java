@@ -16,5 +16,4 @@ public class CustomerCheck extends ICheck<JLFJson> {
 	public JLFJson getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
 		return json.getJson(checkName);
 	}
-
 }

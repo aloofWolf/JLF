@@ -23,6 +23,8 @@ public abstract class ICheck<T extends Object> {
 	public static final String MAX_DATE_EXCEPTION_DESC = "超过最大日期限制";
 	public static final String MIN_DATE_EXCEPTION_DESC = "未达到最小日期限制";
 	public static final String CHECKED_EXCEPTION_DESC = "未在指定范围内";
+	
+	private static final String ERR_MSG = "参数校验失败,%s%s";
 
 	/**
 	 * 
@@ -67,7 +69,7 @@ public abstract class ICheck<T extends Object> {
 		if (fieldDesc == null || fieldDesc.length() <= 0) {
 			fieldDesc = checkName;
 		}
-		return new StringBuffer(fieldDesc).append(exceptionMsg).toString();
+		return String.format(ERR_MSG, fieldDesc,exceptionMsg);
 	}
 
 }

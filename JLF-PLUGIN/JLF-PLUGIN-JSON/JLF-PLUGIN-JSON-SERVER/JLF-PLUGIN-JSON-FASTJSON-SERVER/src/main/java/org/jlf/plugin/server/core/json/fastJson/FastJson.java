@@ -129,6 +129,9 @@ public class FastJson implements JLFJson {
 	@Override
 	public JLFJson getJson(String key) {
 		JSONObject obj = json.getJSONObject(key);
+		if(obj == null){
+			return null;
+		}
 		return new FastJson(obj);
 	}
 

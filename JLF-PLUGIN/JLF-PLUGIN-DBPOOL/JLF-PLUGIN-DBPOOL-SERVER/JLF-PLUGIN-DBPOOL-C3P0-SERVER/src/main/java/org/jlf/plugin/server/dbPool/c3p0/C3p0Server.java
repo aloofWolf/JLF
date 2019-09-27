@@ -28,21 +28,37 @@ public class C3p0Server extends JLFPluginServer<JLFDbPool> {
 	public JLFDbPool getServerApi() {
 		return new C3p0Core();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
 		Set<Class<CLIENT>> depends = new HashSet<Class<CLIENT>>();
 		depends.add((Class<CLIENT>) JLFCheckClient.class);
 		return depends;
-		
+
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void initConfig() {
-		JLFCheck ckeck = JLFCheckClient.get();
+	public void start() {
 		Properties prop = super.getConfig();
+		start(prop);
+	}
+
+	@Override
+	public void reStart() {
+		Properties prop = super.getConfig(true);
+		start(prop);
+	}
+
+	/**
+	 * 
+	 * @Title: start
+	 * @Description:Æô¶¯·þÎñ
+	 * @param prop
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void start(Properties prop) {
+		JLFCheck ckeck = JLFCheckClient.get();
 		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
 		C3p0MainConfig config = ckeck.check(map, C3p0MainConfig.class);
 		C3p0Pool.initMainDataSource(config);

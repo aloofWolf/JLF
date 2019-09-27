@@ -82,6 +82,10 @@ public class DateUtil {
 		return dayStr;
 	}
 
+	public static void main(String[] args) {
+		System.out.print(getDateString(new Date(), "YYYYMM"));
+	}
+
 	/**
 	 * 
 	 * @Title: formatDate
@@ -242,15 +246,16 @@ public class DateUtil {
 	 * @Description:根据指n定日期获取前几天（由参数interval指定）的日期字符串
 	 * @param date
 	 * @param interval
+	 * @param format
 	 * @return
 	 */
-	public static String getSomeDayBefore(Date date, int interval) {
+	public static String getSomeDayBefore(Date date, int interval, String format) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		int day = c.get(Calendar.DATE);
 		c.set(Calendar.DATE, day - interval);
 
-		String dayBefore = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+		String dayBefore = new SimpleDateFormat(format).format(c.getTime());
 		return dayBefore;
 	}
 
@@ -372,15 +377,16 @@ public class DateUtil {
 	 * @Description:根据指n定日期获取后几天（由参数interval指定）的日期字符串
 	 * @param date
 	 * @param interval
+	 * @param format
 	 * @return
 	 */
-	public static String getSomeDayAfter(Date date, int interval) {
+	public static String getSomeDayAfter(Date date, int interval, String format) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		int day = c.get(Calendar.DATE);
 		c.set(Calendar.DATE, day + interval);
 
-		String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+		String dayAfter = new SimpleDateFormat(format).format(c.getTime());
 		return dayAfter;
 	}
 

@@ -23,19 +23,24 @@ public class PushCustomServer extends JLFPluginServer<JLFPush> {
 	public JLFPush getServerApi() {
 		return new PushCustomCore();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public <CLIENT extends JLFPluginClient<?>> Set<Class<CLIENT>> getDepends() {
 		Set<Class<CLIENT>> depends = new HashSet<Class<CLIENT>>();
 		depends.add((Class<CLIENT>) JLFCheckClient.class);
 		return depends;
-		
+
 	}
 
 	@Override
-	public void initConfig() {
+	public void start() {
 		ChannelManager.init(super.getConfig());
+	}
+
+	@Override
+	public void reStart() {
+		ChannelManager.init(super.getConfig(true));
 	}
 
 }
