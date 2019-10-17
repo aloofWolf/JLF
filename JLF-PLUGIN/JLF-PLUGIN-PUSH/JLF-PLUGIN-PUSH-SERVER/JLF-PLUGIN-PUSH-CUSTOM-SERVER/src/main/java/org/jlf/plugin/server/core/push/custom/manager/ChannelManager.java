@@ -3,18 +3,15 @@ package org.jlf.plugin.server.core.push.custom.manager;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
+import org.jlf.common.util.IniContent;
 import org.jlf.common.util.LogUtil;
 import org.jlf.common.util.PackageUtil;
-import org.jlf.core.config.JLFConfig;
 import org.jlf.core.exception.JLFException;
-import org.jlf.plugin.push.server.api.JLFPush;
 import org.jlf.plugin.push.server.api.JLFPushChannelAnn;
 import org.jlf.plugin.push.server.api.JLFPushInterAnn;
 import org.jlf.plugin.push.user.api.channel.JLFPushChannel;
@@ -42,19 +39,14 @@ public class ChannelManager {
 	 * @param ini
 	 * @
 	 */
-	public static void init(Properties props) {
-		if (props != null) {
+	public static void init(IniContent content) {
+		if (content != null) {
 			intersBak = new HashMap<String, JLFPushInter<?, ?, ?>>();
-			for (Enumeration<Object> keys = props.keys(); keys.hasMoreElements();) {
-				String channelCode = (String) keys.nextElement();
-				String packages = props.getProperty(channelCode);
-				Properties config = JLFConfig.getPluginConfig(JLFPush.PLUGIN_NAME+"-"+channelCode);
-				if (config == null || config.isEmpty()) {
-					throw new JLFException("«˛µ¿±‡∫≈" + channelCode + "Œ¥’“µΩ≈‰÷√–≈œ¢");
+			List<IniContent> channelConfigs = content.getSectionArr("channel");
+			if(channelConfigs != null){
+				for(IniContent channelConfig : channelConfigs){
+					pasreChannel(channelConfig);
 				}
-				List<Class<?>> clss = PackageUtil.getPackageClss(packages);
-				JLFPushChannel<?> channel = pasreChannel(channelCode, clss, config);
-				pasreInter(channelCode, clss, channel);
 			}
 			
 			inters = intersBak;
@@ -81,7 +73,10 @@ public class ChannelManager {
 	 * @param config
 	 * @return @
 	 */
-	private static JLFPushChannel<?> pasreChannel(String channelCode, List<Class<?>> clss, Properties config) {
+	private static JLFPushChannel<?> pasreChannel(IniContent channelConfig) {
+		String channelCode = channelConfig.getValue("channelCode");
+		String packageName = channelConfig.getValue("packageName");
+		List<Class<?>> clss = PackageUtil.getPackageClss(packageName);
 		List<Class<?>> channels = new ArrayList<Class<?>>();
 		for (Class<?> channelCls : clss) {
 			JLFPushChannelAnn channelAnn = (JLFPushChannelAnn) channelCls.getAnnotation(JLFPushChannelAnn.class);
@@ -106,7 +101,8 @@ public class ChannelManager {
 			e.printStackTrace();
 			throw new JLFException(e);
 		}
-		channel.initConfig(config);
+		channel.initConfig(channelConfig.getPros());
+		pasreInter(channelCode, clss, channel);
 		return channel;
 	}
 

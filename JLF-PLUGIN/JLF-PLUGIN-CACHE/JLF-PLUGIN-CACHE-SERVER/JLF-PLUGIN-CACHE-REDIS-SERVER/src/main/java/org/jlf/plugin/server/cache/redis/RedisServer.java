@@ -45,13 +45,13 @@ public class RedisServer extends JLFPluginServer<JLFCache> {
 	
 	@Override
 	public void start() {
-		Properties prop = super.getConfig();
+		Properties prop = super.getConfig().getPros();
 		start(prop);
 	}
 
 	@Override
 	public void reStart() {
-		Properties prop = super.getConfig(true);
+		Properties prop = super.getConfig(true).getPros();
 		start(prop);
 	}
 

@@ -4,9 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,34 +18,33 @@ import java.util.regex.Pattern;
  */
 public class IniUtil {
 
-	private Properties pros = new Properties(); // 存储标签之外的属性
-	private Map<String, Properties> sections = new HashMap<String, Properties>();// 存储标签之内的属性
-	private String secionName;
-	private Properties secionProps;
-
 	/**
 	 * 
-	 * 创建一个新的实例 IniUtil,默认使用GBK编码.
-	 * 
-	 * @param filename
+	 * @Title: parse
+	 * @Description: 解析.ini文件,默认使用GBK编码
+	 * @param fileName
+	 * @return
 	 */
-	public IniUtil(String fileName) {
-		this(fileName, "GBK");
+	public static IniContent parse(String fileName) {
+		return parse(fileName, "GBK");
 	}
 
 	/**
 	 * 
-	 * 创建一个新的实例 IniUtil,调用者指定编码.
-	 * 
-	 * @param filename
+	 * @Title: parse
+	 * @Description: 解析.ini文件,调用者指定编码
+	 * @param fileName
+	 * @param character
+	 * @return
 	 */
-	public IniUtil(String fileName, String character) {
+	public static IniContent parse(String fileName, String character) {
 		InputStreamReader isr;
 		try {
 			isr = new InputStreamReader(new FileInputStream(fileName), character);
 			BufferedReader reader = new BufferedReader(isr);
-			read(reader);
+			IniContent content = read(reader);
 			reader.close();
+			return content;
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -60,17 +58,22 @@ public class IniUtil {
 	 * @Description:遍历每一行数据
 	 * @param reader
 	 */
-	private void read(BufferedReader reader) {
+	private static IniContent read(BufferedReader reader) {
+		IniContent content = new IniContent();
+		List<IniContent> contents = new LinkedList<IniContent>();
+		contents.add(content);
+		List<String> sectionNames = new LinkedList<String>();
 		String line;
 		try {
 			while ((line = reader.readLine()) != null) {
-				parseLine(line);
+				parseLine(line, contents, sectionNames);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+		return content;
 	}
 
 	/**
@@ -79,23 +82,32 @@ public class IniUtil {
 	 * @Description:解析每一行数据
 	 * @param line
 	 */
-	private void parseLine(String line) {
+	private static void parseLine(String line, List<IniContent> contents, List<String> sectionNames) {
 		line = line.trim();
 		if (line.matches("\\[/.*\\]")) {
-
-			if (line.replaceFirst("\\[/(.*)\\]", "$1").equals(secionName)) {
-				secionName = null;
-				secionProps = null;
+			String currSecionName = sectionNames.get(0);
+			if (line.replaceFirst("\\[/(.*)\\]", "$1").equals(currSecionName)) {
+				sectionNames.remove(0);
+				contents.remove(0);
 			} else {
 				throw new RuntimeException(".ini文件格式有误");
 			}
 		} else if (line.matches("\\[.*\\]")) {
-			if (secionName != null) {
-				throw new RuntimeException(".ini文件格式有误");
+
+			String sectionName = line.replaceFirst("\\[(.*)\\]", "$1");
+			IniContent currContent = contents.get(0);
+			IniContent newContent = new IniContent();
+			if (currContent.getSectionArr(sectionName) != null) {
+				currContent.putSectionArr(sectionName, newContent);
+			} else if (currContent.getSection(sectionName) != null) {
+				currContent.putSectionArr(sectionName, currContent.getSection(sectionName));
+				currContent.putSectionArr(sectionName, newContent);
+				currContent.removeSection(sectionName);
+			} else {
+				currContent.putSection(sectionName, newContent);
 			}
-			secionName = line.replaceFirst("\\[(.*)\\]", "$1");
-			secionProps = new Properties();
-			sections.put(secionName, secionProps);
+			sectionNames.add(0, sectionName);
+			contents.add(0, newContent);
 		} else if (line.matches("^#[^#]*$")) {
 
 		} else {
@@ -104,74 +116,10 @@ public class IniUtil {
 			if (matcher.matches()) {
 				String name = matcher.group(1).trim();
 				String value = matcher.group(2).trim();
-				if (secionProps != null) {
-
-					secionProps.setProperty(name, value);
-				} else {
-					pros.setProperty(name, value);
-				}
+				IniContent currContent = contents.get(0);
+				currContent.putProp(name, value);
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @Title: getSection
-	 * @Description:获取标签内的全部属性
-	 * @param section
-	 * @return
-	 */
-	public Properties getSection(String section) {
-		return sections.get(section);
-	}
-
-	/**
-	 * 
-	 * @Title: getValue
-	 * @Description:获取标签外的数据值
-	 * @param name
-	 * @return
-	 */
-	public String getValue(String name) {
-		return pros.getProperty(name);
-	}
-
-	/**
-	 * 
-	 * @Title: getValue
-	 * @Description:获取标签内的某个属性值
-	 * @param section
-	 * @param name
-	 * @return
-	 */
-	public String getValue(String section, String name) {
-		Properties p = (Properties) sections.get(section);
-
-		if (p == null) {
-			return null;
-		}
-		String value = p.getProperty(name);
-		return value;
-	}
-
-	/**
-	 * 
-	 * @Title: getPros
-	 * @Description:pros
-	 * @return
-	 */
-	public Properties getPros() {
-		return pros;
-	}
-
-	/**
-	 * 
-	 * @Title: getSections
-	 * @Description:sections
-	 * @return
-	 */
-	public Map<String, Properties> getSections() {
-		return sections;
 	}
 
 }

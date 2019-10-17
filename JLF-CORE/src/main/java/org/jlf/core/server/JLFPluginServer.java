@@ -1,10 +1,10 @@
 package org.jlf.core.server;
 
 import java.lang.reflect.Field;
-import java.util.Properties;
 import java.util.Set;
 
 import org.jlf.common.util.GenericityUtil;
+import org.jlf.common.util.IniContent;
 import org.jlf.common.util.LogUtil;
 import org.jlf.core.api.JLFPluginServerApi;
 import org.jlf.core.client.JLFPluginClient;
@@ -103,7 +103,7 @@ public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 	 * @Description:获取服务端配置,不用重新加载配置文件
 	 * @return
 	 */
-	public Properties getConfig() {
+	public IniContent getConfig() {
 		return getConfig(false);
 
 	}
@@ -116,16 +116,16 @@ public abstract class JLFPluginServer<SERVER_API extends JLFPluginServerApi> {
 	 *            是否需要重新加载配置文件
 	 * @return
 	 */
-	public Properties getConfig(boolean reLoadConfig) {
+	public IniContent getConfig(boolean reLoadConfig) {
 		Class<SERVER_API> serverApiCls = GenericityUtil.getObjSuperClsGenerCls(this.getClass());
 		Field pluginField;
 		try {
 			pluginField = serverApiCls.getField("PLUGIN_NAME");
 			String pluginName = (String) pluginField.get(serverApiCls);
-			Properties config = JLFConfig.getPluginConfig(pluginName, reLoadConfig);
+			IniContent config = JLFConfig.getPluginConfig(pluginName, reLoadConfig);
 
 			if (config == null) {
-				config = new Properties();
+				config = new IniContent();
 			}
 			return config;
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {

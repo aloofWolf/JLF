@@ -1,14 +1,16 @@
 [plugin-push]
+  [channel]
+    channelCode=socket
+    packageName=org.jlf.plugin.push.test.socket
+    ip=127.0.0.1
+    port=8081
+  [/channel]
+  [channel]
+    channelCode=http
+    packageName=org.jlf.plugin.push.test.http
+    hostName=mvctest
+    url=http://127.0.0.1:8080/mvctest/JLF
+  [/channel]
 socket=org.jlf.plugin.push.test.socket
 http=org.jlf.plugin.push.test.http
 [/plugin-push]
-
-[plugin-push-socket]
-ip=127.0.0.1
-port=8081
-[/plugin-push-socket]
-
-[plugin-push-http]
-hostName=mvctest
-url=http://127.0.0.1:8080/mvctest/JLF
-[/plugin-push-http]

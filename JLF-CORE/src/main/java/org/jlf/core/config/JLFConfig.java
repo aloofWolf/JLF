@@ -1,7 +1,6 @@
 package org.jlf.core.config;
 
-import java.util.Properties;
-
+import org.jlf.common.util.IniContent;
 import org.jlf.common.util.IniUtil;
 import org.jlf.common.util.PathUtil;
 
@@ -17,7 +16,7 @@ public class JLFConfig {
 	private static String configFilePath = PathUtil.getRootPath(); // 配置文件路径
 	private static String configFileName = "JLF.ini"; // 配置文件名
 
-	private static IniUtil jLFConfig; // 项目配置
+	private static IniContent jLFConfig; // 项目配置
 
 	private static final String pluginConfigName = "plugin-%s";
 	private static final String productConfigName = "product-%s";
@@ -33,7 +32,7 @@ public class JLFConfig {
 	 * @Description: 加载配置
 	 */
 	private static void loadConfig() {
-		jLFConfig = new IniUtil(new StringBuffer(configFilePath).append(configFileName).toString());
+		jLFConfig =   IniUtil.parse(new StringBuffer(configFilePath).append(configFileName).toString());
 	}
 
 	/**
@@ -43,7 +42,7 @@ public class JLFConfig {
 	 * @param pluginName
 	 * @return
 	 */
-	public static Properties getPluginConfig(String pluginName) {
+	public static IniContent getPluginConfig(String pluginName) {
 		return getPluginConfig(pluginName, false);
 	}
 
@@ -56,7 +55,7 @@ public class JLFConfig {
 	 *            是否需要重新加载配置文件
 	 * @return
 	 */
-	public static Properties getPluginConfig(String pluginName, boolean reLoadConfig) {
+	public static IniContent getPluginConfig(String pluginName, boolean reLoadConfig) {
 
 		if (reLoadConfig) {
 			loadConfig();
@@ -71,7 +70,7 @@ public class JLFConfig {
 	 * @param productName
 	 * @return
 	 */
-	public static Properties getProductConfig(String productName) {
+	public static IniContent getProductConfig(String productName) {
 		return getProductConfig(productName, false);
 	}
 
@@ -84,7 +83,7 @@ public class JLFConfig {
 	 *            是否需要重新加载配置文件
 	 * @return
 	 */
-	public static Properties getProductConfig(String productName, boolean reLoadConfig) {
+	public static IniContent getProductConfig(String productName, boolean reLoadConfig) {
 		if (reLoadConfig) {
 			loadConfig();
 		}
@@ -98,7 +97,7 @@ public class JLFConfig {
 	 * @param pluginName
 	 * @return
 	 */
-	public static Properties getSoaConfig(String soaName) {
+	public static IniContent getSoaConfig(String soaName) {
 		return getSoaConfig(soaName, false);
 	}
 
@@ -111,7 +110,7 @@ public class JLFConfig {
 	 *            是否需要重新加载配置文件
 	 * @return
 	 */
-	public static Properties getSoaConfig(String soaName, boolean reLoadConfig) {
+	public static IniContent getSoaConfig(String soaName, boolean reLoadConfig) {
 		if (reLoadConfig) {
 			loadConfig();
 		}

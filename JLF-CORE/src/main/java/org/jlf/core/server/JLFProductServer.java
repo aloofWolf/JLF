@@ -1,9 +1,9 @@
 package org.jlf.core.server;
 
 import java.lang.reflect.Field;
-import java.util.Properties;
 
 import org.jlf.common.util.GenericityUtil;
+import org.jlf.common.util.IniContent;
 import org.jlf.common.util.LogUtil;
 import org.jlf.core.api.JLFProductServerApi;
 import org.jlf.core.config.JLFConfig;
@@ -91,7 +91,7 @@ public abstract class JLFProductServer<SERVER_API extends JLFProductServerApi> {
 	 * @Description:获取服务端配置,不用重新加载配置文件
 	 * @return
 	 */
-	public Properties getConfig() {
+	public IniContent getConfig() {
 		return getConfig(false);
 
 	}
@@ -104,16 +104,16 @@ public abstract class JLFProductServer<SERVER_API extends JLFProductServerApi> {
 	 *            是否需要重新加载配置文件
 	 * @return
 	 */
-	public Properties getConfig(boolean reLoadConfig) {
+	public IniContent getConfig(boolean reLoadConfig) {
 		Class<SERVER_API> serverApiCls = GenericityUtil.getObjSuperClsGenerCls(this.getClass());
 		Field productField;
 		try {
 			productField = serverApiCls.getField("PRODUCT_NAME");
 			String productName = (String) productField.get(serverApiCls);
-			Properties config = JLFConfig.getPluginConfig(productName, reLoadConfig);
+			IniContent config = JLFConfig.getPluginConfig(productName, reLoadConfig);
 
 			if (config == null) {
-				config = new Properties();
+				config = new IniContent();
 			}
 			return config;
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {

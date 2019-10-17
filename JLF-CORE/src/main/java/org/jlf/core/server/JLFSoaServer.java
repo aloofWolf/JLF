@@ -1,7 +1,6 @@
 package org.jlf.core.server;
 
-import java.util.Properties;
-
+import org.jlf.common.util.IniContent;
 import org.jlf.common.util.LogUtil;
 import org.jlf.core.config.JLFConfig;
 
@@ -83,7 +82,7 @@ public abstract class JLFSoaServer {
 	 * @Description:获取服务端配置,不用重新加载配置文件
 	 * @return
 	 */
-	public Properties getConfig() {
+	public IniContent getConfig() {
 		return getConfig(false);
 	}
 
@@ -95,10 +94,10 @@ public abstract class JLFSoaServer {
 	 *            是否需要重新加载配置文件
 	 * @return
 	 */
-	public Properties getConfig(boolean reLoadConfig) {
-		Properties config = JLFConfig.getSoaConfig(getSoaName(), reLoadConfig);
+	public IniContent getConfig(boolean reLoadConfig) {
+		IniContent config = JLFConfig.getSoaConfig(getSoaName(), reLoadConfig);
 		if (config == null) {
-			config = new Properties();
+			config = new IniContent();
 		}
 		return config;
 	}

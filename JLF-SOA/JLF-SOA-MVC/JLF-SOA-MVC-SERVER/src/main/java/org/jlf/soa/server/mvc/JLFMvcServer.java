@@ -78,7 +78,7 @@ public class JLFMvcServer extends JLFSoaServer {
 	@Override
 	public void start() {
 		try {
-			Properties prop = getConfig();
+			Properties prop = getConfig().getPros();
 			start(prop);
 		} catch (Exception e) {
 			throw new JLFException(e);
@@ -88,7 +88,7 @@ public class JLFMvcServer extends JLFSoaServer {
 	@Override
 	public void reStart() {
 		try {
-			Properties prop = getConfig(true);
+			Properties prop = getConfig(true).getPros();
 			start(prop);
 		} catch (Exception e) {
 			throw new JLFException(e);
