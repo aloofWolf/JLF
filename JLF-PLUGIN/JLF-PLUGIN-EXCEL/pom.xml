@@ -13,6 +13,5 @@
 		<module>JLF-PLUGIN-EXCEL-SERVER</module>
 		<module>JLF-PLUGIN-EXCEL-CLIENT</module>
 		<module>JLF-PLUGIN-EXCEL-TEST</module>
-		<module>JLF-PLUGIN-EXCEL-PROVIDE</module>
 	</modules>
 </project>

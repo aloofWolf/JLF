@@ -29,5 +29,10 @@ public class JLFTemplateClient implements JLFPluginClient<JLFTemplate> {
 	public <SERVER extends JLFPluginServer<JLFTemplate>> void bindServer(SERVER server) {
 		api = server.getServerApi();
 	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.template.velocity.VelocityServer";
+	}
 
 }

@@ -21,12 +21,6 @@
 			<artifactId>JLF-PLUGIN-SESSION-CLIENT</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF-PLUGIN-SESSION-CACHE-SERVER -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-SESSION-CACHE-SERVER</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
 		<!--依赖servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

@@ -28,7 +28,11 @@ public class JLFDbPoolClient implements JLFPluginClient<JLFDbPool> {
 	@Override
 	public <SERVER extends JLFPluginServer<JLFDbPool>> void bindServer(SERVER server) {
 		api = server.getServerApi();
-
+	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.dbPool.c3p0.C3p0Server";
 	}
 
 }

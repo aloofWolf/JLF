@@ -14,5 +14,12 @@
 			<artifactId>JLF-PLUGIN-MQ-SERVER-API</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
+		
+		<!--依赖JLF-PLUGIN-MQ-ACTIVEMQ-SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-MQ-ACTIVEMQ-SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
 	</dependencies>
 </project>

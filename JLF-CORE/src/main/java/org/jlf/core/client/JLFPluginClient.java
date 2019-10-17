@@ -21,4 +21,12 @@ public interface JLFPluginClient<SERVER_API extends JLFPluginServerApi> {
 	 */
 	public <SERVER extends JLFPluginServer<SERVER_API>> void bindServer(SERVER server);
 
+	/**
+	 * 
+	 * @Title: getDefaultServer
+	 * @Description:插件默认绑定的服务端的类的全名
+	 * @return
+	 */
+	public String getDefaultServerClsName();
+
 }

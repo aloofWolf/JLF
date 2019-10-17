@@ -13,7 +13,6 @@ import org.jlf.core.api.JLFProductWebApi;
 import org.jlf.core.client.JLFPluginClient;
 import org.jlf.core.client.JLFProductClient;
 import org.jlf.core.exception.JLFException;
-import org.jlf.core.provide.JLFPluginProvide;
 import org.jlf.core.server.JLFPluginServer;
 import org.jlf.core.server.JLFProductServer;
 import org.jlf.core.server.JLFSoaServer;
@@ -29,7 +28,6 @@ public abstract class JLFCore {
 
 	private static final String PLUGIN_CLIENT_PACKAGE_NAME = "org.jlf.plugin.client";
 	private static final String PLUGIN_SERVER_PACKAGE_NAME = "org.jlf.plugin.server.%s";
-	private static final String PLUGIN_PROVIDE_PACKAGE_NAME = "org.jlf.plugin.provide.%s";
 	private static final String PLUGIN_FIELD_NAME = "PLUGIN_NAME";
 	private static final String PRODUCT_CLIENT_PACKAGE_NAME = "org.jlf.product.client";
 	private static final String PRODUCT_SERVER_PACKAGE_NAME = "org.jlf.product.server.%s";
@@ -84,8 +82,6 @@ public abstract class JLFCore {
 		Field pluginField;
 		String pluginName;
 		String pluginServerPackageName;
-		String pluginProvidePackageName;
-		List<Class<?>> provideClss;
 		List<Class<?>> serverClss;
 		Class<?> serverCls;
 		JLFPluginServer<SERVER_API> server;
@@ -105,18 +101,9 @@ public abstract class JLFCore {
 				throw new JLFException(exceptionDesc);
 			}
 			if (serverClss.size() == 2) {
-				pluginProvidePackageName = String.format(PLUGIN_PROVIDE_PACKAGE_NAME, pluginName);
-				provideClss = PackageUtil.getPackageClss(pluginProvidePackageName, new JLFPluginProvideClsFilter());
-				if (provideClss.size() == 0) {
-					String exceptionDesc = String.format("客户端%s对应的服务端匹配到多个", clientCls.getSimpleName());
-					throw new JLFException(exceptionDesc);
-				}
-				Class<?> provideCls = provideClss.get(0);
-				JLFPluginProvide<SERVER_API> provide = (JLFPluginProvide<SERVER_API>) provideCls.newInstance();
-				Class<? extends JLFPluginServer<SERVER_API>> defaultServerCls = provide.getDefaultServer();
-				if (serverClss.get(0).equals(defaultServerCls)) {
+				if (serverClss.get(0).getName().equals(client.getDefaultServerClsName())) {
 					serverClss.remove(0);
-				} else if (serverClss.get(1).equals(defaultServerCls)) {
+				} else if (serverClss.get(1).getName().equals(client.getDefaultServerClsName())) {
 					serverClss.remove(1);
 				} else {
 					String exceptionDesc = String.format("客户端%s对应的服务端匹配到多个", clientCls.getSimpleName());

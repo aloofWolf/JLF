@@ -28,7 +28,11 @@ public class JLFMqClient implements JLFPluginClient<JLFMq> {
 	@Override
 	public <SERVER extends JLFPluginServer<JLFMq>> void bindServer(SERVER server) {
 		api = server.getServerApi();
-
+	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.mq.activeMq.ActiveMqServer";
 	}
 
 }

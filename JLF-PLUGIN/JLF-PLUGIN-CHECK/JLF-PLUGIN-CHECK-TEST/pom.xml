@@ -18,12 +18,7 @@
 			<artifactId>JLF-PLUGIN-CHECK-CLIENT</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF-PLUGIN-CHECK-CUSTOM-SERVER -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-CHECK-CUSTOM-SERVER</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
+		
 		<!--依赖slf4j-log4j12 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

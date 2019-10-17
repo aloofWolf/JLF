@@ -19,22 +19,10 @@
 			<artifactId>JLF-PLUGIN-PUSH-CLIENT</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF-PLUGIN-PUSH-CUSTOM-SERVER -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-PUSH-CUSTOM-SERVER</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
 		<!--依赖JLF-PLUGIN-THREADPOOL-CLIENT -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>JLF-PLUGIN-THREADPOOL-CLIENT</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
-		<!--依赖JLF-PLUGIN-THREADPOOL-CUSTOM-SERVER -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-THREADPOOL-CUSTOM-SERVER</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 		<!--依赖slf4j-log4j12 -->

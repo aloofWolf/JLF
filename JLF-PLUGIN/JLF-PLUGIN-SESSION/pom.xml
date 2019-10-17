@@ -13,6 +13,5 @@
 		<module>JLF-PLUGIN-SESSION-SERVER</module>
 		<module>JLF-PLUGIN-SESSION-CLIENT</module>
 		<module>JLF-PLUGIN-SESSION-TEST</module>
-		<module>JLF-PLUGIN-SESSION-PROVIDE</module>
 	</modules>
 </project>

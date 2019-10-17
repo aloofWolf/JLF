@@ -13,6 +13,5 @@
 		<module>JLF-PLUGIN-CHECK-SERVER</module>
 		<module>JLF-PLUGIN-CHECK-CLIENT</module>
 		<module>JLF-PLUGIN-CHECK-TEST</module>
-		<module>JLF-PLUGIN-CHECK-PROVIDE</module>
 	</modules>
 </project>

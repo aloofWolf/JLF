@@ -24,12 +24,6 @@
 			<artifactId>JLF-PLUGIN-CHECK-CLIENT</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF-PLUGIN-CHECK-PROVIDE -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-CHECK-PROVIDE</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
 	</dependencies>
 
 </project>

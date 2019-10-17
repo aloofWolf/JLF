@@ -26,6 +26,5 @@
 		<module>JLF-PRODUCT-QUARTZ</module>
 		<module>JLF-PRODUCT-OPS</module>
 		<module>JLF-PRODUCT-LOG</module>
-		<module>JLF-PRODUCT-WORKFLOW</module>
 	</modules>
 </project>

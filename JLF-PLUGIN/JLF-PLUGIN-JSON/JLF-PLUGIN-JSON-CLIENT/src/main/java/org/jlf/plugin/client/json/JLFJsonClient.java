@@ -28,7 +28,11 @@ public class JLFJsonClient implements JLFPluginClient<JLFJsonFactory> {
 	@Override
 	public <SERVER extends JLFPluginServer<JLFJsonFactory>> void bindServer(SERVER server) {
 		api = server.getServerApi();
-
+	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.json.fastJson.FastJsonServer";
 	}
 
 }

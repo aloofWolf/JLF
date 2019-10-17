@@ -28,6 +28,10 @@ public class JLFSessionClient implements JLFPluginClient<JLFSession> {
 	@Override
 	public <SERVER extends JLFPluginServer<JLFSession>> void bindServer(SERVER server) {
 		api = server.getServerApi();
-
+	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.session.cache.SessionCacheServer";
 	}
 }

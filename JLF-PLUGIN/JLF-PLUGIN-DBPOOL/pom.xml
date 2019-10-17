@@ -13,6 +13,5 @@
 		<module>JLF-PLUGIN-DBPOOL-SERVER</module>
 		<module>JLF-PLUGIN-DBPOOL-CLIENT</module>
 		<module>JLF-PLUGIN-DBPOOL-TEST</module>
-		<module>JLF-PLUGIN-DBPOOL-PROVIDE</module>
 	</modules>
 </project>

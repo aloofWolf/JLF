@@ -14,5 +14,12 @@
 			<artifactId>JLF-PLUGIN-AOP-SERVER-API</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
+		
+		<!--依赖JLF-PLUGIN-AOP-CGLIB-SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-AOP-CGLIB-SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
 	</dependencies>
 </project>

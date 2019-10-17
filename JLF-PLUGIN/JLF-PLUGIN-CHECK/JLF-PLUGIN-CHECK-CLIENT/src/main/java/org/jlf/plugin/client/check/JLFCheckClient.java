@@ -28,7 +28,11 @@ public class JLFCheckClient implements JLFPluginClient<JLFCheck> {
 	@Override
 	public <SERVER extends JLFPluginServer<JLFCheck>> void bindServer(SERVER server) {
 		api = server.getServerApi();
-
+	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.check.custom.CheckCustomServer";
 	}
 
 }

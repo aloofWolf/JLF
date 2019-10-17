@@ -29,5 +29,10 @@ public class JLFExcelClient implements JLFPluginClient<JLFExcel> {
 	public <SERVER extends JLFPluginServer<JLFExcel>> void bindServer(SERVER server) {
 		api = server.getServerApi();
 	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.excel.apachePoi.ExcelApachePoiServer";
+	}
 
 }

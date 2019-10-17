@@ -13,6 +13,5 @@
 		<module>JLF-PLUGIN-TEMPLATE-SERVER</module>
 		<module>JLF-PLUGIN-TEMPLATE-CLIENT</module>
 		<module>JLF-PLUGIN-TEMPLATE-TEST</module>
-		<module>JLF-PLUGIN-TEMPLATE-PROVIDE</module>
 	</modules>
 </project>

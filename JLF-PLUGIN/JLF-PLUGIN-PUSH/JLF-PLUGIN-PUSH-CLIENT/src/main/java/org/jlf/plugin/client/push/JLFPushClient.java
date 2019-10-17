@@ -29,5 +29,10 @@ public class JLFPushClient implements JLFPluginClient<JLFPush> {
 	public <SERVER extends JLFPluginServer<JLFPush>> void bindServer(SERVER server) {
 		api = server.getServerApi();
 	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.push.custom.PushCustomServer";
+	}
 
 }

@@ -28,7 +28,11 @@ public class JLFCacheClient implements JLFPluginClient<JLFCache> {
 	@Override
 	public <SERVER extends JLFPluginServer<JLFCache>> void bindServer(SERVER server) {
 		api = server.getServerApi();
-
+	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.cache.redis.RedisServer";
 	}
 
 }

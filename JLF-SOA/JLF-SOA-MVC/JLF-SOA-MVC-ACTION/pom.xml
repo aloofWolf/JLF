@@ -31,18 +31,11 @@
 			<artifactId>JLF-PLUGIN-JSON-CLIENT</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF-PLUGIN-JSON-PROVIDE -->
 		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-JSON-PROVIDE</artifactId>
-			<version>${parent.version}</version>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.4</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-<dependency>
-    <groupId>commons-io</groupId>
-    <artifactId>commons-io</artifactId>
-    <version>2.4</version>
-</dependency>
 		
 	</dependencies>
 </project>

@@ -11,17 +11,10 @@
 		<log4j.version>1.7.2</log4j.version>
 	</properties>
 	<dependencies>
-		<!--依赖JLF_PLUGIN_AOP_CLIENT -->
+		<!--依赖JLF-PLUGIN-AOP-CLIENT -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>JLF-PLUGIN-AOP-CLIENT</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
-
-		<!--依赖JLF_PLUGIN_AOP_CGLIB-SERVER -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-AOP-JDK-SERVER</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 

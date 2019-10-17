@@ -15,5 +15,12 @@
 			<artifactId>JLF-PLUGIN-DBPOOL-SERVER-API</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
+		
+		<!--依赖JLF-PLUGIN-DBPOOL-C3P0-SERVER -->
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>JLF-PLUGIN-DBPOOL-C3P0-SERVER</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -13,6 +13,5 @@
 		<module>JLF-PLUGIN-PUSH-SERVER</module>
 		<module>JLF-PLUGIN-PUSH-CLIENT</module>
 		<module>JLF-PLUGIN-PUSH-TEST</module>
-		<module>JLF-PLUGIN-PUSH-PROVIDE</module>
 	</modules>
 </project>

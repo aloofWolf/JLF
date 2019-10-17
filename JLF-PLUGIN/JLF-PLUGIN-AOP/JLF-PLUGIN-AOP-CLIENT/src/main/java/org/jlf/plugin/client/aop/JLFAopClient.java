@@ -30,4 +30,10 @@ public class JLFAopClient implements JLFPluginClient<JLFAop> {
 		api = server.getServerApi();
 	}
 
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.aop.cglib.AopCglibServer";
+	}
+
+
 }

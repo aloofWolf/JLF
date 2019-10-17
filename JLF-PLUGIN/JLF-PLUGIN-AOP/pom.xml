@@ -12,6 +12,5 @@
   	<module>JLF-PLUGIN-AOP-SERVER</module>
   	<module>JLF-PLUGIN-AOP-CLIENT</module>
   	<module>JLF-PLUGIN-AOP-TEST</module>
-  	<module>JLF-PLUGIN-AOP-PROVIDE</module>
   </modules>
 </project>

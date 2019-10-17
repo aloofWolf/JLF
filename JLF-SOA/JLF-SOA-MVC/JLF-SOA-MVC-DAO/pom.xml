@@ -19,22 +19,10 @@
 			<artifactId>JLF-PLUGIN-DBPOOL-CLIENT</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF-PLUGIN-DBPOOL-PROVIDE -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-DBPOOL-PROVIDE</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
 		<!--依赖JLF-PLUGIN-CACHE-CLIENT -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>JLF-PLUGIN-CACHE-CLIENT</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
-		<!--依赖JLF-PLUGIN-CACHE-PROVIDE -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-CACHE-PROVIDE</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 		<!--依赖JLF-PLUGIN-SESSION-CLIENT -->
@@ -43,22 +31,10 @@
 			<artifactId>JLF-PLUGIN-SESSION-CLIENT</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<!--依赖JLF-PLUGIN-SESSION-PROVIDE -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-SESSION-PROVIDE</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
 		<!--依赖JLF-PLUGIN-MQ-CLIENT -->
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>JLF-PLUGIN-MQ-CLIENT</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
-		<!--依赖JLF-PLUGIN-MQ-PROVIDE -->
-		<dependency>
-			<groupId>${groupId}</groupId>
-			<artifactId>JLF-PLUGIN-MQ-PROVIDE</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 		<!--依赖JLF-SOA-MVC-METADATA -->

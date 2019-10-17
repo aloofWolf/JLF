@@ -28,7 +28,11 @@ public class JLFThreadPoolClient implements JLFPluginClient<JLFThreadPool> {
 	@Override
 	public <SERVER extends JLFPluginServer<JLFThreadPool>> void bindServer(SERVER server) {
 		api = server.getServerApi();
-
+	}
+	
+	@Override
+	public String getDefaultServerClsName() {
+		return "org.jlf.plugin.server.threadPool.custom.ThreadPoolCustomServer";
 	}
 
 }

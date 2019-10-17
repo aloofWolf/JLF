@@ -13,6 +13,5 @@
 		<module>JLF-PLUGIN-MQ-SERVER</module>
 		<module>JLF-PLUGIN-MQ-CLIENT</module>
 		<module>JLF-PLUGIN-MQ-TEST</module>
-		<module>JLF-PLUGIN-MQ-PROVIDE</module>
 	</modules>
 </project>
