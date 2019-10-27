@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.jlf.common.enums.api.IEnum;
 import org.jlf.common.util.ClassUtil;
@@ -49,6 +50,14 @@ public class CheckCustom implements JLFCheck {
 		JLFJson json = JLFJsonClient.get().mapToJson(map);
 		return checkCls(json, cls);
 	}
+	
+	@Override
+	public <T> T check(Properties prop, Class<T> cls) {
+		JLFJson json = JLFJsonClient.get().beanToJson(prop);
+		return checkCls(json, cls);
+	}
+
+	
 
 	@Override
 	public Object[] check(String jsonStr, Method method) {
@@ -62,6 +71,11 @@ public class CheckCustom implements JLFCheck {
 		return checkMethod(json, method);
 	}
 	
+	@Override
+	public Object[] check(Properties prop, Method method) {
+		JLFJson json = JLFJsonClient.get().beanToJson(prop);
+		return checkMethod(json, method);
+	}
 	/**
 	 * 
 	 * @Title: checkCls
@@ -103,7 +117,10 @@ public class CheckCustom implements JLFCheck {
 			Object value = getValue(json, checkBean, field,JLFCheckType.FIELD,field.getType(),field.getName());
 			checkValue(fieldName, ann, checkBean, value);
 			value = recursive(field,JLFCheckType.FIELD, fieldCls, value);
-			setValue(cls, t, field, fieldCls, value);
+			if(value != null){
+				setValue(cls, t, field, fieldCls, value);
+			}
+			
 		}
 		return t;
 	}
@@ -255,6 +272,8 @@ public class CheckCustom implements JLFCheck {
 		}
 
 	}
+
+	
 
 	
 

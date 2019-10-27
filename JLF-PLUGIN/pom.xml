@@ -28,5 +28,6 @@
 		<module>JLF-PLUGIN-PUSH</module>
 		<module>JLF-PLUGIN-THREADPOOL</module>
 		<module>JLF-PLUGIN-SESSION</module>
+		<module>JLF-PLUGIN-RPC</module>
 	</modules>
 </project>

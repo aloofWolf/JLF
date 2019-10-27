@@ -1,8 +1,6 @@
 package org.jlf.plugin.server.session.cache;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -58,11 +56,9 @@ public class SessionCacheServer extends JLFPluginServer<JLFSession> {
 	 * @Description:Æô¶¯·þÎñ
 	 * @param prop
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void start(Properties prop) {
 		JLFCheck ckeck = JLFCheckClient.get();
-		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		SessionCacheConfig config = ckeck.check(map, SessionCacheConfig.class);
+		SessionCacheConfig config = ckeck.check(prop, SessionCacheConfig.class);
 		SessionCacheBean.setConfig(config);
 	}
 }

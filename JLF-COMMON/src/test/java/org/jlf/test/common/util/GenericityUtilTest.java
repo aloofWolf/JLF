@@ -23,7 +23,7 @@ public class GenericityUtilTest {
 	 * 
 	 * @Title: getParameterGenerCls
 	 * @Description:获取方法参数中的泛型所属的class测试
-	 *//*
+	 */
 	@Test
 	public <T> void getParameterGenerCls() {
 		Method method = null;
@@ -38,11 +38,11 @@ public class GenericityUtilTest {
 		System.out.println(GenericityUtil.getParameterGenerCls(parameter, 1));
 	}
 
-	*//**
+	/**
 	 * 
 	 * @Title: getFieldGenerCls
 	 * @Description:获取成员变量字段中的泛型所属的class测试
-	 *//*
+	 */
 	@Test
 	public <T> void getFieldGenerCls() {
 		Field field = null;
@@ -55,22 +55,22 @@ public class GenericityUtilTest {
 		System.out.println(GenericityUtil.getFieldGenerCls(field, 1));
 	}
 
-	*//**
+	/**
 	 * 
 	 * @Title: getObjSuperClsGenerCls
 	 * @Description:获获取当前对象继承类的泛型所属的class测试
-	 *//*
+	 */
 	@Test
 	public <T> void getObjSuperClsGenerCls() {
 		System.out.println(GenericityUtil.getObjSuperClsGenerCls(ChildC.class));
 		System.out.println(GenericityUtil.getObjSuperClsGenerCls(ChildC.class, 1));
 	}
 
-	*//**
+	/**
 	 * 
 	 * @Title: getObjSuperClsGenerCls
 	 * @Description:获获取当前对象实现接口的泛型所属的class测试
-	 *//*
+	 */
 	@Test
 	public <T> void getObjSuperInterGenerCls() {
 		System.out.println(GenericityUtil.getObjSuperInterGenerCls(ChildI.class));
@@ -78,10 +78,10 @@ public class GenericityUtilTest {
 	}
 
 	public void test(List<String> list, Map<Long, Object> map) {
-	}*/
+	}
 }
 
-/*class ParentC<T extends Object, V extends List<?>> {
+class ParentC<T extends Object, V extends List<?>> {
 
 }
 
@@ -104,4 +104,3 @@ class ChildI implements ParentI<Long, ArrayList> {
 	private Map<String, Long> l;
 
 }
-*/

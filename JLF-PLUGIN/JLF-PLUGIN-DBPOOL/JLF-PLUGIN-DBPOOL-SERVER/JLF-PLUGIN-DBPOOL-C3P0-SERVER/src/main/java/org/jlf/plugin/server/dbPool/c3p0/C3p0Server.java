@@ -1,8 +1,6 @@
 package org.jlf.plugin.server.dbPool.c3p0;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -56,11 +54,9 @@ public class C3p0Server extends JLFPluginServer<JLFDbPool> {
 	 * @Description:Æô¶¯·þÎñ
 	 * @param prop
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void start(Properties prop) {
 		JLFCheck ckeck = JLFCheckClient.get();
-		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		C3p0MainConfig config = ckeck.check(map, C3p0MainConfig.class);
+		C3p0MainConfig config = ckeck.check(prop, C3p0MainConfig.class);
 		C3p0Pool.initMainDataSource(config);
 	}
 

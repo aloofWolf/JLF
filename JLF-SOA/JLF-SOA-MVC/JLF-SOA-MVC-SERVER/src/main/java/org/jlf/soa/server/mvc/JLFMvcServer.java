@@ -4,9 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -95,10 +93,8 @@ public class JLFMvcServer extends JLFSoaServer {
 		}
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void start(Properties prop) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		JLFMVCConfig config = JLFCheckClient.get().check(map, JLFMVCConfig.class);
+		JLFMVCConfig config = JLFCheckClient.get().check(prop, JLFMVCConfig.class);
 		initAllBeans(config.getBeanPackages());
 	}
 

@@ -13,17 +13,20 @@ import org.jlf.plugin.server.core.check.custom.enums.JLFCheckType;
  * @author Lone Wolf
  * @date 2019Äê5ÔÂ24ÈÕ
  */
-public class MapCheck extends CollectionCheck<Map<String, Object>> {
+public class MapCheck extends CollectionCheck<Map<String, ? extends Object>> {
 
 	@Override
-	public Map<String, Object> getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
+	public Map<String, ? extends Object> getValue(JLFJson json, Object checkObj,JLFCheckType type,Class<?> checkCls,String checkName) {
 		JLFJson jsonValue = json.getJson(checkName);
+		if(jsonValue == null){
+			return null;
+		}
 		Map<String, Object> map = jsonValue.toMap();
 		return map;
 	}
 
 	@Override
-	protected int getSize(Map<String, Object> value) {
+	protected int getSize(Map<String, ? extends Object> value) {
 		return value.size();
 	}
 }

@@ -1,8 +1,6 @@
 package org.jlf.plugin.server.cache.redis;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -61,11 +59,9 @@ public class RedisServer extends JLFPluginServer<JLFCache> {
 	 * @Description:Æô¶¯·þÎñ
 	 * @param prop
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void start(Properties prop) {
 		JLFCheck ckeck = JLFCheckClient.get();
-		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		RedisConfig config = ckeck.check(map, RedisConfig.class);
+		RedisConfig config = ckeck.check(prop, RedisConfig.class);
 		RedisPool.init(config);
 	}
 

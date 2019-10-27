@@ -82,12 +82,32 @@ public class IniContent {
 	/**
 	 * 
 	 * @Title: getSectionArr
-	 * @Description:获取嵌套标数组签属性
+	 * @Description:获取嵌套标数组签属性,sectionArrs为空去sections中找
 	 * @param sectionName
 	 * @return
 	 */
 	public List<IniContent> getSectionArr(String sectionArrName) {
-		return sectionArrs.get(sectionArrName);
+		List<IniContent> list = sectionArrs.get(sectionArrName);
+		if (list == null) {
+			IniContent IniContent = getSection(sectionArrName);
+			if (IniContent != null) {
+				list = new ArrayList<IniContent>();
+				list.add(IniContent);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * @Title: getSectionArrOnly
+	 * @Description:获取嵌套标数组签属性
+	 * @param sectionName
+	 * @return
+	 */
+	protected List<IniContent> getSectionArrOnly(String sectionArrName) {
+		List<IniContent> list = sectionArrs.get(sectionArrName);
+		return list;
 	}
 
 	/**

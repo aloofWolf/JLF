@@ -58,6 +58,7 @@ public class IniUtilTest {
 	
 	private void printContent(IniContent content){
 		Properties pros = content.getPros();
+		
 		if (pros != null) {
 			for (Enumeration<Object> keys = pros.keys(); keys.hasMoreElements();) {
 				String key = (String) keys.nextElement();

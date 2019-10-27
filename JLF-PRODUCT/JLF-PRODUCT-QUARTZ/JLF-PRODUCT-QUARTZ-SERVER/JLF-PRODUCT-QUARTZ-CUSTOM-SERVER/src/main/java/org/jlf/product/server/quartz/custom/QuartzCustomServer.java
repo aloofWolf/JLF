@@ -1,7 +1,5 @@
 package org.jlf.product.server.quartz.custom;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.jlf.core.server.JLFProductServer;
@@ -35,10 +33,8 @@ public class QuartzCustomServer extends JLFProductServer<JLFQuartz> {
 		start(prop);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void start(Properties prop) {
-		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		QuartzConfig config = JLFCheckClient.get().check(map, QuartzConfig.class);
+		QuartzConfig config = JLFCheckClient.get().check(prop, QuartzConfig.class);
 		QuartzJobManager.init(config);
 		QuartzJobManager.addMainjob();
 	}

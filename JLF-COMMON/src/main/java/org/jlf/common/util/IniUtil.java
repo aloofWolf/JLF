@@ -97,7 +97,7 @@ public class IniUtil {
 			String sectionName = line.replaceFirst("\\[(.*)\\]", "$1");
 			IniContent currContent = contents.get(0);
 			IniContent newContent = new IniContent();
-			if (currContent.getSectionArr(sectionName) != null) {
+			if (currContent.getSectionArrOnly(sectionName) != null) {
 				currContent.putSectionArr(sectionName, newContent);
 			} else if (currContent.getSection(sectionName) != null) {
 				currContent.putSectionArr(sectionName, currContent.getSection(sectionName));

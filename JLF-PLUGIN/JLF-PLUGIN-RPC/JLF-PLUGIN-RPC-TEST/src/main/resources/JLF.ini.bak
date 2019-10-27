@@ -1,0 +1,21 @@
+[plugin-rpc]
+  [application]
+    name=JLF
+  [/application]
+  [registry]
+    registryId=registry1
+    address=zookeeper://39.108.166.34:2184
+  [/registry]
+  [protocol]
+    protocolId=dubbo
+  [/protocol]
+  [service]
+    interfaceName=org.jlf.plugin.rpc.test.api.api1
+  [/service]
+  [service]
+    interfaceName=org.jlf.plugin.rpc.test.api.api2
+  [/service]
+  [service]
+    interfaceName=org.jlf.plugin.rpc.test.api.api3
+  [/service]
+[/plugin-rpc]

@@ -2,6 +2,7 @@ package org.jlf.plugin.check.server.api;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Properties;
 
 import org.jlf.core.api.JLFPluginServerApi;
 
@@ -35,7 +36,17 @@ public interface JLFCheck extends JLFPluginServerApi {
 	 * @return
 	 */
 	public <T> T check(Map<String, Object> map, Class<T> cls);
-	
+
+	/**
+	 * 
+	 * @Title: check
+	 * @Description: 对properties进行校验,校验cls里的所有field
+	 * @param prop
+	 * @param cls
+	 * @return
+	 */
+	public <T> T check(Properties prop, Class<T> cls);
+
 	/**
 	 * 
 	 * @Title: check
@@ -55,4 +66,14 @@ public interface JLFCheck extends JLFPluginServerApi {
 	 * @return
 	 */
 	public Object[] check(Map<String, Object> map, Method method);
+
+	/**
+	 * 
+	 * @Title: check
+	 * @Description: 对properties进行校验,检验method里的所有parameter
+	 * @param prop
+	 * @param method
+	 * @return
+	 */
+	public Object[] check(Properties prop, Method method);
 }

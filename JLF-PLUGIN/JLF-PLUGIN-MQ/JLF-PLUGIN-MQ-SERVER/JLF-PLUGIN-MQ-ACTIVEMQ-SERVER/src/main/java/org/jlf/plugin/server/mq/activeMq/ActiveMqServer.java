@@ -1,8 +1,6 @@
 package org.jlf.plugin.server.mq.activeMq;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -58,11 +56,9 @@ public class ActiveMqServer extends JLFPluginServer<JLFMq> {
 	 * @Description:Æô¶¯·þÎñ
 	 * @param prop
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void start(Properties prop) {
 		JLFCheck ckeck = JLFCheckClient.get();
-		Map<String, Object> map = new HashMap<String, Object>((Map) prop);
-		ActiveMqConfig config = ckeck.check(map, ActiveMqConfig.class);
+		ActiveMqConfig config = ckeck.check(prop, ActiveMqConfig.class);
 		ActiveMqPool.init(config);
 	}
 }
