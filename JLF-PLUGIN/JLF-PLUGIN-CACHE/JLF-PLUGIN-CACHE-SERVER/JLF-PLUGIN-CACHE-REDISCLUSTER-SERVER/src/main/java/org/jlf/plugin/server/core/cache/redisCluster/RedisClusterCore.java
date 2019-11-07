@@ -29,16 +29,13 @@ public class RedisClusterCore implements JLFCache {
 
 	@Override
 	public void save(String key, String value, int seconds) {
-		RedisClusterPool.getJedis().set(key, value);
-		RedisClusterPool.getJedis().expire(key, seconds);
-
+		RedisClusterPool.getJedis().setex(key, seconds,value);
 	}
 
 	@Override
 	public void save(String key, Serializable bean, int seconds) {
 		String ser = SerializeUtil.serialize(bean);
-		RedisClusterPool.getJedis().set(key, ser);
-		RedisClusterPool.getJedis().expire(key, seconds);
+		RedisClusterPool.getJedis().setex(key,seconds, ser);
 	}
 
 	@Override
@@ -55,16 +52,14 @@ public class RedisClusterCore implements JLFCache {
 
 	@Override
 	public void update(String key, String value, int seconds) {
-		RedisClusterPool.getJedis().set(key, value);
-		RedisClusterPool.getJedis().expire(key, seconds);
+		RedisClusterPool.getJedis().setex(key, seconds,value);
 
 	}
 
 	@Override
 	public void update(String key, Serializable bean, int seconds) {
 		String ser = SerializeUtil.serialize(bean);
-		RedisClusterPool.getJedis().set(key, ser);
-		RedisClusterPool.getJedis().expire(key, seconds);
+		RedisClusterPool.getJedis().setex(key, seconds,ser);
 
 	}
 
@@ -153,25 +148,17 @@ public class RedisClusterCore implements JLFCache {
 	}
 	
 	@Override
-	public boolean setnx(String key, int seconds, String value) {
-		long flg = RedisClusterPool.getJedis().setnx(key, value);
-		if (flg == 1) {
-			RedisClusterPool.getJedis().expire(key, seconds);
+	public boolean setnx(String key, String value,int seconds) {
+		String flg = RedisClusterPool.getJedis().set(key, value, "nx", "ex", seconds);
+		if ("OK".equals(flg)) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public String getset(String key, String value) {
-		return RedisClusterPool.getJedis().getSet(key, value);
-	}
-
-	@Override
-	public String getset(String key, int seconds, String value) {
-		String oldValue = RedisClusterPool.getJedis().getSet(key, value);
-		RedisClusterPool.getJedis().expire(key, seconds);
-		return oldValue;
+	public boolean exists(String key) {
+		return RedisClusterPool.getJedis().exists(key);
 	}
 
 }

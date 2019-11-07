@@ -20,10 +20,7 @@ public class ActiveMqPool {
 	private static ActiveMQConnectionFactory factory = null;
 
 	public static void init(ActiveMqConfig config) {
-		ActiveMQConnectionFactory factoryBak = new ActiveMQConnectionFactory(config.getUrl());
-		factoryBak.setUserName(config.getUserName());
-		factoryBak.setPassword(config.getPassword());
-		factory = factoryBak;
+		factory = config.getFactory();
 	}
 
 	/**

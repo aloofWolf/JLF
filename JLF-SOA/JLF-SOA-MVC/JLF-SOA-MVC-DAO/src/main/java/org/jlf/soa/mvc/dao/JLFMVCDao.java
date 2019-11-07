@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.jlf.common.enums.BooleanType;
 import org.jlf.common.enums.api.IEnum;
-import org.jlf.common.util.DateUtil;
 import org.jlf.common.util.EnumUtil;
 import org.jlf.common.util.GenericityUtil;
 import org.jlf.common.util.LogUtil;
@@ -28,7 +27,6 @@ import org.jlf.plugin.client.session.JLFSessionClient;
 import org.jlf.plugin.dbPool.server.api.JLFDbPool;
 import org.jlf.plugin.session.user.api.JLFSessionBean;
 import org.jlf.soa.mvc.container.ann.JLFMVCBean;
-import org.jlf.soa.mvc.dao.blacklist.JLFMVCDaoBlackList;
 import org.jlf.soa.mvc.dao.sqlBean.JLFMVCSqlBean;
 import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanFieldMapped;
 import org.jlf.soa.mvc.metadata.ann.JLFMVCBeanTableMapped;
@@ -58,7 +56,9 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	protected String tableName = null; // 当前bean对应的数据库表名
 	protected boolean isCache = false;// 当前bean是否需要缓存
 	protected int seconds = -1;// 缓存有效期
-	protected String cacheKey = null;// 缓存的key值
+	protected String cacheKeyFormat = null;// 缓存的key值
+	protected String cacheReadIdLockKeyFormat = null;// 缓存id的读锁key值
+	protected String cacheWriteIdLockKeyFormat = null;// 缓存id的读锁key值
 
 	private String getByIdSql = null;
 	private String getByIdWithTableNameSql = null;
@@ -174,7 +174,9 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 			} else {
 				this.tableName = this.entityCls.getSimpleName();
 			}
-			this.cacheKey = new StringBuffer("%s").append("_").append(tableName).append("%d").toString();
+			this.cacheKeyFormat = new StringBuffer("%s").append("_").append("%s").append("%d").toString();
+			this.cacheReadIdLockKeyFormat = new StringBuffer("%s").append("_").append("%s").append("%d")
+					.append("_readLock").toString();
 			this.isCache = mapped.cache();
 			this.seconds = mapped.seconds();
 		}
@@ -255,7 +257,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	 * @return
 	 */
 	public ENTITY getById(Long id) {
-		return getByIdExecute(id, getByIdSql);
+		return getByIdExecute(id, getByIdSql, this.tableName);
 	}
 
 	/**
@@ -267,51 +269,128 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	 * @return
 	 */
 	public ENTITY getById(Long id, String tableName) {
-		return getByIdExecute(id, String.format(getByIdWithTableNameSql, tableName));
+		return getByIdExecute(id, String.format(getByIdWithTableNameSql, tableName), tableName);
+	}
+
+	/**
+	 * 
+	 * @Title: getByIdWithCache
+	 * @Description: 根据id去缓存中查询数据
+	 * @param id
+	 * @param sql
+	 * @param cacheKey
+	 * @param dbName
+	 * @param tableName
+	 * @return
+	 */
+	private ENTITY getByIdWithCache(Long id, String sql, String cacheKey, String dbName, String tableName) {
+		ENTITY entity = null;
+		entity = JLFCacheClient.get().getObj(cacheKey, this.entityCls);
+		return entity;
+	}
+
+	/**
+	 * 
+	 * @Title: addReadLock
+	 * @Description: 为id对应的数据创建读锁,防止缓存穿透
+	 * @param id
+	 * @param dbName
+	 * @param tableName
+	 * @return
+	 */
+	private boolean addReadLock(Long id, String dbName, String tableName) {
+		String cacheReadIdLockKey = String.format(cacheReadIdLockKeyFormat, dbName, tableName, id);
+		return JLFCacheClient.get().setnx(cacheReadIdLockKey, id.toString(), 3);
+	}
+
+	/**
+	 * 
+	 * @Title: getByIdWithDatabase
+	 * @Description: 根据id去数据库中查询数据
+	 * @param id
+	 * @param sql
+	 * @param dbName
+	 * @param tableName
+	 * @return
+	 */
+	private ENTITY getByIdWithDatabase(Long id, String sql, String dbName, String tableName) {
+		ResultSet rs = getRs(sql, id);
+		try {
+			if (rs.next()) {
+				return ResultSetToBean(rs);
+			}
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new JLFException(e);
+		}
 	}
 
 	/**
 	 * 
 	 * @Title: getByIdExecute
-	 * @Description:根据id获取实体的执行
+	 * @Description: 根据id获取实体的执行
 	 * @param id
 	 * @param sql
+	 * @param tableName
 	 * @return
 	 */
-	private ENTITY getByIdExecute(Long id, String sql) {
+	private ENTITY getByIdExecute(Long id, String sql, String tableName) {
+
 		String dbName = getDbName();
-		if (JLFMVCDaoBlackList.isExist(dbName, tableName, id)) {
-			return null;
-		}
-		ENTITY ENTITY = null;
-		String key = null;
+
 		if (isCache) {
-			key = String.format(cacheKey, dbName, id);
-			ENTITY = JLFCacheClient.get().getObj(key, this.entityCls);
-			if (ENTITY != null) {
-				return ENTITY;
-			}
-		}
-		ResultSet rs = getRs(sql, id);
-		try {
-			if (rs.next()) {
-				ENTITY = ResultSetToBean(rs);
-				if (BooleanType.TRUE.equals(ENTITY.getIsDelete())) {
-					JLFMVCDaoBlackList.addBlack(dbName, tableName, id);
+			String cacheKey = String.format(cacheKeyFormat, dbName, tableName, id);
+			ENTITY entity = null;
+			while (true) {
+				entity = getByIdWithCache(id, sql, cacheKey, dbName, tableName);
+				if (entity != null) {
+					if (entity.isBlack()) { // 判断是否为黑名单,如果是黑名单,返回null
+						return null;
+					} else {
+						return entity;
+					}
+				}
+				boolean addReadLockFlg = addReadLock(id, dbName, tableName);
+				if (!addReadLockFlg) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+					}
+					continue;
+				}
+				entity = getByIdWithDatabase(id, sql, dbName, tableName);
+				if (entity == null) {
+					try {
+						entity = this.entityCls.newInstance();
+					} catch (InstantiationException | IllegalAccessException e) {
+						throw new JLFException(e);
+					}
+					entity.setId(id);
+					entity.setBlack(true);
+					JLFCacheClient.get().save(cacheKey, entity, 60);
+
 					return null;
+				} else if (BooleanType.TRUE.equals(entity.getIsDelete())) {
+					try {
+						entity = this.entityCls.newInstance();
+					} catch (InstantiationException | IllegalAccessException e) {
+						throw new JLFException(e);
+					}
+					entity.setId(id);
+					entity.setIsDelete(BooleanType.TRUE);
+					entity.setBlack(true);
+					JLFCacheClient.get().save(cacheKey, entity);
+
+					return null;
+				} else {
+					JLFCacheClient.get().save(cacheKey, entity, seconds);
+
 				}
-				if (isCache) {
-					JLFCacheClient.get().save(key, ENTITY);
-				}
-				return ResultSetToBean(rs);
 			}
-			Date expireTime = DateUtil.getDateAfterMinute(3);
-			JLFMVCDaoBlackList.addBlack(dbName, tableName, id, expireTime);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new JLFException(e);
 		}
-		return null;
+		return getByIdWithDatabase(id, sql, dbName, tableName);
+
 	}
 
 	/**
@@ -508,7 +587,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 				throw new JLFException("数据过期");
 			}
 			if (isCache) {
-				String key = String.format(cacheKey, ENTITY.getId());
+				String key = String.format(cacheKeyFormat, ENTITY.getId());
 				JLFCacheClient.get().delete(key);
 			}
 		} catch (Exception e) {
@@ -552,7 +631,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	public void deleteExecute(Long id, Long version, String sql) {
 
 		if (isCache) {
-			String key = String.format(cacheKey, id);
+			String key = String.format(cacheKeyFormat, id);
 			JLFCacheClient.get().delete(key);
 		}
 

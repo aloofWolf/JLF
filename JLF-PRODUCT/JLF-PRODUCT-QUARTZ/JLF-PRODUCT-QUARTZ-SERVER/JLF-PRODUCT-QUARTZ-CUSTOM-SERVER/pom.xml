@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jlf</groupId>
     <artifactId>JLF-PRODUCT-QUARTZ-SERVER</artifactId>
-    <version>0.0.1</version>
+    <version>1.0</version>
   </parent>
   <artifactId>JLF-PRODUCT-QUARTZ-CUSTOM-SERVER</artifactId>
   <properties>

@@ -44,6 +44,13 @@ public class JLFMVCEntity implements Serializable {
 	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(desc = "更新时间")
 	private Date updateTime;
+	
+	/**
+	 * 此字段在与缓存集成时时候,判断缓存中存储的对象是否为黑名单,不与数据库同步
+	 */
+	@JLFCheckAnn(isSkipValidate=true)
+	@JLFMVCBeanFieldMapped(isSkipMapped=true)
+	private boolean isBlack = false;
 
 	@JLFCheckAnn(isSkipValidate=true)
 	@JLFMVCBeanFieldMapped(isSkipMapped=true)
@@ -122,6 +129,15 @@ public class JLFMVCEntity implements Serializable {
 		relationMap.put(entityCls, entity);
 	}
 	
+	
+	public boolean isBlack() {
+		return isBlack;
+	}
+
+	public void setBlack(boolean isBlack) {
+		this.isBlack = isBlack;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

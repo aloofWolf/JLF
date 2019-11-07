@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF-PLUGIN-JSON-API</artifactId>
-		<version>0.0.1</version>
+		<version>1.0</version>
 	</parent>
 	<artifactId>JLF-PLUGIN-JSON-SERVER-API</artifactId>
 </project>

@@ -25,14 +25,6 @@ import org.jlf.plugin.threadPool.user.api.JLFThreadPoolSubmit;
  * @date 2019年5月28日
  */
 public class ThreadPoolCustomCore implements JLFThreadPool {
-	
-	private static ExecutorService executeService;
-	
-	static{
-		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(1);
-		executeService = new ThreadPoolExecutor(1, 1,
-                0L, TimeUnit.MILLISECONDS,queue);
-	}
 
 	@Override
 	public <T extends Object> JLFThreadPoolResult<T> execute(List<T> beans, JLFThreadPoolExecute<T> execute) {
@@ -44,13 +36,31 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 			return new JLFThreadPoolResult<T>(successBeans, failBeans);
 		}
 		int size = beans.size();
-		LogUtil.get().debug(size + "");
-		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(1);
+		LogUtil.get().debug("待执行的线程数量为:"+size);
+		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(size);
 		ExecutorService executeService = new ThreadPoolExecutor(execute.getThreadPoolNum(), execute.getThreadPoolNum(),
                 0L, TimeUnit.MILLISECONDS,queue);
 		List<FutureExt<T>> futures = new ArrayList<FutureExt<T>>();
+		ExecuteThread<T> t = null;
+		
 		for (T bean : beans) {
-			Future<String> future = executeService.submit(new ExecuteThread<T>(bean, execute));
+			boolean newExecuteThreadFlg = true;
+			while(newExecuteThreadFlg){  // 如果创建ExecuteThread对象时出现内存溢出,则将当前线程睡眠十分钟后继续创建
+				try{
+					t = new ExecuteThread<T>(bean, execute);
+					newExecuteThreadFlg = false;
+				}catch(OutOfMemoryError e){
+					newExecuteThreadFlg = true;
+					try {
+						Thread.sleep(600000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			
+			
+			Future<String> future = executeService.submit(t);
 			futures.add(new FutureExt<T>(future, bean));
 
 		}
@@ -60,7 +70,11 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 				break;
 			}
 		}
-		/*for (FutureExt<T> future : futures) {
+		
+		/**
+		 * 统计执行成功和失败数量
+		 */
+		for (FutureExt<T> future : futures) {
 			String result = null;
 			try {
 				result = future.getFuture().get();
@@ -73,7 +87,7 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 			} else {
 				failBeans.put(future.getBean(), result);
 			}
-		}*/
+		}
 		LogUtil.get().info("%s:线程池任务结束", execute.getThreadPoolName());
 		Long endTime = System.currentTimeMillis();
 		LogUtil.get().info("所花费时间" + (endTime - statrTime));
@@ -82,7 +96,7 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 	
 	@Override
 	public <T> void submit(T bean, JLFThreadPoolSubmit<T> submit) {
-		executeService.submit(new ExecuteThread<T>(bean, submit));
+		ThreadPoolCustomManager.getExecuteService().submit(new ExecuteThread<T>(bean, submit));
 		
 	}
 

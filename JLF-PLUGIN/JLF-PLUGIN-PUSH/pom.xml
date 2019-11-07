@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF-PLUGIN</artifactId>
-		<version>0.0.1</version>
+		<version>1.0</version>
 	</parent>
 	<artifactId>JLF-PLUGIN-PUSH</artifactId>
 	<packaging>pom</packaging>

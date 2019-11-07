@@ -26,6 +26,6 @@ public interface JLFThreadPoolExecute<T> extends JLFThreadPoolSubmit<T>{
 	 * @return
 	 */
 	public default int getThreadPoolNum() {
-		return 5;
+		return 10;
 	}
 }

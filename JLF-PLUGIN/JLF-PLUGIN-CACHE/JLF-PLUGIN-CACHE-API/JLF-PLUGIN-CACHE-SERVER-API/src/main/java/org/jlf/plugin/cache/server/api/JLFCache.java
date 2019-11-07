@@ -220,26 +220,15 @@ public interface JLFCache extends JLFPluginServerApi {
 	 * @param value
 	 * @return
 	 */
-	public boolean setnx(String key, int seconds, String value);
+	public boolean setnx(String key, String value, int seconds);
 
 	/**
 	 * 
 	 * @Title: getset
-	 * @Description: 设置新值,同时返回旧值
+	 * @Description: 检查key是否存在
 	 * @param key
-	 * @param value
 	 * @return
 	 */
-	public String getset(String key, String value);
-
-	/**
-	 * 
-	 * @Title: getset
-	 * @Description: 设置新值,同时返回旧值,并设定有效期
-	 * @param key
-	 * @param value
-	 * @return
-	 */
-	public String getset(String key, int seconds, String value);
+	public boolean exists(String key);
 
 }

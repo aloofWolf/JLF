@@ -1,7 +1,12 @@
 package org.jlf.plugin.server.core.dbPool.c3p0.config;
 
+import java.beans.PropertyVetoException;
+
 import org.jlf.common.enums.BooleanType;
+import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.check.server.api.JLFCheckAnn;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 /**
  * 
@@ -12,89 +17,102 @@ import org.jlf.plugin.check.server.api.JLFCheckAnn;
  */
 public class C3p0MainConfig {
 
+	@JLFCheckAnn(isSkipValidate = true)
+	private ComboPooledDataSource dataSource = new ComboPooledDataSource();
+
 	private String driver;
 	private String url;
 	private String userName;
 	private String password;
 
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer acquireIncrement;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer acquireRetryAttempts;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer acquireRetryDelay;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType autoCommitOnClose;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String automaticTestTable;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType breakAfterAcquireFailure;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer checkoutTimeout;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String connectionCustomizerClassName;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String connectionTesterClassName;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String contextClassLoaderSource;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType debugUnreturnedConnectionStackTraces;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String factoryClassLocation;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType forceIgnoreUnresolvedTransactions;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType forceSynchronousCheckins;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String identityToken;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer idleConnectionTestPeriod;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer initialPoolSize;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer maxAdministrativeTaskTime;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer maxConnectionAge;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer maxIdleTime;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer maxIdleTimeExcessConnections;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer maxPoolSize;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer maxStatements;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer maxStatementsPerConnection;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer minPoolSize;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String overrideDefaultPassword;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String overrideDefaultUser;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String preferredTestQuery;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType privilegeSpawnedThreads;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer propertyCycle;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer statementCacheNumDeferredCloseThreads;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType testConnectionOnCheckin;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType testConnectionOnCheckout;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private Integer unreturnedConnectionTimeout;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private String userOverridesAsString;
-	@JLFCheckAnn(isNull=true)
+	@JLFCheckAnn(isNull = true)
 	private BooleanType usesTraditionalReflectiveProxies;
+
+	public ComboPooledDataSource getDataSource() {
+		return dataSource;
+	}
+
 	public String getDriver() {
 		return driver;
 	}
 
 	public void setDriver(String driver) {
 		this.driver = driver;
+		try {
+			this.dataSource.setDriverClass(driver);
+		} catch (PropertyVetoException e) {
+			throw new JLFException(e);
+		}
 	}
 
 	public String getUrl() {
@@ -103,6 +121,7 @@ public class C3p0MainConfig {
 
 	public void setUrl(String url) {
 		this.url = url;
+		this.dataSource.setJdbcUrl(url);
 	}
 
 	public String getUserName() {
@@ -111,6 +130,7 @@ public class C3p0MainConfig {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+		this.dataSource.setUser(userName);
 	}
 
 	public String getPassword() {
@@ -119,6 +139,7 @@ public class C3p0MainConfig {
 
 	public void setPassword(String password) {
 		this.password = password;
+		this.dataSource.setPassword(password);
 	}
 
 	public Integer getAcquireIncrement() {
@@ -127,6 +148,7 @@ public class C3p0MainConfig {
 
 	public void setAcquireIncrement(Integer acquireIncrement) {
 		this.acquireIncrement = acquireIncrement;
+		this.dataSource.setAcquireIncrement(acquireIncrement);
 	}
 
 	public Integer getAcquireRetryAttempts() {
@@ -135,6 +157,7 @@ public class C3p0MainConfig {
 
 	public void setAcquireRetryAttempts(Integer acquireRetryAttempts) {
 		this.acquireRetryAttempts = acquireRetryAttempts;
+		this.dataSource.setAcquireRetryAttempts(acquireRetryAttempts);
 	}
 
 	public Integer getAcquireRetryDelay() {
@@ -143,6 +166,7 @@ public class C3p0MainConfig {
 
 	public void setAcquireRetryDelay(Integer acquireRetryDelay) {
 		this.acquireRetryDelay = acquireRetryDelay;
+		this.dataSource.setAcquireRetryDelay(acquireRetryDelay);
 	}
 
 	public BooleanType getAutoCommitOnClose() {
@@ -151,6 +175,7 @@ public class C3p0MainConfig {
 
 	public void setAutoCommitOnClose(BooleanType autoCommitOnClose) {
 		this.autoCommitOnClose = autoCommitOnClose;
+		this.dataSource.setAutoCommitOnClose(autoCommitOnClose.isBln());
 	}
 
 	public String getAutomaticTestTable() {
@@ -159,6 +184,7 @@ public class C3p0MainConfig {
 
 	public void setAutomaticTestTable(String automaticTestTable) {
 		this.automaticTestTable = automaticTestTable;
+		this.dataSource.setAutomaticTestTable(automaticTestTable);
 	}
 
 	public BooleanType getBreakAfterAcquireFailure() {
@@ -167,6 +193,7 @@ public class C3p0MainConfig {
 
 	public void setBreakAfterAcquireFailure(BooleanType breakAfterAcquireFailure) {
 		this.breakAfterAcquireFailure = breakAfterAcquireFailure;
+		this.dataSource.setBreakAfterAcquireFailure(breakAfterAcquireFailure.isBln());
 	}
 
 	public Integer getCheckoutTimeout() {
@@ -175,6 +202,7 @@ public class C3p0MainConfig {
 
 	public void setCheckoutTimeout(Integer checkoutTimeout) {
 		this.checkoutTimeout = checkoutTimeout;
+		this.dataSource.setCheckoutTimeout(checkoutTimeout);
 	}
 
 	public String getConnectionCustomizerClassName() {
@@ -183,6 +211,7 @@ public class C3p0MainConfig {
 
 	public void setConnectionCustomizerClassName(String connectionCustomizerClassName) {
 		this.connectionCustomizerClassName = connectionCustomizerClassName;
+		this.dataSource.setConnectionCustomizerClassName(connectionCustomizerClassName);
 	}
 
 	public String getConnectionTesterClassName() {
@@ -191,6 +220,7 @@ public class C3p0MainConfig {
 
 	public void setConnectionTesterClassName(String connectionTesterClassName) {
 		this.connectionTesterClassName = connectionTesterClassName;
+		this.dataSource.setConnectionCustomizerClassName(connectionTesterClassName);
 	}
 
 	public String getContextClassLoaderSource() {
@@ -199,6 +229,11 @@ public class C3p0MainConfig {
 
 	public void setContextClassLoaderSource(String contextClassLoaderSource) {
 		this.contextClassLoaderSource = contextClassLoaderSource;
+		try {
+			this.dataSource.setContextClassLoaderSource(contextClassLoaderSource);
+		} catch (PropertyVetoException e) {
+			throw new JLFException(e);
+		}
 	}
 
 	public BooleanType getDebugUnreturnedConnectionStackTraces() {
@@ -207,6 +242,7 @@ public class C3p0MainConfig {
 
 	public void setDebugUnreturnedConnectionStackTraces(BooleanType debugUnreturnedConnectionStackTraces) {
 		this.debugUnreturnedConnectionStackTraces = debugUnreturnedConnectionStackTraces;
+		this.dataSource.setDebugUnreturnedConnectionStackTraces(debugUnreturnedConnectionStackTraces.isBln());
 	}
 
 	public String getFactoryClassLocation() {
@@ -215,6 +251,7 @@ public class C3p0MainConfig {
 
 	public void setFactoryClassLocation(String factoryClassLocation) {
 		this.factoryClassLocation = factoryClassLocation;
+		this.dataSource.setFactoryClassLocation(factoryClassLocation);
 	}
 
 	public BooleanType getForceIgnoreUnresolvedTransactions() {
@@ -223,6 +260,7 @@ public class C3p0MainConfig {
 
 	public void setForceIgnoreUnresolvedTransactions(BooleanType forceIgnoreUnresolvedTransactions) {
 		this.forceIgnoreUnresolvedTransactions = forceIgnoreUnresolvedTransactions;
+		this.dataSource.setForceIgnoreUnresolvedTransactions(forceIgnoreUnresolvedTransactions.isBln());
 	}
 
 	public BooleanType getForceSynchronousCheckins() {
@@ -231,6 +269,7 @@ public class C3p0MainConfig {
 
 	public void setForceSynchronousCheckins(BooleanType forceSynchronousCheckins) {
 		this.forceSynchronousCheckins = forceSynchronousCheckins;
+		this.dataSource.setForceSynchronousCheckins(forceSynchronousCheckins.isBln());
 	}
 
 	public String getIdentityToken() {
@@ -239,6 +278,7 @@ public class C3p0MainConfig {
 
 	public void setIdentityToken(String identityToken) {
 		this.identityToken = identityToken;
+		this.dataSource.setIdentityToken(identityToken);
 	}
 
 	public Integer getIdleConnectionTestPeriod() {
@@ -247,6 +287,7 @@ public class C3p0MainConfig {
 
 	public void setIdleConnectionTestPeriod(Integer idleConnectionTestPeriod) {
 		this.idleConnectionTestPeriod = idleConnectionTestPeriod;
+		this.dataSource.setIdleConnectionTestPeriod(idleConnectionTestPeriod);
 	}
 
 	public Integer getInitialPoolSize() {
@@ -255,6 +296,7 @@ public class C3p0MainConfig {
 
 	public void setInitialPoolSize(Integer initialPoolSize) {
 		this.initialPoolSize = initialPoolSize;
+		this.dataSource.setInitialPoolSize(initialPoolSize);
 	}
 
 	public Integer getMaxAdministrativeTaskTime() {
@@ -263,6 +305,7 @@ public class C3p0MainConfig {
 
 	public void setMaxAdministrativeTaskTime(Integer maxAdministrativeTaskTime) {
 		this.maxAdministrativeTaskTime = maxAdministrativeTaskTime;
+		this.dataSource.setMaxAdministrativeTaskTime(maxAdministrativeTaskTime);
 	}
 
 	public Integer getMaxConnectionAge() {
@@ -271,6 +314,7 @@ public class C3p0MainConfig {
 
 	public void setMaxConnectionAge(Integer maxConnectionAge) {
 		this.maxConnectionAge = maxConnectionAge;
+		this.dataSource.setMaxConnectionAge(maxConnectionAge);
 	}
 
 	public Integer getMaxIdleTime() {
@@ -279,6 +323,7 @@ public class C3p0MainConfig {
 
 	public void setMaxIdleTime(Integer maxIdleTime) {
 		this.maxIdleTime = maxIdleTime;
+		this.dataSource.setMaxIdleTime(maxIdleTime);
 	}
 
 	public Integer getMaxIdleTimeExcessConnections() {
@@ -287,6 +332,7 @@ public class C3p0MainConfig {
 
 	public void setMaxIdleTimeExcessConnections(Integer maxIdleTimeExcessConnections) {
 		this.maxIdleTimeExcessConnections = maxIdleTimeExcessConnections;
+		this.dataSource.setMaxIdleTimeExcessConnections(maxIdleTimeExcessConnections);
 	}
 
 	public Integer getMaxPoolSize() {
@@ -295,6 +341,7 @@ public class C3p0MainConfig {
 
 	public void setMaxPoolSize(Integer maxPoolSize) {
 		this.maxPoolSize = maxPoolSize;
+		this.dataSource.setMaxPoolSize(maxPoolSize);
 	}
 
 	public Integer getMaxStatements() {
@@ -303,6 +350,7 @@ public class C3p0MainConfig {
 
 	public void setMaxStatements(Integer maxStatements) {
 		this.maxStatements = maxStatements;
+		this.dataSource.setMaxStatements(maxStatements);
 	}
 
 	public Integer getMaxStatementsPerConnection() {
@@ -311,6 +359,7 @@ public class C3p0MainConfig {
 
 	public void setMaxStatementsPerConnection(Integer maxStatementsPerConnection) {
 		this.maxStatementsPerConnection = maxStatementsPerConnection;
+		this.dataSource.setMaxStatementsPerConnection(maxStatementsPerConnection);
 	}
 
 	public Integer getMinPoolSize() {
@@ -319,6 +368,7 @@ public class C3p0MainConfig {
 
 	public void setMinPoolSize(Integer minPoolSize) {
 		this.minPoolSize = minPoolSize;
+		this.dataSource.setMinPoolSize(minPoolSize);
 	}
 
 	public String getOverrideDefaultPassword() {
@@ -327,6 +377,7 @@ public class C3p0MainConfig {
 
 	public void setOverrideDefaultPassword(String overrideDefaultPassword) {
 		this.overrideDefaultPassword = overrideDefaultPassword;
+		this.dataSource.setOverrideDefaultPassword(overrideDefaultPassword);
 	}
 
 	public String getOverrideDefaultUser() {
@@ -335,6 +386,7 @@ public class C3p0MainConfig {
 
 	public void setOverrideDefaultUser(String overrideDefaultUser) {
 		this.overrideDefaultUser = overrideDefaultUser;
+		this.dataSource.setOverrideDefaultUser(overrideDefaultUser);
 	}
 
 	public String getPreferredTestQuery() {
@@ -343,6 +395,7 @@ public class C3p0MainConfig {
 
 	public void setPreferredTestQuery(String preferredTestQuery) {
 		this.preferredTestQuery = preferredTestQuery;
+		this.dataSource.setPreferredTestQuery(preferredTestQuery);
 	}
 
 	public BooleanType getPrivilegeSpawnedThreads() {
@@ -351,6 +404,7 @@ public class C3p0MainConfig {
 
 	public void setPrivilegeSpawnedThreads(BooleanType privilegeSpawnedThreads) {
 		this.privilegeSpawnedThreads = privilegeSpawnedThreads;
+		this.dataSource.setPrivilegeSpawnedThreads(privilegeSpawnedThreads.isBln());
 	}
 
 	public Integer getPropertyCycle() {
@@ -359,6 +413,7 @@ public class C3p0MainConfig {
 
 	public void setPropertyCycle(Integer propertyCycle) {
 		this.propertyCycle = propertyCycle;
+		this.dataSource.setPropertyCycle(propertyCycle);
 	}
 
 	public Integer getStatementCacheNumDeferredCloseThreads() {
@@ -367,6 +422,7 @@ public class C3p0MainConfig {
 
 	public void setStatementCacheNumDeferredCloseThreads(Integer statementCacheNumDeferredCloseThreads) {
 		this.statementCacheNumDeferredCloseThreads = statementCacheNumDeferredCloseThreads;
+		this.dataSource.setStatementCacheNumDeferredCloseThreads(statementCacheNumDeferredCloseThreads);
 	}
 
 	public BooleanType getTestConnectionOnCheckin() {
@@ -375,6 +431,7 @@ public class C3p0MainConfig {
 
 	public void setTestConnectionOnCheckin(BooleanType testConnectionOnCheckin) {
 		this.testConnectionOnCheckin = testConnectionOnCheckin;
+		this.dataSource.setTestConnectionOnCheckin(testConnectionOnCheckin.isBln());
 	}
 
 	public BooleanType getTestConnectionOnCheckout() {
@@ -383,6 +440,7 @@ public class C3p0MainConfig {
 
 	public void setTestConnectionOnCheckout(BooleanType testConnectionOnCheckout) {
 		this.testConnectionOnCheckout = testConnectionOnCheckout;
+		this.dataSource.setTestConnectionOnCheckout(testConnectionOnCheckout.isBln());
 	}
 
 	public Integer getUnreturnedConnectionTimeout() {
@@ -391,6 +449,7 @@ public class C3p0MainConfig {
 
 	public void setUnreturnedConnectionTimeout(Integer unreturnedConnectionTimeout) {
 		this.unreturnedConnectionTimeout = unreturnedConnectionTimeout;
+		this.dataSource.setUnreturnedConnectionTimeout(unreturnedConnectionTimeout);
 	}
 
 	public String getUserOverridesAsString() {
@@ -399,6 +458,11 @@ public class C3p0MainConfig {
 
 	public void setUserOverridesAsString(String userOverridesAsString) {
 		this.userOverridesAsString = userOverridesAsString;
+		try {
+			this.dataSource.setUserOverridesAsString(userOverridesAsString);
+		} catch (PropertyVetoException e) {
+			throw new JLFException(e);
+		}
 	}
 
 	public BooleanType getUsesTraditionalReflectiveProxies() {
@@ -407,8 +471,7 @@ public class C3p0MainConfig {
 
 	public void setUsesTraditionalReflectiveProxies(BooleanType usesTraditionalReflectiveProxies) {
 		this.usesTraditionalReflectiveProxies = usesTraditionalReflectiveProxies;
+		this.dataSource.setUsesTraditionalReflectiveProxies(usesTraditionalReflectiveProxies.isBln());
 	}
-	
-	
 
 }

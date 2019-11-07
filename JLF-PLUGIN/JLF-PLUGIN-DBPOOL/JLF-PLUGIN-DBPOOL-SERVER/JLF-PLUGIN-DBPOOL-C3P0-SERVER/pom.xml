@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jlf</groupId>
 		<artifactId>JLF-PLUGIN-DBPOOL-SERVER</artifactId>
-		<version>0.0.1</version>
+		<version>1.0</version>
 	</parent>
 	<artifactId>JLF-PLUGIN-DBPOOL-C3P0-SERVER</artifactId>
 	<properties>
