@@ -13,8 +13,15 @@ import org.jlf.plugin.rpc.test.api.Api1;
 public class Impl1 implements Api1 {
 
 	@Override
-	public void print() {
+	public String print() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		LogUtil.get().debug("Impl1.....");
+		return "Impl1";
 
 	}
 

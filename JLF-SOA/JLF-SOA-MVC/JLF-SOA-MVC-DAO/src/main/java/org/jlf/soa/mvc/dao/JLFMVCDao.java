@@ -344,7 +344,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 			ENTITY entity = null;
 			while (true) {
 				entity = getByIdWithCache(id, sql, cacheKey, dbName, tableName);
-				if (entity != null) {
+				if (entity != null && !entity.getIsReLoad()) { //entity不为空并且IsReLoad为false,不去查数据库,直接返回
 					if (entity.isBlack()) { // 判断是否为黑名单,如果是黑名单,返回null
 						return null;
 					} else {
@@ -368,7 +368,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 					}
 					entity.setId(id);
 					entity.setBlack(true);
-					JLFCacheClient.get().save(cacheKey, entity, 60);
+					JLFCacheClient.get().setnx(cacheKey, entity, 60);
 
 					return null;
 				} else if (BooleanType.TRUE.equals(entity.getIsDelete())) {
@@ -380,7 +380,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 					entity.setId(id);
 					entity.setIsDelete(BooleanType.TRUE);
 					entity.setBlack(true);
-					JLFCacheClient.get().save(cacheKey, entity);
+					JLFCacheClient.get().setnx(cacheKey, entity);
 
 					return null;
 				} else {
@@ -549,7 +549,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	 * @param ingoreNull
 	 * @param tableName
 	 */
-	public void update(ENTITY ENTITY, boolean ingoreNull, String tableName) {
+	public void update(ENTITY entity, boolean ingoreNull, String tableName) {
 		try {
 			JLFSessionBean sessionBean = JLFSessionClient.get().getSessionBean();
 			Long sessionUserId = -1l;
@@ -557,8 +557,8 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 				sessionUserId = sessionBean.getUserId();
 			}
 			Date now = new Date();
-			ENTITY.setUpdateUserId(sessionUserId);
-			ENTITY.setUpdateTime(now);
+			entity.setUpdateUserId(sessionUserId);
+			entity.setUpdateTime(now);
 			StringBuffer sql = new StringBuffer("update ");
 			sql.append(tableName).append(" set ");
 
@@ -566,7 +566,7 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 			for (Field field : this.fieldList) {
 				String fieldName = field.getName();
 				Method getMethod = ReflectUtil.createGetMothod(this.entityCls, fieldName);
-				Object value = getMethod.invoke(ENTITY);
+				Object value = getMethod.invoke(entity);
 				if (!ingoreNull || (ingoreNull && value != null && !value.equals(""))) {
 					Class<?> fieldCls = fieldNameEnumClsMapping.get(fieldName);
 					if (fieldCls != null) {
@@ -580,15 +580,22 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 			}
 
 			sql.append("version = version + 1 where id = ? and version = ?");
-			values.add(ENTITY.getId());
-			values.add(ENTITY.getVersion());
+			values.add(entity.getId());
+			values.add(entity.getVersion());
 			int updNum = execute(sql.toString(), values.toArray(new Object[0]));
 			if (updNum != 1) {
 				throw new JLFException("数据过期");
 			}
 			if (isCache) {
-				String key = String.format(cacheKeyFormat, ENTITY.getId());
-				JLFCacheClient.get().delete(key);
+				ENTITY reLoadEntity = null;
+				try {
+					reLoadEntity = this.entityCls.newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					throw new JLFException(e);
+				}
+				reLoadEntity.setIsReLoad(true);
+				String key = String.format(cacheKeyFormat, entity.getId());
+				JLFCacheClient.get().save(key, reLoadEntity, 3);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -631,8 +638,17 @@ public abstract class JLFMVCDao<ENTITY extends JLFMVCEntity> {
 	public void deleteExecute(Long id, Long version, String sql) {
 
 		if (isCache) {
-			String key = String.format(cacheKeyFormat, id);
-			JLFCacheClient.get().delete(key);
+			if (isCache) {
+				ENTITY reLoadEntity = null;
+				try {
+					reLoadEntity = this.entityCls.newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					throw new JLFException(e);
+				}
+				reLoadEntity.setIsReLoad(true);
+				String key = String.format(cacheKeyFormat, id);
+				JLFCacheClient.get().save(key, reLoadEntity, 3);
+			}
 		}
 
 		if (execute(sql, BooleanType.TRUE.getId(), id, id, version) != 1) {

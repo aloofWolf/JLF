@@ -157,6 +157,18 @@ public class RedisClusterCore implements JLFCache {
 	}
 
 	@Override
+	public boolean setnx(String key, Serializable bean) {
+		String ser = SerializeUtil.serialize(bean);
+		return setnx(key,ser);
+	}
+
+	@Override
+	public boolean setnx(String key, Serializable bean, int seconds) {
+		String ser = SerializeUtil.serialize(bean);
+		return setnx(key,ser,seconds);
+	}
+	
+	@Override
 	public boolean exists(String key) {
 		return RedisClusterPool.getJedis().exists(key);
 	}

@@ -13,8 +13,9 @@ import org.jlf.plugin.rpc.test.api.Api3;
 public class Impl3 implements Api3 {
 
 	@Override
-	public void print() {
+	public String print() {
 		LogUtil.get().debug("Impl3.....");
+		return "Impl1";
 
 	}
 

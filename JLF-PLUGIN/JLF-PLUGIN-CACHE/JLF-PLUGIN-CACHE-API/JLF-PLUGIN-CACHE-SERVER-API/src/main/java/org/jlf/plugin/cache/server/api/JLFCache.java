@@ -199,6 +199,7 @@ public interface JLFCache extends JLFPluginServerApi {
 	 * @Title: setKeyPeriod
 	 * @Description:设定key的有效期
 	 * @param key
+	 * @param seconds
 	 */
 	public void setKeyPeriod(String key, int seconds);
 
@@ -218,9 +219,31 @@ public interface JLFCache extends JLFPluginServerApi {
 	 * @Description: 当key不存在时,创建key,返回true,当key存在时,返回false,并设定有效期
 	 * @param key
 	 * @param value
+	 * @param seconds
 	 * @return
 	 */
 	public boolean setnx(String key, String value, int seconds);
+	
+	/**
+	 * 
+	 * @Title: setnx
+	 * @Description: 当key不存在时,创建key,返回true,当key存在时,返回false
+	 * @param key
+	 * @param bean
+	 * @return
+	 */
+	public boolean setnx(String key, Serializable bean);
+
+	/**
+	 * 
+	 * @Title: setnx
+	 * @Description: 当key不存在时,创建key,返回true,当key存在时,返回false,并设定有效期
+	 * @param key
+	 * @param bean
+	 * @param seconds
+	 * @return
+	 */
+	public boolean setnx(String key, Serializable bean, int seconds);
 
 	/**
 	 * 

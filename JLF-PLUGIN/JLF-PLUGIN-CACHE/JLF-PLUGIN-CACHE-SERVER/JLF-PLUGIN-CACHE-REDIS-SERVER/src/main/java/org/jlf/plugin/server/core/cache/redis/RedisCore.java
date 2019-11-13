@@ -161,9 +161,23 @@ public class RedisCore implements JLFCache {
 		return false;
 	}
 
+
+	@Override
+	public boolean setnx(String key, Serializable bean) {
+		String ser = SerializeUtil.serialize(bean);
+		return setnx(key,ser);
+	}
+
+	@Override
+	public boolean setnx(String key, Serializable bean, int seconds) {
+		String ser = SerializeUtil.serialize(bean);
+		return setnx(key,ser,seconds);
+	}
+	
 	@Override
 	public boolean exists(String key) {
 		return jedis.get().exists(key);
 	}
+
 
 }

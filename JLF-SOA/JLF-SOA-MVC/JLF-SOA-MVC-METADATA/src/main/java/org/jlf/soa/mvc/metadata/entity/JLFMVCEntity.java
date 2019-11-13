@@ -20,40 +20,47 @@ public class JLFMVCEntity implements Serializable {
 
 	private static final long serialVersionUID = -8754870124474277604L;
 
-	@JLFCheckAnn(isSkipValidate=true)
-	@JLFMVCBeanFieldMapped(desc = "主键",isPrimary = true)
+	@JLFCheckAnn(isSkipValidate = true)
+	@JLFMVCBeanFieldMapped(desc = "主键", isPrimary = true)
 	private Long id;
-	@JLFCheckAnn(isSkipValidate=true)
-	@JLFMVCBeanFieldMapped(desc = "版本号",defaultValue="0")
+	@JLFCheckAnn(isSkipValidate = true)
+	@JLFMVCBeanFieldMapped(desc = "版本号", defaultValue = "0")
 	private Long version;
-	@JLFCheckAnn(isSkipValidate=true)
-	@JLFMVCBeanFieldMapped(desc = "是否删除  0:已删除 1:未删除",defaultValue="1")
+	@JLFCheckAnn(isSkipValidate = true)
+	@JLFMVCBeanFieldMapped(desc = "是否删除  0:已删除 1:未删除", defaultValue = "1")
 	private BooleanType isDelete;
-	@JLFCheckAnn(isSkipValidate=true)
-	@JLFMVCBeanFieldMapped(desc = "删除编码",defaultValue="-1")
+	@JLFCheckAnn(isSkipValidate = true)
+	@JLFMVCBeanFieldMapped(desc = "删除编码", defaultValue = "-1")
 	private Long deleteNum;
-	@JLFCheckAnn(isSkipValidate=true)
+	@JLFCheckAnn(isSkipValidate = true)
 	@JLFMVCBeanFieldMapped(desc = "创建记录用户id")
 	private Long createUserId;
-	@JLFCheckAnn(isSkipValidate=true)
+	@JLFCheckAnn(isSkipValidate = true)
 	@JLFMVCBeanFieldMapped(desc = "创建时间")
 	private Date createTime;
-	@JLFCheckAnn(isSkipValidate=true)
+	@JLFCheckAnn(isSkipValidate = true)
 	@JLFMVCBeanFieldMapped(desc = "更新用户id")
 	private Long updateUserId;
-	@JLFCheckAnn(isSkipValidate=true)
+	@JLFCheckAnn(isSkipValidate = true)
 	@JLFMVCBeanFieldMapped(desc = "更新时间")
 	private Date updateTime;
-	
+
+	@JLFCheckAnn(isSkipValidate = true)
+	@JLFMVCBeanFieldMapped(isSkipMapped = true)
+
+	/**
+	 * 在缓存中获取对象时,如果发现此字段为true,仍需去数据库中查询
+	 */
+	private Boolean isReLoad = false;
 	/**
 	 * 此字段在与缓存集成时时候,判断缓存中存储的对象是否为黑名单,不与数据库同步
 	 */
-	@JLFCheckAnn(isSkipValidate=true)
-	@JLFMVCBeanFieldMapped(isSkipMapped=true)
-	private boolean isBlack = false;
+	@JLFCheckAnn(isSkipValidate = true)
+	@JLFMVCBeanFieldMapped(isSkipMapped = true)
+	private Boolean isBlack = false;
 
-	@JLFCheckAnn(isSkipValidate=true)
-	@JLFMVCBeanFieldMapped(isSkipMapped=true)
+	@JLFCheckAnn(isSkipValidate = true)
+	@JLFMVCBeanFieldMapped(isSkipMapped = true)
 	private Map<Class<? extends JLFMVCEntity>, JLFMVCEntity> relationMap = new HashMap<Class<? extends JLFMVCEntity>, JLFMVCEntity>();// 其它数据
 
 	public Long getId() {
@@ -128,8 +135,15 @@ public class JLFMVCEntity implements Serializable {
 	public <ENTITY extends JLFMVCEntity> void set(Class<? extends JLFMVCEntity> entityCls, JLFMVCEntity entity) {
 		relationMap.put(entityCls, entity);
 	}
-	
-	
+
+	public Boolean getIsReLoad() {
+		return isReLoad;
+	}
+
+	public void setIsReLoad(Boolean isReLoad) {
+		this.isReLoad = isReLoad;
+	}
+
 	public boolean isBlack() {
 		return isBlack;
 	}

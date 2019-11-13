@@ -10,16 +10,16 @@ import com.alibaba.dubbo.config.ProtocolConfig;
 /**
  * 
  * @ClassName: DubboProtocolConfig
- * @Description: Protocolé…ç½®
+ * @Description: ProtocolÅäÖÃ
  * @author Lone Wolf
- * @date 2019å¹´10æœˆ26æ—¥
+ * @date 2019Äê10ÔÂ26ÈÕ
  */
 public class DubboProtocolConfig {
-
+	
 	@JLFCheckAnn(isSkipValidate = true)
 	private ProtocolConfig protocol = new ProtocolConfig();
 	
-	private String protocolId; // é…ç½®å¤šä¸ªprotocol,ç”¨äºåŒºåˆ†çš„å”¯ä¸€æ ‡è¯†,åœ¨serviceConfigä¸­å¯ä»¥æ ¹æ®æ­¤idé€‰æ‹©ç”¨å“ªä¸ªprotocol
+	private String protocolId; // ÅäÖÃ¶à¸öprotocol,ÓÃÓÚÇø·ÖµÄÎ¨Ò»±êÊ¶,ÔÚserviceConfigÖĞ¿ÉÒÔ¸ù¾İ´ËidÑ¡ÔñÓÃÄÄ¸öprotocol
 
 	@JLFCheckAnn(isNull = true)
 	private String host;

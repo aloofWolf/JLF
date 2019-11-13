@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -12,6 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.jlf.common.util.LogUtil;
+import org.jlf.core.exception.JLFException;
 import org.jlf.plugin.threadPool.api.JLFThreadPool;
 import org.jlf.plugin.threadPool.api.JLFThreadPoolResult;
 import org.jlf.plugin.threadPool.user.api.JLFThreadPoolExecute;
@@ -42,12 +44,12 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
                 0L, TimeUnit.MILLISECONDS,queue);
 		List<FutureExt<T>> futures = new ArrayList<FutureExt<T>>();
 		ExecuteThread<T> t = null;
-		
+		CountDownLatch countDownLatch = new CountDownLatch(size);
 		for (T bean : beans) {
 			boolean newExecuteThreadFlg = true;
 			while(newExecuteThreadFlg){  // 如果创建ExecuteThread对象时出现内存溢出,则将当前线程睡眠十分钟后继续创建
 				try{
-					t = new ExecuteThread<T>(bean, execute);
+					t = new ExecuteThread<T>(bean, execute,countDownLatch);
 					newExecuteThreadFlg = false;
 				}catch(OutOfMemoryError e){
 					newExecuteThreadFlg = true;
@@ -65,10 +67,10 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 
 		}
 		executeService.shutdown(); // 关闭线程池,不在接收新的任务
-		while (true) {
-			if (executeService.isTerminated()) {
-				break;
-			}
+		try {
+			countDownLatch.await();
+		} catch (InterruptedException e) {
+			throw new JLFException(e);
 		}
 		
 		/**
@@ -111,10 +113,17 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 
 		private T bean;
 		private JLFThreadPoolSubmit<T> submit;
-
+		private CountDownLatch countDownLatch;
+		
 		public ExecuteThread(T bean, JLFThreadPoolSubmit<T> submit) {
 			this.bean = bean;
 			this.submit = submit;
+		}
+
+		public ExecuteThread(T bean, JLFThreadPoolSubmit<T> submit,CountDownLatch countDownLatch) {
+			this.bean = bean;
+			this.submit = submit;
+			this.countDownLatch = countDownLatch;
 		}
 
 		@Override
@@ -130,6 +139,9 @@ public class ThreadPoolCustomCore implements JLFThreadPool {
 				}
 				return errMsg;
 			} finally {
+				if(this.countDownLatch != null){
+					this.countDownLatch.countDown();
+				}
 				submit.ResourceRecovery();
 			}
 		}

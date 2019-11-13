@@ -9,5 +9,5 @@ package org.jlf.plugin.rpc.test.api;
  */
 public interface Api1 {
 
-	public void print();
+	public String print();
 }

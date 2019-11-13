@@ -13,8 +13,14 @@ import org.jlf.plugin.rpc.test.api.Api2;
 public class Impl2 implements Api2 {
 
 	@Override
-	public void print() {
+	public String print() {
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		LogUtil.get().debug("Impl2.....");
-
+		return "Impl2";
 	}
 }

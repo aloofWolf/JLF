@@ -2,20 +2,39 @@
   [application]
     name=JLF
   [/application]
+  
   [registry]
     registryId=registry1
     address=zookeeper://39.108.166.34:2184
   [/registry]
+  
   [protocol]
     protocolId=dubbo
   [/protocol]
+  
+  [beanFactory]
+    name=org.jlf.plugin.rpc.test.BeanFactory
+  [/beanFactory]
+  
   [service]
-    interfaceName=org.jlf.plugin.rpc.test.api.api1
+    interfaceName=org.jlf.plugin.rpc.test.api.Api1
   [/service]
   [service]
-    interfaceName=org.jlf.plugin.rpc.test.api.api2
+    interfaceName=org.jlf.plugin.rpc.test.api.Api2
   [/service]
   [service]
-    interfaceName=org.jlf.plugin.rpc.test.api.api3
+    interfaceName=org.jlf.plugin.rpc.test.api.Api3
   [/service]
+  
+  [reference]
+    interfaceName=org.jlf.plugin.rpc.test.api.Api1
+  [/reference]
+  [reference]
+    interfaceName=org.jlf.plugin.rpc.test.api.Api2
+    timeout=1000
+    retries=0
+  [/reference]
+  [reference]
+    interfaceName=org.jlf.plugin.rpc.test.api.Api3
+  [/reference]
 [/plugin-rpc]

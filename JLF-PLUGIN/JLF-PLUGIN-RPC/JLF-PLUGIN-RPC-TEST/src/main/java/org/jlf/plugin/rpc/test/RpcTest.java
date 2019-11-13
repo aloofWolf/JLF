@@ -15,11 +15,16 @@ import org.jlf.plugin.rpc.test.api.Api3;
  */
 public class RpcTest {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		JLFCore.starts();
-		Thread.sleep(5000);
-		JLFRpcClient.get().get(Api1.class).print();
-		JLFRpcClient.get().get(Api2.class).print();
-		JLFRpcClient.get().get(Api3.class).print();
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(JLFRpcClient.get().get(Api1.class).print());
+		System.out.println(JLFRpcClient.get().get(Api2.class).print());
+		System.out.println(JLFRpcClient.get().get(Api3.class).print());
 	}
 }
